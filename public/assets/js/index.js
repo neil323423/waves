@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbar = document.querySelector(".navbar");
     const searchInput1 = document.getElementById("searchInput");
     const searchInput2 = document.getElementById("searchInputt");
+    const loadingScreen = document.querySelector(".loading-screen");
 
     navbar.style.display = "none";
     iframe.style.display = "none";
@@ -22,12 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const searchURL = search(query);
         preloadResources(searchURL);
 
+        showLoadingScreen();
+        div.style.display = "none";
+        iframe.style.display = "block";
+        gamesButton.style.display = "none";
+
         div.style.display = "none";
         iframe.style.display = "block";
         
         iframe.src = await getUrlWithDelay(searchURL);
 
         iframe.onload = () => {
+            hideLoadingScreen();
             navbar.style.display = "block";
             generateRandomId();  
         };
@@ -36,6 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function search(input) {
         const url = `https://duckduckgo.com/?q=${encodeURIComponent(input)}`;
         return url;
+    }
+
+    function showLoadingScreen() {
+        loadingScreen.style.display = "flex";
+        loadingScreen.querySelector(".loading-text").textContent = "Almost there! We're getting your content ready...";
+    }
+
+    function hideLoadingScreen() {
+        loadingScreen.querySelector(".loading-text").textContent = "Ready!";
+        setTimeout(() => {
+            loadingScreen.style.display = "none";
+        }, 200);
     }
 
     function preloadResources(url) {

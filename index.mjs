@@ -10,7 +10,6 @@ import { hostname } from "node:os";
 import { fileURLToPath } from "url";
 import chalk from "chalk"; 
 
-// Enable debugging based on environment variable
 const DEBUG = process.env.DEBUG === "true";
 
 const publicPath = fileURLToPath(new URL("./public/", import.meta.url));
