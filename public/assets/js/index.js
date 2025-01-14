@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showLoadingScreen();
         div.style.display = "none";
         iframe.style.display = "block";
-        gamesButton.style.display = "none";
 
         div.style.display = "none";
         iframe.style.display = "block";
