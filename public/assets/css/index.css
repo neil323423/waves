@@ -11,14 +11,6 @@ body {
      position: relative;
      z-index: 1;
 }
- #particles-js {
-     position: fixed;
-     top: 0;
-     left: 0;
-     width: 100%;
-     height: 100%;
-     z-index: -1;
-}
  .navbar {
      top: 5%;
      background-color: #1b1b1bc3;
@@ -211,7 +203,7 @@ body {
 }
  .loading-text {
      position: absolute;
-     top: 60%;
+     top: 65%;
      left: 50%;
      font-size: 15px;
      transform: translateX(-50%);
