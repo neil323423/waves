@@ -211,7 +211,7 @@ body {
 }
  .loading-text {
      position: absolute;
-     top: 80%;
+     top: 60%;
      left: 50%;
      font-size: 15px;
      transform: translateX(-50%);
