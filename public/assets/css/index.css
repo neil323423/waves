@@ -150,7 +150,7 @@ body {
 	z-index: 999;
     padding-left: 40px;
 	width: 0%;
-    background-image: url('/lol.png');
+    background-image: url('/assets/images/icons/search.png');
     background-size: 35px 35px;
     background-position: 10px center;  
     background-repeat: no-repeat; 
@@ -160,7 +160,7 @@ body {
 	font-size: 16px;
 	background-color: #0e0e0eb9;
 	backdrop-filter: blur(6px);
-    box-shadow: 0 0 5px rgb(61, 56, 130);
+    box-shadow: 0 0 5px rgb(68, 58, 182);
 	text-indent: 0.5em;
 	outline: none;
 	transition: width 0.8s ease, box-shadow 0.9s ease;
@@ -171,11 +171,11 @@ body {
 }
 
 .search-bar input[type=text]:focus {
-	box-shadow: 0 0 27px 5px rgb(61, 56, 130);
+	box-shadow: 0 0 27px 5px rgb(68, 58, 182);
 }
 
 .search-bar input[type=text]:hover {
-	box-shadow: 0 0 27px 5px rgb(61, 56, 130);
+	box-shadow: 0 0 27px 5px rgb(68, 58, 182);
 }
 
 .search-bar input[type=text]::placeholder {
@@ -254,13 +254,13 @@ body {
 .highlight {
   font-weight: bold;
   font-size: 90px;
-  color: rgb(67, 63, 113); 
+  color: rgb(68, 58, 182); 
 }
 
 .bar {
     width: 8px;
     height: 20px;
-    background-color: rgb(67, 63, 113); 
+    background-color: rgb(68, 58, 182); 
     animation: bounce 1s infinite;
 }
 
