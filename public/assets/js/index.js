@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     navbar.style.display = "none";
     iframe.style.display = "none";
+    loadingScreen.style.display = "none";
     searchInput2.style.display = "block";
 
     const searchInputs = [searchInput1, searchInput2];
