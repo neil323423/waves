@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (url.hostname.includes(".")) return url.toString();
         } catch (err) {}
 
-        const url = `https://duckduckgo.com/?q=${encodeURIComponent(input)}`;
+        const url = `https://google.com/?q=${encodeURIComponent(input)}`;
         return url;
     }
 
