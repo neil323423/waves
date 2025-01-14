@@ -1,0 +1,28 @@
+{
+    "name": "waves",
+    "version": "1.0.0",
+    "description": "better",
+    "type": "module",
+    "engines": {
+        "npm": ">=7.0.0",
+        "node": ">=16.0.0"
+    },
+    "scripts": {
+        "start": "node index.mjs"
+    },
+    "author": "",
+    "dependencies": {
+        "@mercuryworkshop/bare-mux": "^2.1.7",
+        "@mercuryworkshop/epoxy-transport": "^2.1.27",
+        "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
+        "@tomphttp/bare-server-node": "^2.0.5",
+        "express": "^4.21.2",
+        "node-fetch": "^3.3.2",
+        "wisp-server-node": "^1.1.7",
+        "ws": "^8.18.0"
+    },
+    "devDependencies": {
+        "eslint": "^8.36.0",
+        "prettier": "^2.8.4"
+    }
+}

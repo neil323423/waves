@@ -1,0 +1,227 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    color: #e0e0e0;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease;
+    scroll-behavior: smooth;
+    position: relative;
+    z-index: 1;
+  }
+
+.navbar {
+	top: 5%;
+	background-color: #1b1b1bc3;
+	backdrop-filter: blur(10px);
+	border: 1px solid #505050;
+	width: 90%;
+	display: none;
+	border-radius: 20px;
+	align-items: center;
+	overflow: hidden;
+	position: fixed;
+	z-index: 999;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.nav-links li img {
+	width: 25px;
+	height: 25px;
+	transition: background-color 1.3s;
+}
+
+.navbar ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.nav-links {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+}
+
+.navbar li {
+    padding: 10px -10px;
+    margin-left: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative; 
+}
+
+.navbar a {
+    display: block;
+    color: #fff;
+    text-align: center;
+    padding: 16px 20px;
+    transform-origin: center center;
+    text-decoration: none;
+    border-radius: 50%;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.navbar a:hover {
+    transform: rotate(360deg); 
+    transform-origin: center; 
+}
+
+.small-searchbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 700px; 
+}
+
+.small-searchbar input[type=text] {
+    padding: 12px;
+    width: 90%;
+    border: 1px solid #505050;
+    border-radius: 15px;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    background-color: #151515ac;
+    text-align: center;
+    text-indent: 0.5em;
+    outline: none;
+}
+
+.small-searchbar input[type=text]::placeholder {
+    color: rgb(255, 255, 255);
+}
+
+.search-container {
+	position: absolute;
+	top: 110%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	width: 90%;
+}
+
+.search-title {
+	font-size: 80px;
+	color: white;
+	margin-bottom: 100px;
+	font-weight: bolder;
+}
+
+.search-bar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 10;
+	margin: 0 auto;
+}
+
+.search-bar input[type=text] {
+	padding: 15px;
+	margin-top: -130px;
+	z-index: 999;
+    padding-left: 40px;
+	width: 0%;
+    background-image: url('/lol.png');
+    background-size: 35px 35px;
+    background-position: 10px center;  
+    background-repeat: no-repeat; 
+	border: none;
+	border-radius: 20px;
+	color: white;
+	font-size: 16px;
+	background-color: #0e0e0eb9;
+	backdrop-filter: blur(6px);
+    box-shadow: 0 0 5px rgb(61, 56, 130);
+	text-indent: 0.5em;
+	outline: none;
+	transition: width 0.8s ease, box-shadow 0.9s ease;
+}
+
+.search-bar input[type=text].expanded {
+	width: 24%; 
+}
+
+.search-bar input[type=text]:focus {
+	box-shadow: 0 0 27px 5px rgb(61, 56, 130);
+}
+
+.search-bar input[type=text]:hover {
+	box-shadow: 0 0 27px 5px rgb(61, 56, 130);
+}
+
+.search-bar input[type=text]::placeholder {
+    color: rgb(131, 131, 131);
+}
+
+#erudaLoadingScreen {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #1b1b1b9d;
+	backdrop-filter: blur(6px);
+	color: white;
+	font-size: 3em;
+	z-index: 10000;
+	border-radius: 20px;
+	padding: 30px;
+	display: none;
+}
+
+.container {
+	float: right;
+	width: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	padding-top: 50px;
+	text-align: center;
+}
+
+
+#urlInput:focus {
+	width: 40%;
+	top: 0;
+	transform: translate(-50%, 0%);
+}
+
+
+::placeholder {
+	color: white;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+.iframe {
+	height: 100vh;
+	width: 100vw;
+	background-color: rgb(0, 0, 0);
+	border: none;
+	position: relative;	
+}
+@media (max-width: 600px) {
+    #userCount {
+        padding: 15px 30px;
+        font-size: 20px;
+    }
+}
+
+.highlight {
+  font-weight: bold;
+  font-size: 90px;
+  color: rgb(67, 63, 113); 
+}
