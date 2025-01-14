@@ -37,22 +37,23 @@ sh setup.sh
 ---
 
 ## Run Waves on Github Codespaces:
-[![Open in GitHub Codespaces](https://codespaces.githubusercontent.com/github/brands/raw/main/graphics/codespaces/codespaces-lockup.png)](https://github.com/codespaces/new?repo=https://github.com/xojw/waves)
 
 If you don't already have a Github account create one!
 
-If you already have an account or just created one, scroll up and click the green “Code” button.
-On the right, select “Codespaces.”
+1. If you already have an account or just created one, scroll up and click the green “Code” button.
+
+2. On the right, select “Codespaces.”
 Click the ”+” button to create a new Codespace for this project.
-After everything loads run the commands bellow:
+
+3. After everything loads run the commands bellow:
 
 ```bash
 npm install
 
 node index.mjs
+```
 
 When the process completes, a pop-up will appear. Click ‘Public’ and your done now just go to your given url.
-```
 
 ---
 ---
