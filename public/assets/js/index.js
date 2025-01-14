@@ -27,19 +27,24 @@ document.addEventListener('DOMContentLoaded', () => {
         div.style.display = "none";
         iframe.style.display = "block";
 
-        div.style.display = "none";
-        iframe.style.display = "block";
-        
         iframe.src = await getUrlWithDelay(searchURL);
 
         iframe.onload = () => {
             hideLoadingScreen();
             navbar.style.display = "block";
-            generateRandomId();  
+            generateRandomId();
         };
     }
 
     function search(input) {
+        try {
+            return new URL(input).toString();
+        } catch (err) {}
+        try {
+            const url = new URL(`https://${input}`);
+            if (url.hostname.includes(".")) return url.toString();
+        } catch (err) {}
+
         const url = `https://duckduckgo.com/?q=${encodeURIComponent(input)}`;
         return url;
     }
