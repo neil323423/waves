@@ -10,8 +10,6 @@ import { hostname } from "node:os";
 import { fileURLToPath } from "url";
 import chalk from "chalk"; 
 
-const DEBUG = process.env.DEBUG === "true";
-
 const publicPath = fileURLToPath(new URL("./public/", import.meta.url));
 
 const bare = createBareServer("/bare/");
@@ -23,7 +21,7 @@ app.use(express.static(publicPath));
 app.use("/uv/", express.static(uvPath));
 
 app.use((req, res) => {
-  log("404 error for:", req.url);
+  console.log("404 error for:", req.url);
   res.status(404);
   res.sendFile(join(publicPath, "404.html"));
 });
@@ -38,59 +36,101 @@ const server = createServer();
 
 server.on("request", (req, res) => {
   if (bare.shouldRoute(req)) {
-    log("Routing request through Bare Server:", req.url);
     bare.routeRequest(req, res);
   } else {
-    log("Routing request through Express:", req.url);
     app(req, res);
   }
 });
 
 server.on("upgrade", (req, socket, head) => {
   if (bare.shouldRoute(req)) {
-    log("Routing upgrade request through Bare Server:", req.url);
     bare.routeUpgrade(req, socket, head);
   } else if (req.url.endsWith("/wisp/")) {
-    log("Routing upgrade request through Wisp:", req.url);
     wisp.routeRequest(req, socket, head); 
   } else {
-    log("Upgrade request not handled, closing socket:", req.url);
     socket.end();
   }
 });
 
 server.on("listening", () => {
   const address = server.address();
-
-  console.log(chalk.green("Server is up and running!"));
-  console.log(chalk.green("Server listening on:"));
-  console.log(chalk.red(`\thttp://localhost:${address.port}`));
-  console.log(chalk.yellow(`\thttp://${hostname()}:${address.port}`));
+  
+  console.log(chalk.bold.green(`🚀 Server starting...`));
   console.log(
-    chalk.yellow(
-      `\thttp://${address.family === "IPv6" ? `[${address.address}]` : address.address}:${address.port}` 
+    chalk.bold.yellow(
+      `🌐 Server started and listening on:\n` +
+      `   🔗 Local:     http://localhost:${address.port}\n` +
+      `   🔗 Hostname:  http://${hostname()}:${address.port}\n` +
+      `   🔗 Network:   http://${address.family === "IPv6" ? `[${address.address}]` : address.address}:${address.port}`
     )
   );
+
+  console.log(chalk.bold.gray("\n─────────────\n"));
 });
 
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
 
-function shutdown() {
-  log("SIGTERM signal received: closing HTTP server");
-  server.close(() => {
-    log("Server closed successfully.");
-    bare.close(() => {
-      log("Bare Server closed.");
-      process.exit(0);
+async function shutdown(signal) {
+  console.log(chalk.bold.red(`🛑 ${signal} received. Shutting down...`));
+
+  try {
+    await closeServer(server, "HTTP server");
+
+    await closeBareServer(bare);
+
+    if (wisp.isActive) {
+      await closeWispServer();
+    }
+
+    console.log(chalk.bold.green("✅ All servers shut down successfully."));
+    process.exit(0);
+  } catch (err) {
+    console.error(chalk.bold.red("⚠️ Error during shutdown:"), err);
+    process.exit(1);
+  }
+}
+
+function closeServer(server, name) {
+  return new Promise((resolve, reject) => {
+    server.close((err) => {
+      if (err) {
+        console.error(chalk.bold.red(`❌ Error closing ${name}:`), err);
+        reject(err);
+      } else {
+        console.log(chalk.bold.blue(`🛑 ${name} closed.`));
+        resolve();
+      }
+    });
+  });
+}
+
+function closeBareServer(bare) {
+  return new Promise((resolve, reject) => {
+    bare.close((err) => {
+      if (err) {
+        console.error(chalk.bold.red("❌ Error closing Bare Server:"), err);
+        reject(err);
+      } else {
+        console.log(chalk.bold.blue("🛑 Bare Server closed."));
+        resolve();
+      }
+    });
+  });
+}
+
+function closeWispServer() {
+  return new Promise((resolve, reject) => {
+    wisp.close((err) => {
+      if (err) {
+        console.error(chalk.bold.red("❌ Error closing Wisp:"), err);
+        reject(err);
+      } else {
+        console.log(chalk.bold.blue("🛑 Wisp server closed."));
+        resolve();
+      }
     });
   });
 }
 
 server.listen({ port });
-
-function log(...args) {
-  if (DEBUG) {
-    console.log(chalk.blue("[DEBUG]"), ...args);
-  }
-}
