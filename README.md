@@ -6,7 +6,7 @@ A very minimalist Web Proxy.
 
 ## Supported Sites:
 
-- [Google](https://google.com).
+- [Google](https://google.com)
 - [Spotify](https://spotify.com)
 - [Discord](https://discord.com)
 - [Youtube](https://www.youtube.com)
