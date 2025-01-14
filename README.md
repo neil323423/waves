@@ -12,7 +12,7 @@ A very minimalist Web Proxy.
 - [Youtube](https://www.youtube.com)
 - [Reddit](https://reddit.com)
 - [GeForce NOW](https://play.geforcenow.com/)
-- [now.gg](https://now.gg)
+- [Now.gg](https://now.gg)
 
 ---
 ---
