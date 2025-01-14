@@ -30,7 +30,7 @@ info "Step 2: Installing Node.js..."
 sudo apt install -y nodejs > /dev/null 2>&1
 separator
 
-info "Step 3: Installing nescessary dependencies for waves...
+info "Step 3: Installing necessary dependencies and packages for waves..."
 npm install > /dev/null 2>&1
 sudo apt install -y certbot python3-certbot-nginx > /dev/null 2>&1
 separator
