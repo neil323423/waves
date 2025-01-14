@@ -1,14 +1,24 @@
 body {
     font-family: 'Poppins', sans-serif;
+    background-color: black;
+    height: 100%;
     margin: 0;
     padding: 0;
-    background-color: transparent;
     color: #e0e0e0;
     overflow-x: hidden;
     transition: background-color 0.3s ease;
     scroll-behavior: smooth;
     position: relative;
     z-index: 1;
+  }
+
+#particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; 
   }
 
 .navbar {
@@ -74,6 +84,20 @@ body {
     transform-origin: center; 
 }
 
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
 .small-searchbar {
     display: flex;
     justify-content: center;
@@ -99,18 +123,17 @@ body {
 }
 
 .search-container {
-	position: absolute;
-	top: 110%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	text-align: center;
-	width: 90%;
+    position: relative;
+    margin-top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 90%;
 }
 
 .search-title {
 	font-size: 80px;
 	color: white;
-	margin-bottom: 100px;
 	font-weight: bolder;
 }
 
@@ -124,7 +147,6 @@ body {
 
 .search-bar input[type=text] {
 	padding: 15px;
-	margin-top: -130px;
 	z-index: 999;
     padding-left: 40px;
 	width: 0%;
@@ -196,16 +218,6 @@ body {
 	color: white;
 }
 
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-
-	to {
-		opacity: 1;
-	}
-}
-
 .iframe {
 	height: 100vh;
 	width: 100vw;
@@ -213,15 +225,66 @@ body {
 	border: none;
 	position: relative;	
 }
-@media (max-width: 600px) {
-    #userCount {
-        padding: 15px 30px;
-        font-size: 20px;
-    }
+
+.loading-screen {
+	position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    z-index: 10; 
+    background-color: #000; 
+}
+
+.loading-text {
+	position: absolute;
+	top: 80%;
+	left: 50%;
+	font-size: 15px;
+	transform: translateX(-50%);
+	color: #ffffff;
+	text-align: center;
+	font-weight: bold;
 }
 
 .highlight {
   font-weight: bold;
   font-size: 90px;
   color: rgb(67, 63, 113); 
+}
+
+.bar {
+    width: 8px;
+    height: 20px;
+    background-color: rgb(67, 63, 113); 
+    animation: bounce 1s infinite;
+}
+
+.bar:nth-child(1) {
+    animation-delay: 0s;
+}
+.bar:nth-child(2) {
+    animation-delay: 0.1s;
+}
+.bar:nth-child(3) {
+    animation-delay: 0.2s;
+}
+.bar:nth-child(4) {
+    animation-delay: 0.3s;
+}
+.bar:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: scaleY(0.7);
+    }
+    50% {
+        transform: scaleY(2);
+    }
 }

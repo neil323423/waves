@@ -4,53 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Waves</title>
-    <link rel="icon" type="image/x-icon" href="/images/icons/home.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="/assets/css/index.css">
-    <script src="js/loader.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <script src="/baremux/index.js" defer></script>
+<body onload="hidePageLoader();">
+    <script src="/baremux/index.js"></script>
     <script src="/uv/uv.bundle.js" defer></script>
-    <script src="/uv/uv.config.js" defer></script>
-    <script src="/public/assets/js/register.js" defer></script>   
-    <script src="/public/assets/js/index.js" defer></script>
-    <script src="/public/assets/js/navbar.js" defer></script>
-    <script src="/public/assets/js/eruda.js" defer></script>
+    <script src="/uv/uv.config.js"></script>
+    <script src="/assets/js/navbar.js" defer></script>
+    <script src="/assetsjs/loader.js" defer></script>
+    <script src="/assets/js/load.js" defer></script>
+    <script src="/assets/js/eruda.js" defer></script>
+    <script src="/assets/js/register.js" defer></script>
+    <script src="/assets/js/index.js" defer></script>
     <div class="navbar">
         <ul class="nav-links">
             <li>
-                <a id="backIcon" href="#"><img src="/assets/images/icons/back.png" alt="Back"></a>
+                <a id="backIcon" href="#"><img src="images/icons/back.png" alt="Back"></a>
             </li>
             <li>
-                <a id="refreshIcon" href="#"><img src="/assets/images/icons/refresh.png" alt="Refresh"></a>
+                <a id="refreshIcon" href="#"><img src="images/icons/refresh.png" alt="Refresh"></a>
             </li>
             <li>
-                <a id="forwardIcon" href="#"><img src="/assets/images/icons/forward.png" alt="Forward"></a>
+                <a id="forwardIcon" href="#"><img src="images/icons/forward.png" alt="Forward"></a>
             </li>
             <li>
                 <div class="search-containersmall">
                     <div class="small-searchbar">
-                        <input class="waves" type="text" id="searchInputt" placeholder="Search for a query or enter a URL..." autocomplete="off">
+                        <input class="pxyinput" type="text" id="searchInputt" placeholder="Search for a query or enter a URL..." autocomplete="off">
                     </div>
                 </div>
             </li>
             <li>
-                <a id="erudaIcon" href="#"><img src="/assets/images/icons/eruda.png" alt="Eruda"></a>
+                <a id="erudaIcon" href="#"><img src="images/icons/eruda.png" alt="Eruda"></a>
             </li>
             <li>
-                <a id="fullscreenIcon" href="#"><img src="/assets/images/icons/fullscreen.png" alt="Full-Screen"></a>
+                <a id="fullscreenIcon" href="#"><img src="images/icons/fullscreen.png" alt="Full-Screen"></a>
             </li>
             <li>
-                <a href="/index.html"><img src="/assets/images/icons/out.png" alt="X out"></a>
+                <a href="/search.html"><img src="images/icons/out.png" alt="X out"></a>
             </li>
         </ul>
+    </div>
+    <div class="loading-screen">
+        <div class="loading-text">Loading...</div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
     </div>
     <div class="search-container">
         <div class="search-title"><span></span><span class="highlight">ulrua.</span></div>
         <div class="search-bar">
-            <input class="waves" type="text" id="searchInput" placeholder="Browse with Zero Restrictions..." autocomplete="off">
+            <input class="wav" type="text" id="searchInput" placeholder="Browse with Zero Restrictions..." autocomplete="off">
         </div>
     </div>
     <iframe class="iframe"></iframe>
