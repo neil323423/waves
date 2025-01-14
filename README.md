@@ -19,7 +19,7 @@ A very minimalist Web Proxy.
 
 ## Deploying Waves on your own server:
 > [!NOTE] 
-> You need a subdomain or a domain for this.
+> A subdomain or a domain is **required** for this.
 
 1. Login your server
 2. Go to your server terminal
