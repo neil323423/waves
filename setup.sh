@@ -35,20 +35,20 @@ npm install > /dev/null 2>&1
 sudo apt install -y certbot python3-certbot-nginx > /dev/null 2>&1
 separator
 
-info "Step 4: Please enter your subdomain (e.g., subdomain.example.com):"
-read -p "Subdomain: " SUBDOMAIN
+info "Step 4: Please enter your domain or subdomain (e.g., example.com or subdomain.example.com):"
+read -p "Domain/Subdomain: " DOMAIN
 
-if [ -z "$SUBDOMAIN" ]; then
-  error "No subdomain entered. Exiting."
+if [ -z "$DOMAIN" ]; then
+  error "No domain or subdomain entered. Exiting."
   separator
   exit 1
 fi
 
-info "Step 5: Requesting SSL certificate for $SUBDOMAIN..."
-sudo certbot --nginx -d $SUBDOMAIN
+info "Step 5: Requesting SSL certificate for $DOMAIN..."
+sudo certbot --nginx -d $DOMAIN
 separator
 
-success "SSL configuration complete for $SUBDOMAIN!"
+success "SSL configuration complete for $DOMAIN!"
 separator
 
 info "Step 6: Running config.sh..."
@@ -64,7 +64,7 @@ sudo npm install pm2 -g > /dev/null 2>&1
 pm2 startup > /dev/null 2>&1
 separator
 
-info "Step 9: Starting the application with PM2..."
+info "Step 9: Starting the server with PM2..."
 pm2 start index.mjs > /dev/null 2>&1
 separator
 
