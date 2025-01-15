@@ -3,7 +3,7 @@ var loadingTimeout;
 var errorMessageDisplayed = false;
 
 document.getElementById('erudaIcon').addEventListener('click', function() {
-    var iframe = document.querySelector('.frame');
+    var iframe = document.querySelector('.iframe');
     var erudaLoadingScreen = document.getElementById('erudaLoadingScreen');
     
     erudaLoadingScreen.style.display = 'block';

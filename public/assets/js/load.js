@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const searchBar = document.querySelector('.search-bar');
+    const searchInput = document.getElementById('searchInput');
     const highlight = document.querySelector('.highlight');
 
-    searchBar.classList.add('loaded');
+    searchInput.classList.add('loaded');    
     highlight.classList.add('loaded');
 });
