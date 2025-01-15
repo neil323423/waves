@@ -17,6 +17,17 @@ A sleek and minimalist Web Proxy.
 ---
 ---
 
+## Features:
+
+- Fast, Advanced & Powerful Web Proxy
+- DevTools
+- Sleek
+- Search Bar
+- Clean UI
+
+---
+---
+
 ## Deploying Waves on your own server:
 > [!NOTE] 
 > A subdomain or a domain is **required** for this.
