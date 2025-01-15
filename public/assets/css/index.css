@@ -23,7 +23,7 @@ body {
     position: absolute;
     transform: translate(-50%, -35%);
     left: 50%;
-    top: -77vh;
+    top: -78vh;
   }
 ::-webkit-scrollbar {
     width: 5px;
