@@ -155,7 +155,8 @@ body {
     z-index: 999;
     padding-left: 40px;
     opacity: 0;
-    width: 25%;
+    width: 400px;
+    max-width: 100%;
     background-image: url('/assets/images/icons/search.png');
     background-size: 35px 35px;
     background-position: 10px center;
