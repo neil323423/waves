@@ -40,12 +40,13 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: #3b3b3b;
   }
-.navbar {
-    top: 5%;
+  .navbar {
+    top: 2%;
     background-color: #1b1b1bc3;
     backdrop-filter: blur(10px);
     border: 1px solid #505050;
-    width: 90%;
+    width: 1200px; 
+    max-width: 100%; 
     display: none;
     border-radius: 20px;
     align-items: center;
@@ -55,6 +56,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
 }
+
 .nav-links li img {
     width: 25px;
     height: 25px;
@@ -126,7 +128,7 @@ body {
     outline: none;
 }
 .small-searchbar input[type=text]::placeholder {
-    color: rgb(255, 255, 255);
+    color: #525252;
 }
 .search-container {
     position: relative;
