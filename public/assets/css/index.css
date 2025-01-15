@@ -11,6 +11,35 @@ body {
     position: relative;
     z-index: 1;
 }
+.light {
+    box-shadow: 0 0 250px 100px rgba(68, 58, 182, 0.8);
+    border-radius: 50%;
+    height: 45vh;
+    width: 75vw;
+    opacity: 0.65; 
+    background-image: radial-gradient(farthest-corner at 50% 50%, #443ab6);
+    background-blend-mode: multiply;
+    filter: blur(50px) contrast(1.1);
+    position: absolute;
+    transform: translate(-50%, -35%);
+    left: 50%;
+    top: -76vh;
+  }
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #000000; 
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #303030;
+    border-radius: 6px; 
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3b3b3b;
+  }
 .navbar {
     top: 5%;
     background-color: #1b1b1bc3;
@@ -130,14 +159,14 @@ body {
     background-position: 10px center;
     background-repeat: no-repeat;
     border-radius: 20px;
-    border: 1px solid #505050;
     color: white;
     font-size: 16px;
-    background-color: #0e0e0eb9;
+    border: none;
+    background-color: #11111180;
     backdrop-filter: blur(6px);
     text-indent: 0.5em;
     outline: none;
-    transition: width 0.8s ease, box-shadow 0.9s ease, opacity 0.5s ease-out, clip-path 0.5s ease-out, border-color 0.5s ease;
+    transition: width 0.8s ease, box-shadow 0.9s ease, opacity 0.5s ease-out, clip-path 0.5s ease-out, background-color 0.5s ease;
     clip-path: inset(0 100% 0 0);
 }
 
@@ -147,15 +176,15 @@ body {
 }
 
 .search-bar input[type=text]:focus {
-    border: 1px solid #a5a5a5;
+    background-color: #33333380;
 }
 
 .search-bar input[type=text]:hover {
-    border: 1px solid #a5a5a5;
+    background-color: #33333380;
 }
 
 .search-bar input[type=text]::placeholder {
-    color: rgb(131, 131, 131);
+    color: #525252;
 }
 #erudaLoadingScreen {
     position: absolute;
@@ -220,7 +249,7 @@ body {
 .highlight {
     font-weight: bold;
     font-size: 90px;
-    color: rgb(68, 58, 182);
+    color: #443ab6;
     clip-path: inset(0 100% 0 0);
     transition: opacity 0.5s ease-out 0.3s, clip-path 0.5s ease-out 0.3s;
 }
@@ -257,4 +286,3 @@ body {
         transform: scaleY(2);
    }
 }
-
