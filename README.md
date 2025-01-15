@@ -1,5 +1,5 @@
 ## Waves.
-A very minimalist Web Proxy.
+A sleek and minimalist Web Proxy.
 
 ---
 ---
