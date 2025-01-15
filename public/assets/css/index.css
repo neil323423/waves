@@ -12,7 +12,7 @@ body {
     z-index: 1;
 }
 .light {
-    box-shadow: 0 0 250px 100px rgba(68, 58, 182, 0.8);
+    box-shadow: 0 0 250px 100px #443ab6;
     border-radius: 5%;
     height: 45vh;
     width: 75vw;
