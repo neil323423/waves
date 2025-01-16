@@ -25,7 +25,7 @@ Waves is currently in beta, so you may encounter occasional bugs. New features a
 
 ## Deploy Waves Locally:
 
-1. Go into your machine terminal
+1. Go into your local machine terminal
 2. Run the commands bellow
 
 ```bash
