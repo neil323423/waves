@@ -36,6 +36,8 @@ npm i
 npm start
 ```
 
+Once everything is set up, head over to http://localhost:3000 to experience Waves running smoothly on your local machine!
+
 ## Deploying Waves on your own server:
 > [!NOTE] 
 > A subdomain or a domain is **required** for this.

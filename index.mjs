@@ -62,6 +62,7 @@ server.on("listening", () => {
   console.log(chalk.bold.green(`🟡 Server starting...`));
   console.log(chalk.bold.green(`🟢 Server started successfully!`));
   console.log(chalk.green(`🔗 Hostname: `) + chalk.bold(`http://${hostname()}:${address.port}`));
+  console.log(chalk.green(`🔗 LocalHost: `) + chalk.bold(`http://localhost:${address.port}`));
   console.log(chalk.green('🕒 Time: ') + chalk.bold.magenta(new Date().toLocaleTimeString()));
   console.log(chalk.green('📅 Date: ') + chalk.bold.magenta(new Date().toLocaleDateString()));
   console.log(chalk.green('💻 Platform: ') + chalk.bold.yellow(process.platform));
