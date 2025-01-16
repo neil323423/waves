@@ -61,9 +61,9 @@ Click the ”+” button to create a new Codespace for this project.
 3. After everything loads run the commands bellow:
 
 ```bash
-npm install
+npm i
 
-node index.mjs
+npm start
 ```
 
 When the process completes, a pop-up will appear. Click ‘Public’ and your done now just go to your given url.
