@@ -5,7 +5,7 @@ A sleek and minimalist Web Proxy.
 ---
 
 ## Version:
-Waves is currently in beta, so you may encounter occasional bugs. New features and improvements are on the way.
+Waves is currently in beta, so you may encounter occasional bugs. New features and improvements are on the way—stay tuned!
 
 ---
 ---
