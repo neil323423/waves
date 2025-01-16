@@ -53,6 +53,14 @@ server.on("upgrade", (req, socket, head) => {
 server.on("listening", () => {
   const address = server.address();
 
+  console.log(chalk.bold.blue(`
+__      __                                       
+\ \    / /__ _    __ __    ___     ___           
+ \ \/\/ // _` |   \ V /   / -_)   (_-<      _    
+  \_/\_/ \__,_|   _\_/_   \___|   /__/_   _(_)_  
+_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
+"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' 
+`));
   console.log(chalk.bold.green(`🟡 Server starting...`));
   console.log(chalk.bold.green(`🟢 Server started successfully!`));
   console.log(chalk.green(`🔗 Hostname: `) + chalk.bold(`http://${hostname()}:${address.port}`));
