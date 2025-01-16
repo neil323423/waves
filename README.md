@@ -1,14 +1,9 @@
 # Waves.
 A sleek and minimalist Web Proxy.
 
----
----
 
 ## Version:
 Waves is currently in beta, so you may encounter occasional bugs. New features and improvements are on the way—stay tuned!
-
----
----
 
 ## Supported Sites:
 
@@ -20,9 +15,6 @@ Waves is currently in beta, so you may encounter occasional bugs. New features a
 - [GeForce NOW](https://play.geforcenow.com/)
 - [Now.gg](https://now.gg)
 
----
----
-
 ## Features:
 
 - Fast, Advanced & Powerful Web Proxy
@@ -30,9 +22,6 @@ Waves is currently in beta, so you may encounter occasional bugs. New features a
 - Sleek
 - Search Bar
 - Clean UI
-
----
----
 
 ## Deploying Waves on your own server:
 > [!NOTE] 
@@ -50,19 +39,15 @@ cd waves
 sh setup.sh
 ```
 
----
----
-
 ## Run Waves on Github Codespaces:
 
-If you don't already have a Github account create one!
+1. Create a GitHub account if you don’t have one.
 
-1. If you already have an account or just created one, scroll up and click the green “Code” button.
+2. Log in, click the green **"Code"** button, and select **"Codespaces"** on the right.
 
-2. On the right, select “Codespaces.”
-Click the ”+” button to create a new Codespace for this project.
+3. Click the **"+"** to create a new Codespace.
 
-3. After everything loads run the commands bellow:
+4. After everything loads, run these commands:
 
 ```bash
 npm i
@@ -70,10 +55,7 @@ npm i
 npm start
 ```
 
-When the process completes, a pop-up will appear. Click ‘Public’ and your done now just go to your given url.
-
----
----
+5. When done, click **"Public"** on the pop-up and access your given URL.
 
 > [!IMPORTANT]
 > Considering giving this repository a star if you do fork and use Waves. :)
