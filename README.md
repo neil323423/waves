@@ -1,5 +1,6 @@
 ## Waves.
 A sleek and minimalist Web Proxy.
+---
 (still in beta more stuff will be added very soon)
 
 ---
