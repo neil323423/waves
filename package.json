@@ -1,7 +1,7 @@
 {
     "name": "waves",
     "version": "1.0.0",
-    "description": "better",
+    "description": "a sleek and minimalist Web Proxy.",
     "type": "module",
     "engines": {
         "npm": ">=7.0.0",
