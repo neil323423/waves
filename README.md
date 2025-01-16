@@ -23,6 +23,19 @@ Waves is currently in beta, so you may encounter occasional bugs. New features a
 - Search Bar
 - Clean UI
 
+## Deploy Waves Locally:
+
+1. Go into your machine terminal
+2. Run the commands bellow
+
+```bash
+git clone https://github.com/xojw/waves
+
+npm i
+
+npm start
+```
+
 ## Deploying Waves on your own server:
 > [!NOTE] 
 > A subdomain or a domain is **required** for this.
