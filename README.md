@@ -19,9 +19,9 @@ Waves is currently in beta, so you may encounter occasional bugs. New features a
 
 - Fast, Advanced & Powerful Web Proxy
 - DevTools
-- Sleek
+- Sleek & Clean UI
 - Search Bar
-- Clean UI
+- And a lot more features coming soon...
 
 ## Deploy Waves Locally:
 
