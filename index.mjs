@@ -1,31 +1,25 @@
-import { createBareServer } from '@tomphttp/bare-server-node';
+import { createBareServer } from "@tomphttp/bare-server-node";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
-import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
+import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import express from "express";
 import { createServer } from "node:http";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
-import { join } from "node:path";
 import wisp from "wisp-server-node";
 import { hostname } from "node:os";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
-
-const publicPath = fileURLToPath(new URL("./public/", import.meta.url));
+import router from "./src/routes.js"; 
 
 const bare = createBareServer("/@/");
 const app = express();
+
 app.use("/baremux/", express.static(baremuxPath));
 app.use("/epoxy/", express.static(epoxyPath));
-app.use('/libcurl/', express.static(libcurlPath));
-app.use(express.static(publicPath));
+app.use("/libcurl/", express.static(libcurlPath));
 app.use("/uv/", express.static(uvPath));
 
-app.use((req, res) => {
-  console.log("404 error for:", req.url);
-  res.status(404);
-  res.sendFile(join(publicPath, "404.html"));
-});
+app.use(router);
 
 let port = parseInt(process.env.PORT || "");
 
@@ -58,16 +52,16 @@ server.on("upgrade", (req, socket, head) => {
 
 server.on("listening", () => {
   const address = server.address();
-  
+
   console.log(chalk.bold.green(`🟡 Server starting...`));
   console.log(chalk.bold.green(`🟢 Server started successfully!`));
   console.log(chalk.green(`🔗 Hostname: `) + chalk.bold(`http://${hostname()}:${address.port}`));
   console.log(chalk.green(`🔗 LocalHost: `) + chalk.bold(`http://localhost:${address.port}`));
-  console.log(chalk.green('🕒 Time: ') + chalk.bold.magenta(new Date().toLocaleTimeString()));
-  console.log(chalk.green('📅 Date: ') + chalk.bold.magenta(new Date().toLocaleDateString()));
-  console.log(chalk.green('💻 Platform: ') + chalk.bold.yellow(process.platform));
-  console.log(chalk.green('📶 Server Status: ') + chalk.bold.green('Running'));
-  console.log(chalk.red('🔴 Do ctrl + c to shut down the server.'));
+  console.log(chalk.green("🕒 Time: ") + chalk.bold.magenta(new Date().toLocaleTimeString()));
+  console.log(chalk.green("📅 Date: ") + chalk.bold.magenta(new Date().toLocaleDateString()));
+  console.log(chalk.green("💻 Platform: ") + chalk.bold.yellow(process.platform));
+  console.log(chalk.green("📶 Server Status: ") + chalk.bold.green("Running"));
+  console.log(chalk.red("🔴 Do ctrl + c to shut down the server."));
 });
 
 process.on("SIGINT", () => shutdown("SIGINT"));
