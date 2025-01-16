@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     const iframe = document.querySelector("iframe");
-    const div = document.querySelector(".search-container");
-    const navbar = document.querySelector(".navbar");
+    const searchContainer = document.querySelector(".search-container");
+    const navBar = document.querySelector(".navbar");
+    const topBar = document.querySelector(".top-bar");
     const searchInput1 = document.getElementById("searchInput");
     const searchInput2 = document.getElementById("searchInputt");
     const loadingScreen = document.querySelector(".loading-screen");
 
-    navbar.style.display = "none";
+    navBar.style.display = "none";
     iframe.style.display = "none";
     loadingScreen.style.display = "none";
-    searchInput2.style.display = "block";
 
     const searchInputs = [searchInput1, searchInput2];
     searchInputs.forEach((input) => {
@@ -21,33 +21,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function handleSearch(query) {
-        const searchURL = search(query);
+        const searchURL = generateSearchUrl(query);
         preloadResources(searchURL);
 
         showLoadingScreen();
-        div.style.display = "none";
+        searchContainer.style.display = "none";
         iframe.style.display = "block";
+        topBar.style.display = "none";
 
-        iframe.src = await getUrlWithDelay(searchURL);
+        iframe.src = await getUrl(searchURL);
 
         iframe.onload = () => {
             hideLoadingScreen();
-            navbar.style.display = "block";
+            navBar.style.display = "block";
             generateRandomId();
         };
     }
 
-    function search(input) {
+    function generateSearchUrl(query) {
         try {
-            return new URL(input).toString();
-        } catch (err) {}
-        try {
-            const url = new URL(`https://${input}`);
-            if (url.hostname.includes(".")) return url.toString();
-        } catch (err) {}
+            return new URL(query).toString();
+        } catch {
+            try {
+                const url = new URL(`https://${query}`);
+                if (url.hostname.includes(".")) return url.toString();
+            } catch {}
+        }
 
-        const url = `https://duckduckgo.com/?q=${encodeURIComponent(input)}`;
-        return url;
+        return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
     }
 
     function showLoadingScreen() {
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.head.appendChild(link);
     }
 
-    function getUrlWithDelay(url) {
+    function getUrl(url) {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(__uv$config.prefix + __uv$config.encodeUrl(url));
@@ -79,13 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateRandomId() {
-        var randomId = '';
-        var characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        let randomId = '';
 
-        for (var i = 0; i < 5; i++) { 
-            randomId += characters.charAt(Math.floor(Math.random() * 36)); 
+        for (let i = 0; i < 5; i++) {
+            randomId += characters.charAt(Math.floor(Math.random() * 36));
         }
 
-        history.replaceState({}, '', '/course?id=' + randomId); 
+        history.replaceState({}, '', '/course?id=' + randomId);
     }
 });

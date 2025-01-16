@@ -7,7 +7,6 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="/assets/css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <script src="/baremux/index.js"></script>
@@ -17,8 +16,21 @@
     <script src="/assets/js/load.js" defer></script>
     <script src="/assets/js/eruda.js" defer></script>
     <script src="/assets/js/register.js" defer></script>
+    <script src="/assets/js/settings.js" defer></script>
     <script src="/assets/js/index.js" defer></script>
     <div class="light"></div>
+    <div class="top-bar">
+        <a href="#" id="settings-icon"><i class="fas fa-gear"></i></a>
+    </div>    
+    <div id="settings-menu" class="settings-menu">
+        <h2>Settings</h2>
+        <label for="transport-select">Choose your Transport:</label>
+        <select id="transport-select">
+          <option value="epoxy">Epoxy</option>
+          <option value="libcurl">Libcurl</option>
+        </select>
+        <button id="close-settings">Close</button>
+      </div>
     <div class="navbar">
         <ul class="nav-links">
             <li>

@@ -1,6 +1,7 @@
 import { createBareServer } from '@tomphttp/bare-server-node';
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
+import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import express from "express";
 import { createServer } from "node:http";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
@@ -16,6 +17,7 @@ const bare = createBareServer("/@/");
 const app = express();
 app.use("/baremux/", express.static(baremuxPath));
 app.use("/epoxy/", express.static(epoxyPath));
+app.use('/libcurl/', express.static(libcurlPath));
 app.use(express.static(publicPath));
 app.use("/uv/", express.static(uvPath));
 
