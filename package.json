@@ -1,7 +1,7 @@
 {
     "name": "waves",
     "version": "1.0.0",
-    "description": "a sleek and minimalist Web Proxy.",
+    "description": "A sleek and minimalist Web Proxy.",
     "type": "module",
     "engines": {
         "npm": ">=7.0.0",
@@ -10,7 +10,7 @@
     "scripts": {
         "start": "node index.mjs"
     },
-    "author": "",
+    "author": "xojw",
     "dependencies": {
         "@mercuryworkshop/bare-mux": "^2.1.7",
         "@mercuryworkshop/epoxy-transport": "^2.1.27",
