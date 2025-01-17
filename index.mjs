@@ -10,6 +10,7 @@ import wisp from "wisp-server-node";
 import { hostname } from "node:os";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
+import routes from './src/routes.js';
 
 const publicPath = fileURLToPath(new URL("./public/", import.meta.url));
 
@@ -20,12 +21,8 @@ app.use("/epoxy/", express.static(epoxyPath));
 app.use('/libcurl/', express.static(libcurlPath));
 app.use(express.static(publicPath));
 app.use("/uv/", express.static(uvPath));
+app.use('/', routes);
 
-app.use((req, res) => {
-  console.log("404 error for:", req.url);
-  res.status(404);
-  res.sendFile(join(publicPath, "404.html"));
-});
 
 let port = parseInt(process.env.PORT || "");
 
