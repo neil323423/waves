@@ -24,7 +24,7 @@ A sleek and minimalist Web Proxy.
 
 ## Usage:
 
-You *cannot* deploy Waves on any static hosting services.
+You **cannot** deploy Waves on any static hosting services.
 
 
 
