@@ -3,7 +3,7 @@ A sleek and minimalist Web Proxy.
 
 
 ## Version:
-Waves is currently in beta, so you may encounter occasional bugs. New features and improvements are on the way—stay tuned!
+Waves is still in its early stages, so you might encounter a few occasional bugs. I am actively working on new features and improvements—stay tuned!
 
 ## Supported Sites:
 
