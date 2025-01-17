@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
   const SW = "/uv/sw.js";
-  const wispUrl = `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/w/`;
-  let currentTransport = "epoxy";
+  const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
+  let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
+  const wispUrl = currentWispUrl;
   const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
   async function registerSW() {
@@ -13,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       console.log("%c[✔]%c Initializing connection to WebSocket server at: " + wispUrl, "color: green; font-weight: bold;", "color: inherit;");
 
-      const savedTransport = localStorage.getItem('transport') || currentTransport;
+      const savedTransport = localStorage.getItem('transport') || "epoxy";
       switchTransport(savedTransport);
       updateTransportUI(savedTransport);
 
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log("%c[✔]%c Registering Service Worker...", "color: green; font-weight: bold;", "color: inherit;");
       await navigator.serviceWorker.register("/sw.js", { scope: '/$/' });
       console.log("%c[✔]%c Service Worker registered successfully.", "color: green; font-weight: bold;", "color: inherit;");
+
     } catch (error) {
       console.error("%c[❌]%c An error occurred during Service Worker registration: " + error, "color: red; font-weight: bold;", "color: inherit;");
     }
@@ -35,22 +37,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function changeTransport(newTransport) {
-    currentTransport = newTransport;
-    console.log(`%c[✔]%c Switched to ${currentTransport} transport.`, "color: green; font-weight: bold;", "color: inherit;");
-    localStorage.setItem('transport', currentTransport);
-    switchTransport(currentTransport);
-    updateTransportUI(currentTransport);
+  async function changeTransport(newTransport) {
+    try {
+      await new Promise((resolve) => {
+        localStorage.setItem('transport', newTransport, resolve);
+      });
+      switchTransport(newTransport);
+      updateTransportUI(newTransport);
+    } catch (error) {
+      console.error(`%c[❌]%c An error occurred while storing transport preference: ${error}`, "color: red; font-weight: bold;", "color: inherit;");
+    }
   }
 
   function updateTransportUI(transport) {
-    const transportSelect = document.getElementById("transport-select");
-    transportSelect.value = transport;
+    const transportSelected = document.querySelector(".transport-selected");
+    transportSelected.textContent = transport.charAt(0).toUpperCase() + transport.slice(1); 
   }
 
-  const transportSelect = document.getElementById("transport-select");
-  transportSelect.addEventListener("change", (event) => {
-    changeTransport(event.target.value);
+  document.addEventListener('wispUrlChanged', function (e) {
+    currentWispUrl = e.detail;
+    switchTransport(localStorage.getItem('transport') || "epoxy");
   });
 
   registerSW();

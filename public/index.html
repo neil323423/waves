@@ -24,13 +24,26 @@
     </div>    
     <div id="settings-menu" class="settings-menu">
         <h2>Settings</h2>
-        <label for="transport-select">Choose your Transport:</label>
-        <select id="transport-select">
-          <option value="epoxy">Epoxy</option>
-          <option value="libcurl">Libcurl</option>
-        </select>
-        <button id="close-settings">Close</button>
-      </div>
+    
+        <label for="transport-selector">Transport</label>
+        <p>Transport is how the proxy will send information.</p>
+        <div class="transport-selector">
+            
+            <div class="transport-selected">Epoxy</div>
+            <div class="transport-options">
+                <div>Epoxy</div>
+                <div>Libcurl</div>
+            </div>  
+        </div>
+        <label for="wisp-server">Wisp Server</label>
+        <p>Enter a different Wisp Server to connect to.</p>
+        <p>The server URL must begin with <code>ws(s)://</code> and end with a <code>/</code>.</p>
+        <input type="text" id="wisp-server" placeholder="Wisp Server URL Here...">
+        <button id="save-wisp-url">Save</button>
+        <button id="close-settings">
+            <i class="fas fa-times"></i> 
+        </button>        
+    </div>
     <div class="navbar">
         <ul class="nav-links">
             <li>
