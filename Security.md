@@ -14,4 +14,4 @@ The following versions of this project that are currently supported:
 
 ## Support
 
-If you are currently problem with Waves feel free to send me a message on my [Gmail](dopphucs1456@gmail.com), i'll try to answer you as soon as possile.
+If you are having a problem with Waves feel free to send me a message on my [Gmail](dopphucs1456@gmail.com), i'll try to answer you as soon as possile.
