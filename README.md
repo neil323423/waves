@@ -22,6 +22,12 @@ A sleek and minimalist Web Proxy.
 - Search Bar
 - And a lot more features coming soon...
 
+## Usage:
+
+You *cannot* deploy Waves on any static hosting services.
+
+
+
 ## Deploy Waves Locally:
 
 1. Go into your local machine terminal
