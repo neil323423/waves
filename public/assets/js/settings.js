@@ -34,21 +34,12 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
       console.log("%c[❌]%c Invalid WISP URL. Please enter a valid one.", "color: red; font-weight: bold;", "color: inherit;");
       
-      wispInput.value = wispInput.value || defaultWispUrl;
-      currentWispUrl = wispInput.value; 
+      // Revert to default URL and update the input box
+      wispInput.value = defaultWispUrl;
+      currentWispUrl = defaultWispUrl; 
 
       showToast('error', "Invalid URL. Reverting to default...");
     }
-  }
-
-  function showErrorMessage(message) {
-    const errorMsg = document.createElement('p');
-    errorMsg.className = 'error-message';
-    errorMsg.textContent = message;
-    wispInput.parentElement.appendChild(errorMsg);
-    setTimeout(() => {
-      errorMsg.remove();
-    }, 3000); 
   }
 
   function showToast(type, message) {
@@ -136,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const event = new Event('newTransport', { detail: selectedValue.toLowerCase() });
       document.dispatchEvent(event);
 
-      showToast('success', `Transport option changed to ${selectedValue}`);
+      showToast('success', `Transport successfully changed to ${selectedValue}`);
     });
   }
 
