@@ -18,9 +18,10 @@
     <script src="/assets/js/register.js" defer></script>
     <script src="/assets/js/settings.js" defer></script>
     <script src="/assets/js/index.js" defer></script>
-    <div class="stars" id="stars"></div>
     <div class="light"></div>
     <div class="top-bar">
+        <a href="#" id="games-icon"><i class="fas fa-gamepad"></i></a>
+        <a href="#" id="chat-icon"><i class="fas fa-comments"></i></a>
         <a href="#" id="settings-icon"><i class="fas fa-gear"></i></a>
     </div>    
     <div id="settings-menu" class="settings-menu">
@@ -70,7 +71,7 @@
                 <a id="fullscreenIcon" href="#"><img src="/assets/images/icons/fullscreen.png" alt="Full-Screen"></a>
             </li>
             <li>
-                <a href="/index.html"><img src="/assets/images/icons/out.png" alt="X out"></a>
+                <a href="/"><img src="/assets/images/icons/out.png" alt="X out"></a>
             </li>
         </ul>
     </div>
@@ -86,34 +87,10 @@
         <div class="search-title"><span></span><span class="highlight">Waves.</span></div>
         <div class="search-bar">
             <input class="waves" type="text" id="searchInput" placeholder="Browse Waves freely..." autocomplete="off">
-        </div>
+            <ul class="suggestion-box" id="suggestionBox"></ul>
+        </div>        
     </div>
     <iframe class="iframe"></iframe>
     <div id="erudaLoadingScreen" style="display: none;">Eruda is loading...</div> 
-    <script>
-          const starsContainer = document.getElementById('stars');
-  const numberOfStars = 30;
-
-  function createStars() {
-    for (let i = 0; i < numberOfStars; i++) {
-      const star = document.createElement('div');
-      star.classList.add('star');
-      
-      const x = Math.random() * window.innerWidth;
-      const y = Math.random() * window.innerHeight;
-      
-      const delay = Math.random() * 1 + 's';
-
-      star.style.left = `${x}px`;
-      star.style.top = `${y}px`;
-      star.style.animationDelay = delay; 
-      
-      starsContainer.appendChild(star);
-    }
-  }
-
-  window.onload = createStars;
-
-    </script>
 </body>
 </html>

@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput1 = document.getElementById("searchInput");
     const searchInput2 = document.getElementById("searchInputt");
     const loadingScreen = document.querySelector(".loading-screen");
+    const gamesIcon = document.getElementById("games-icon"); 
+    const chatIcon = document.getElementById("chat-icon");   
 
     navBar.style.display = "none";
     iframe.style.display = "none";
@@ -18,6 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleSearch(input.value);
             }
         });
+    });
+
+    gamesIcon.addEventListener("click", (event) => {
+        event.preventDefault(); 
+        handleSearch("https://shuttle.lol/");
+    });
+
+    chatIcon.addEventListener("click", (event) => {
+        event.preventDefault();
+        handleSearch("https://waves-chat.pages.dev/");
     });
 
     async function handleSearch(query) {
