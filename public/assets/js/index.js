@@ -15,9 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return;  
     }
 
-    const isNavbarToggled = localStorage.getItem('navbarToggled') === 'true';
-
     navBar.style.display = "none";
+
+    const isNavbarToggled = localStorage.getItem('navbarToggled') === 'true';
+    if (isNavbarToggled) {
+        navbarToggle.checked = true;  
+    } else {
+        navbarToggle.checked = false;  
+    }
+
+    navbarToggle.addEventListener("change", () => {
+        const isToggled = navbarToggle.checked;
+        localStorage.setItem('navbarToggled', isToggled);
+    });
+
     iframe.style.display = "none";
     loadingScreen.style.display = "none";
 
@@ -31,18 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     gamesIcon.addEventListener("click", (event) => {
-        event.preventDefault();
+        event.preventDefault(); 
         handleSearch("https://shuttle.lol/");
     });
 
     chatIcon.addEventListener("click", (event) => {
         event.preventDefault();
         handleSearch("https://waves-chat.pages.dev/");
-    });
-
-    navbarToggle.addEventListener("change", () => {
-        const isToggled = navbarToggle.checked;
-        localStorage.setItem('navbarToggled', isToggled);
     });
 
     async function handleSearch(query) {
