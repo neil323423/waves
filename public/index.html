@@ -6,6 +6,7 @@
     <title>Waves</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="/assets/css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 <body>
@@ -17,7 +18,10 @@
     <script src="/assets/js/eruda.js" defer></script>
     <script src="/assets/js/register.js" defer></script>
     <script src="/assets/js/settings.js" defer></script>
+    <script src="/assets/js/cursor-trail.js" defer></script>
     <script src="/assets/js/index.js" defer></script>
+    <div class="anime-container">
+    </div>
     <div class="light"></div>
     <div class="top-bar">
         <a href="#" id="games-icon"><i class="fas fa-gamepad"></i></a>
@@ -92,7 +96,7 @@
     <div class="search-container">
         <div class="search-title"><span></span><span class="highlight">Waves.</span></div>
         <div class="search-bar">
-            <input class="waves" type="text" id="searchInput" placeholder="Browse Waves freely..." autocomplete="off">
+            <input class="waves" type="text" id="searchInput" placeholder="Just search, let us handle the stealth work." autocomplete="off">
             <ul class="suggestion-box" id="suggestionBox"></ul>
         </div>        
     </div>

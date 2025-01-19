@@ -12,11 +12,10 @@ body {
     z-index: 1;
 }
 .top-bar {
-    position: fixed;
-    top: 20px;
-    left: 50%;
     transform: translateX(-50%);
-    width: auto;
+    width: 150px;
+    margin-top: 0.5%;
+    margin-left: 50%;
     background-color: #0000009a;
     color: #fff;
     padding: 10px 10px;
@@ -319,7 +318,7 @@ body {
     position: absolute;
     transform: translate(-50%, -35%);
     left: 50%;
-    top: -78vh;
+    top: -30vh;
 }
 ::-webkit-scrollbar {
     width: 5px;
@@ -434,7 +433,7 @@ body {
 }
 .search-container {
     position: relative;
-    margin-top: 24%;
+    margin-top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -658,3 +657,9 @@ body {
 .toast-close:hover {
     color: #f44336;
 }
+.glow-point {
+    position: absolute;
+    box-shadow: 0rem 0rem 1.2rem 0.6rem #443ab6;
+    pointer-events: none;
+    z-index: -1;
+  }

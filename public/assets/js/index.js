@@ -11,24 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbarToggle = document.getElementById("navbar-toggle");
 
     const savedNavbarState = localStorage.getItem('navbarToggled');
-    
-    if (savedNavbarState === null) {
-        navbarToggle.checked = true;
-    } else {
-        navbarToggle.checked = savedNavbarState === 'true';
-    }
+    navbarToggle.checked = savedNavbarState === null ? true : savedNavbarState === 'true';
 
     navBar.style.display = navbarToggle.checked ? "block" : "none";
 
     navbarToggle.addEventListener("change", () => {
         const isToggled = navbarToggle.checked;
         localStorage.setItem('navbarToggled', isToggled);
-        navBar.style.display = isToggled ? "block" : "none"; 
+        handleNavbarVisibility(isToggled);
     });
 
     iframe.style.display = "none";
     loadingScreen.style.display = "none";
-
     navBar.style.display = "none";
 
     const searchInputs = [searchInput1, searchInput2];
@@ -41,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     gamesIcon.addEventListener("click", (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         handleSearch("https://shuttle.lol/");
     });
 
@@ -68,18 +62,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             generateRandomId();
         };
+
+        iframe.onerror = () => {
+            hideLoadingScreen();
+            alert('Failed to load the content.');
+        };
     }
 
     function generateSearchUrl(query) {
         try {
-            return new URL(query).toString();
+            const url = new URL(query);
+            return url.toString();
         } catch {
             try {
                 const url = new URL(`https://${query}`);
                 if (url.hostname.includes(".")) return url.toString();
             } catch {}
         }
-
         return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
     }
 
@@ -104,11 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getUrl(url) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(__uv$config.prefix + __uv$config.encodeUrl(url));
-            }, 0);
-        });
+        return Promise.resolve(__uv$config.prefix + __uv$config.encodeUrl(url));
     }
 
     function generateRandomId() {
@@ -120,5 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         history.replaceState({}, '', '/course?id=' + randomId);
+    }
+
+    function handleNavbarVisibility(isVisible) {
+        if (isVisible) {
+            navBar.style.display = "none";
+        }
     }
 });
