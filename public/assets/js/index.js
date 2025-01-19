@@ -10,27 +10,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatIcon = document.getElementById("chat-icon");
     const navbarToggle = document.getElementById("navbar-toggle");
 
-    if (!navbarToggle) {
-        console.error("Navbar toggle checkbox not found.");
-        return;  
-    }
-
-    navBar.style.display = "none";
-
-    const isNavbarToggled = localStorage.getItem('navbarToggled') === 'true';
-    if (isNavbarToggled) {
-        navbarToggle.checked = true;  
+    const savedNavbarState = localStorage.getItem('navbarToggled');
+    
+    if (savedNavbarState === null) {
+        navbarToggle.checked = true;
     } else {
-        navbarToggle.checked = false;  
+        navbarToggle.checked = savedNavbarState === 'true';
     }
+
+    navBar.style.display = navbarToggle.checked ? "block" : "none";
 
     navbarToggle.addEventListener("change", () => {
         const isToggled = navbarToggle.checked;
         localStorage.setItem('navbarToggled', isToggled);
+        navBar.style.display = isToggled ? "block" : "none"; 
     });
 
     iframe.style.display = "none";
     loadingScreen.style.display = "none";
+
+    navBar.style.display = "none";
 
     const searchInputs = [searchInput1, searchInput2];
     searchInputs.forEach((input) => {
