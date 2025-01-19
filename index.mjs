@@ -5,8 +5,8 @@ import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import express from "express";
 import { createServer } from "node:http";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
-import { join } from "node:path";
 import wisp from "wisp-server-node";
+import compression from 'compression';
 import { hostname } from "node:os";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
@@ -23,6 +23,16 @@ app.use(express.static(publicPath));
 app.use("/uv/", express.static(uvPath));
 app.use('/', routes);
 
+app.use(
+  compression({
+    level: 1, 
+    threshold: 0, 
+    filter: () => true,
+    memLevel: 1,
+    strategy: 1, 
+    windowBits: 9, 
+  })
+);
 
 let port = parseInt(process.env.PORT || "");
 
