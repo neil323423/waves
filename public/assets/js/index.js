@@ -6,8 +6,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput1 = document.getElementById("searchInput");
     const searchInput2 = document.getElementById("searchInputt");
     const loadingScreen = document.querySelector(".loading-screen");
-    const gamesIcon = document.getElementById("games-icon"); 
-    const chatIcon = document.getElementById("chat-icon");   
+    const gamesIcon = document.getElementById("games-icon");
+    const chatIcon = document.getElementById("chat-icon");
+    const navbarToggle = document.getElementById("navbar-toggle");
+
+    if (!navbarToggle) {
+        console.error("Navbar toggle checkbox not found.");
+        return;  
+    }
+
+    const isNavbarToggled = localStorage.getItem('navbarToggled') === 'true';
 
     navBar.style.display = "none";
     iframe.style.display = "none";
@@ -23,13 +31,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     gamesIcon.addEventListener("click", (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         handleSearch("https://shuttle.lol/");
     });
 
     chatIcon.addEventListener("click", (event) => {
         event.preventDefault();
         handleSearch("https://waves-chat.pages.dev/");
+    });
+
+    navbarToggle.addEventListener("change", () => {
+        const isToggled = navbarToggle.checked;
+        localStorage.setItem('navbarToggled', isToggled);
     });
 
     async function handleSearch(query) {
@@ -45,7 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         iframe.onload = () => {
             hideLoadingScreen();
-            navBar.style.display = "block";
+            if (navbarToggle.checked) {
+                navBar.style.display = "block"; 
+            }
             generateRandomId();
         };
     }
