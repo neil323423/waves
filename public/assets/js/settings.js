@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const transportSelector = document.querySelector('.transport-selector');
   const transportSelected = transportSelector.querySelector('.transport-selected');
   const transportOptions = transportSelector.querySelector('.transport-options');
+  const navbarToggle = document.getElementById('navbar-toggle');
   
   const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
   let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
@@ -26,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (isValidUrl(url)) {
       currentWispUrl = url;
       localStorage.setItem('customWispUrl', url);
-      console.log(`%c[✔]%c WISP URL updated to: ${currentWispUrl}`, "color: green; font-weight: bold;", "color: inherit;");
       document.dispatchEvent(new CustomEvent('wispUrlChanged', { detail: currentWispUrl }));
       wispInput.value = currentWispUrl;
 
@@ -130,6 +130,14 @@ document.addEventListener('DOMContentLoaded', function () {
       showToast('success', `Transport successfully changed to ${selectedValue}`);
     });
   }
+  
+  navbarToggle.addEventListener('change', function() {
+    if (this.checked) {
+      showToast('success', 'Navigation Bar is now enabled.');
+    } else {
+      showToast('error', 'Navigation Bar is now disabled.');
+    }
+  });
 
   document.addEventListener('click', function(e) {
     if (!transportSelector.contains(e.target)) {
