@@ -6,11 +6,11 @@ The following versions of this project that are currently supported:
 
 | Version  | Supported          |
 |----------|--------------------|
-| 1.0.0    | :white_check_mark: |
+| 1.1.2    | :white_check_mark: |
 
 ## Best Practices
 
-- Always use the latest supported version for Waves.
+- Always use the latest supported version of Waves.
 
 ## Support
 
