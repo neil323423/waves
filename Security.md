@@ -6,7 +6,7 @@ The following versions of this project that are currently supported:
 
 | Version  | Supported          |
 |----------|--------------------|
-| 1.1.2    | :white_check_mark: |
+| 1.1.7    | :white_check_mark: |
 
 ## Best Practices
 
