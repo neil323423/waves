@@ -20,8 +20,6 @@
     <script src="/assets/js/settings.js" defer></script>
     <script src="/assets/js/cursor-trail.js" defer></script>
     <script src="/assets/js/index.js" defer></script>
-    <div class="anime-container">
-    </div>
     <div class="light"></div>
     <div class="top-bar">
         <a href="#" id="games-icon"><i class="fas fa-gamepad"></i></a>
@@ -29,32 +27,50 @@
         <a href="#" id="settings-icon"><i class="fas fa-gear"></i></a>
     </div>    
     <div id="settings-menu" class="settings-menu">
-        <h2>Settings</h2>
-    
-        <label for="transport-selector">Transport</label>
-        <p>Transport is how the proxy will send information.</p>
-        <div class="transport-selector">
-            <div class="transport-selected">Epoxy</div>
-            <div class="transport-options">
-                <div>Epoxy</div>
-                <div>Libcurl</div>
-            </div>  
+        <h2>Settings</h2>  
+        <div class="settings-tabs">
+            <button class="tab-button active" id="proxy-tab">Proxy</button>
+            <button class="tab-button" id="appearance-tab">Appearance</button>
         </div>
-        
-        <label for="wisp-server">Wisp Server</label>
-        <p>Enter a different Wisp Server to connect to.</p>
-        <p>The server URL must begin with <code>ws(s)://</code> and end with a <code>/</code>.</p>
-        <input type="text" id="wisp-server" placeholder="Wisp Server URL Here...">
-        <button id="save-wisp-url">Save</button>   
 
-        <label for="navbar-toggle">Navigation Bar</label>
-        <p>Keep this on for the NavBar when searching (Recommended).</p>
-        <input type="checkbox" id="navbar-toggle">
+        <div id="proxy-content" class="tab-content">
+            <label for="transport-selector">Transport</label>
+            <p>Transport is how the proxy will send information.</p>
+            <div class="transport-selector">
+                <div class="transport-selected">Epoxy</div>
+                <div class="transport-options">
+                    <div>Epoxy</div>
+                    <div>Libcurl</div>
+                </div>
+            </div>
+
+            <label for="wisp-server">Wisp Server</label>
+            <p>Enter a different Wisp Server to connect to.</p>
+            <p>The server URL must begin with <code>ws(s)://</code> and end with a <code>/</code>.</p>
+            <input type="text" id="wisp-server" placeholder="Wisp Server URL Here..." autocomplete="off">
+            <button id="save-wisp-url">Save</button>
+        </div>
+
+        <div id="appearance-content" class="tab-content">
+            <label for="navbar-toggle">Navigation Bar</label>
+            <p>Keep this on for the NavBar when searching (Recommended).</p>
+            <input type="checkbox" id="navbar-toggle">
+
+        <label for="themes-selector">Themes</label>
+        <p>Choose your preferred theme.</p>
+        <div class="themes-selector">
+            <div class="themes-selected">Default</div>
+            <div class="themes-options">
+                <div>Default</div>
+                <div>Sakura</div>
+            </div>
+        </div>
+        </div>
 
         <button id="close-settings">
-            <i class="fas fa-times"></i> 
-        </button>        
-    </div>
+            <i class="fas fa-times"></i>
+        </button>
+    </div>    
     
     <div class="navbar">
         <ul class="nav-links">
@@ -97,7 +113,6 @@
         <div class="search-title"><span></span><span class="highlight">Waves.</span></div>
         <div class="search-bar">
             <input class="waves" type="text" id="searchInput" placeholder="Just search, let us handle the stealth work." autocomplete="off">
-            <ul class="suggestion-box" id="suggestionBox"></ul>
         </div>        
     </div>
     <iframe class="iframe"></iframe>

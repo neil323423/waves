@@ -26,14 +26,21 @@ const determinePointQuantity = distance => Math.max(
 const appendElement = element => document.body.appendChild(element);
 const removeElement = (element, delay) => setTimeout(() => document.body.removeChild(element), delay);
 
-const createGlowPoint = position => {
+const createGlowPoint = (position) => {
+  // Retrieve the saved glow style (box-shadow) from localStorage
+  const savedGlowStyle = localStorage.getItem('glowPointStyle') || '0rem 0rem 1.2rem 0.6rem #443ab6'; // Default glow style
+
   const glow = document.createElement("div");
   glow.className = "glow-point";
   glow.style.left = px(position.x);
   glow.style.top = px(position.y);
   glow.style.transition = `opacity ${config.fadeOutDuration}ms ease`;  
 
+  // Apply the box-shadow from the saved glow style
+  glow.style.boxShadow = savedGlowStyle;
+
   appendElement(glow);
+
   setTimeout(() => glow.style.opacity = 0, 0); 
   removeElement(glow, config.fadeOutDuration); 
 };
