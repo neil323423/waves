@@ -4,8 +4,8 @@
     "description": "A sleek and minimalist Web Proxy.",
     "type": "module",
     "engines": {
-        "npm": ">=7.0.0",
-        "node": ">=16.0.0"
+        "npm": ">=17.6.0",
+        "node": ">=21.0.0"
     },
     "scripts": {
         "start": "node index.mjs"
