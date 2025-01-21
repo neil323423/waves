@@ -5,7 +5,7 @@ const last = {
 };
 
 const config = {
-  glowDuration: 75,
+  glowDuration: 45,
   maximumGlowPointSpacing: 10,
   fadeOutDuration: 1000,   
 };
@@ -27,8 +27,7 @@ const appendElement = element => document.body.appendChild(element);
 const removeElement = (element, delay) => setTimeout(() => document.body.removeChild(element), delay);
 
 const createGlowPoint = (position) => {
-  // Retrieve the saved glow style (box-shadow) from localStorage
-  const savedGlowStyle = localStorage.getItem('glowPointStyle') || '0rem 0rem 1.2rem 0.6rem #443ab6'; // Default glow style
+  const savedGlowStyle = localStorage.getItem('glowPointStyle') || '0rem 0rem 1.2rem 0.6rem #443ab6'; 
 
   const glow = document.createElement("div");
   glow.className = "glow-point";
@@ -36,7 +35,6 @@ const createGlowPoint = (position) => {
   glow.style.top = px(position.y);
   glow.style.transition = `opacity ${config.fadeOutDuration}ms ease`;  
 
-  // Apply the box-shadow from the saved glow style
   glow.style.boxShadow = savedGlowStyle;
 
   appendElement(glow);
