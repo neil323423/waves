@@ -26,11 +26,11 @@ info "Step 1: Updating package lists..."
 sudo apt update -y > /dev/null 2>&1
 separator
 
-info "Step 2: Installing Node.js..."
-sudo apt install -y nodejs > /dev/null 2>&1
+info "Step 2: Installing Node.js and npm..."
+sudo apt install -y nodejs npm > /dev/null 2>&1
 separator
 
-info "Step 3: Installing necessary dependencies and packages for waves..."
+info "Step 3: Installing necessary dependencies and packages for Waves..."
 npm install > /dev/null 2>&1
 sudo apt install -y certbot python3-certbot-nginx > /dev/null 2>&1
 separator
