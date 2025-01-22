@@ -41,12 +41,18 @@ document.addEventListener('DOMContentLoaded', function () {
       };
 
       ws.onerror = function (error) {
-        console.error("%c[❌]%c WebSocket error: " + error, "color: red; font-weight: bold;", "color: red;");
-        reject(new Error("Failed to establish WebSocket connection"));
+        const errorMessage = error.message || "Unknown error";
+        console.error(`%c[❌]%c WebSocket error: ${errorMessage}`, "color: red; font-weight: bold;", "color: red;");
+        reject(new Error(`Failed to establish WebSocket connection: ${errorMessage}`));
       };
 
-      ws.onclose = function () {
-        console.warn("%c[⚠️]%c WebSocket connection closed.", "color: orange; font-weight: bold;", "color: orange;");
+      ws.onclose = function (event) {
+        if (event.code !== 1000) { 
+          const reason = event.reason || "No reason provided";
+          console.warn(`%c[⚠️]%c WebSocket connection closed. Reason: ${reason}`, "color: orange; font-weight: bold;", "color: orange;");
+        } else {
+          console.warn("%c[⚠️]%c WebSocket connection closed normally.", "color: orange; font-weight: bold;", "color: orange;");
+        }
       };
     });
   }
