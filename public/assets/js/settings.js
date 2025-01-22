@@ -159,27 +159,20 @@ document.addEventListener('DOMContentLoaded', function () {
       document.dispatchEvent(new CustomEvent('wispUrlChanged', { detail: currentWispUrl }));
       wispInput.value = currentWispUrl;
       showToast('success', `WISP URL successfully updated to: ${currentWispUrl}`);
+      location.reload();
     } else {
       console.log("%c[❌]%c Invalid WISP URL. Please enter a valid one.", "color: red; font-weight: bold;", "color: inherit;");
       currentWispUrl = defaultWispUrl;
       localStorage.setItem('customWispUrl', defaultWispUrl);
       wispInput.value = defaultWispUrl;
       showToast('error', "Invalid URL. Reverting back to default...");
+      location.reload();
     }
   }
 
   saveButton.addEventListener('click', () => {
     const customUrl = wispInput.value.trim();
     updateWispServerUrl(customUrl);
-  });
-
-  transportSelector.addEventListener("click", (event) => {
-    const transportOption = event.target.textContent.toLowerCase();
-    if (transportOption === "epoxy" || transportOption === "libcurl") {
-      showToast('success', `Transport option set to ${transportOption}`);
-    } else {
-      showToast('error', 'Unknown transport option selected');
-    }
   });
 
   settingsIcon.addEventListener('click', (event) => {
@@ -225,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
       document.dispatchEvent(event);
 
       showToast('success', `Transport successfully changed to ${selectedValue}`);
+      location.reload();
     });
   }
 
