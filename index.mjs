@@ -43,9 +43,7 @@ if (isNaN(port)) {
 const server = createServer();
 
 server.on("request", (req, res) => {
-  if (bare.shouldRoute(req)) {
-    bare.routeRequest(req, res);
-  } else if (req.url === "/w/") {
+  if (req.url === "/w/") {
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end("hi");
   } else {
@@ -53,10 +51,8 @@ server.on("request", (req, res) => {
   }
 });
 
-server.on("upgrade", (req, socket, head) => {
-  if (bare.shouldRoute(req)) {
-    bare.routeUpgrade(req, socket, head);
-  } else if (req.url.endsWith("/w/")) {
+server.on('upgrade', (req, socket, head) => {
+  if (req.url.endsWith('/w/')) {
     wisp.routeRequest(req, socket, head);
   } else {
     socket.end();
