@@ -126,7 +126,8 @@ EOF
   done
 }
 
-nohup bash -c "$(declare -f monitor_domains); monitor_domains" > $MONITOR_LOG 2>&1 &
+# Run monitor_domains directly without declare -f
+nohup bash -c "monitor_domains" > $MONITOR_LOG 2>&1 &
 
 info "Starting sample server with PM2..."
 pm2 start index.mjs > /dev/null 2>&1
