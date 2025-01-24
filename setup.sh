@@ -30,20 +30,19 @@ highlight "╚███╔███╔╝██║  ██║ ╚████╔
 highlight " ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝"                                         
 
 separator
-info "Starting the setup process..."
+info "Starting domain and SSL setup..."
 separator
 
-info "Updating package lists and installing required dependencies..."
 sudo apt update -y > /dev/null 2>&1
 sudo apt install -y nodejs npm certbot python3-certbot-nginx nginx > /dev/null 2>&1
 separator
 
-info "Installing PM2 globally..."
+info "Installing PM2..."
 sudo npm install -g pm2 > /dev/null 2>&1
 pm2 startup > /dev/null 2>&1
 separator
 
-info "Monitoring for domains pointing to this server's IP..."
+info "Monitoring for domains..."
 separator
 
 VPS_IP=$(curl -s ifconfig.me)
@@ -56,11 +55,11 @@ monitor_domains() {
     if [ -n "$DOMAIN" ]; then
       info "Detected domain: $DOMAIN"
       
-      info "Requesting SSL certificate for $DOMAIN..."
+      info "Requesting SSL for $DOMAIN..."
       sudo certbot --nginx -d $DOMAIN -d www.$DOMAIN --agree-tos --non-interactive --email admin@$DOMAIN > /dev/null 2>&1
       
       if [ $? -eq 0 ]; then
-        success "SSL configuration completed for $DOMAIN!"
+        success "SSL setup for $DOMAIN!"
         separator
 
         info "Setting up Nginx for $DOMAIN..."
@@ -69,7 +68,7 @@ monitor_domains() {
         if [ ! -f "$DhparamFile" ]; then
           info "Generating Diffie-Hellman parameters..."
           sudo openssl dhparam -out $DhparamFile 2048 > /dev/null 2>&1
-          success "Diffie-Hellman parameters generated."
+          success "Diffie-Hellman parameters created."
         fi
 
         cat <<EOF | sudo tee /etc/nginx/sites-available/$DOMAIN > /dev/null
@@ -98,7 +97,7 @@ server {
     add_header X-XSS-Protection "1; mode=block" always;
 
     location / {
-        proxy_pass http://localhost:3000; # Change this to your app's port
+        proxy_pass http://localhost:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -111,28 +110,28 @@ EOF
         sudo nginx -t > /dev/null 2>&1
 
         if [ $? -eq 0 ]; then
-          success "Nginx configuration for $DOMAIN is valid. Reloading Nginx..."
+          success "Nginx setup for $DOMAIN is valid. Reloading..."
           sudo systemctl reload nginx
-          success "Nginx reloaded successfully for $DOMAIN."
+          success "Nginx reloaded."
         else
-          error "Failed to validate Nginx configuration for $DOMAIN."
+          error "Nginx config for $DOMAIN invalid."
         fi
       else
-        error "Failed to obtain SSL certificate for $DOMAIN. Check DNS settings."
+        error "Failed SSL for $DOMAIN."
       fi
     else
-      info "No new domains detected. Retrying in 60 seconds..."
+      info "No domain found. Retrying..."
     fi
-    sleep 60
+    sleep 10
   done
 }
 
 nohup bash -c "$(declare -f monitor_domains); monitor_domains" > $MONITOR_LOG 2>&1 &
 
-info "Setting up a sample server with PM2..."
+info "Starting sample server with PM2..."
 pm2 start index.mjs > /dev/null 2>&1
 separator
 
-success "🎉 Automated domain and SSL setup is complete! Add domains by pointing them to $VPS_IP."
-success "The script will monitor for new domains 24/7."
+success "🎉 Setup complete! Add domains pointing to $VPS_IP."
+success "Monitoring for new domains 24/7."
 separator
