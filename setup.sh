@@ -17,11 +17,7 @@ highlight() {
 }
 
 separator() {
-  echo -e "\033[1;37m══════════════════════════════════════════════════════\033[0m"
-}
-
-bold_separator() {
-  echo -e "\033[1;33m══════════════════════════════════════════════════════\033[0m"
+  echo -e "\033[1;37m---------------------------------------------\033[0m"
 }
 
 clear
@@ -31,11 +27,11 @@ highlight "██║    ██║██╔══██╗██║   ██║�
 highlight "██║ █╗ ██║███████║██║   ██║█████╗  ███████╗"
 highlight "██║███╗██║██╔══██║╚██╗ ██╔╝██╔══╝  ╚════██║"
 highlight "╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗███████║██╗"
-highlight " ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝"  
+highlight " ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝"                                         
 
-bold_separator
+separator
 info "Starting the setup process..."
-bold_separator
+separator
 
 info "Updating package lists..."
 sudo apt update -y > /dev/null 2>&1
@@ -45,12 +41,9 @@ info "Installing Node.js and npm..."
 sudo apt install -y nodejs npm > /dev/null 2>&1
 separator
 
-info "Installing necessary dependencies for Waves..."
+info "Installing necessary dependencies and packages for Waves..."
 npm install > /dev/null 2>&1
-separator
-
-info "Installing acme.sh for SSL certificate management..."
-curl https://get.acme.sh | sh
+sudo apt install -y certbot python3-certbot-nginx > /dev/null 2>&1
 separator
 
 info "Please enter your domain or subdomain (e.g., example.com or subdomain.example.com):"
@@ -69,18 +62,17 @@ if [[ ! "$DOMAIN" =~ ^[a-zA-Z0-9.-]+$ ]]; then
 fi
 
 info "Requesting SSL certificate for $DOMAIN..."
-~/.acme.sh/acme.sh --issue -d $DOMAIN --nginx
-
+sudo certbot --nginx -d $DOMAIN
 if [ $? -ne 0 ]; then
   error "Failed to obtain SSL certificate for $DOMAIN. Check DNS settings or try again."
   exit 1
 fi
 separator
 
-success "SSL certificate successfully configured for $DOMAIN!"
+success "SSL configuration completeed for $DOMAIN!"
 separator
 
-info "Configuring Nginx for $DOMAIN..."
+info "Configuring Nginx..."
 NginxConfigFile="/etc/nginx/sites-available/default"
 BackupConfigFile="/etc/nginx/sites-available/default.bak"
 DhparamFile="/etc/ssl/certs/dhparam.pem"
@@ -88,7 +80,7 @@ DhparamFile="/etc/ssl/certs/dhparam.pem"
 sudo cp $NginxConfigFile $BackupConfigFile
 
 if [ ! -f "$DhparamFile" ]; then
-  info "Generating Diffie-Hellman parameters..."
+  info "Diffie-Hellman parameters file not found, generating it..."
   sudo openssl dhparam -out $DhparamFile 2048 > /dev/null 2>&1
   if [ $? -eq 0 ]; then
     success "Diffie-Hellman parameters generated successfully."
@@ -97,7 +89,7 @@ if [ ! -f "$DhparamFile" ]; then
     exit 1
   fi
 else
-  info "Diffie-Hellman parameters file exists."
+  info "Diffie-Hellman parameters file already exists."
 fi
 
 cat <<EOF | sudo tee $NginxConfigFile > /dev/null
@@ -111,8 +103,8 @@ server {
     listen 443 ssl http2;
     server_name $DOMAIN www.$DOMAIN;
 
-    ssl_certificate /root/.acme.sh/$DOMAIN/fullchain.pem;
-    ssl_certificate_key /root/.acme.sh/$DOMAIN/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
 
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:ECDHE-RSA-AES128-GCM-SHA256';
@@ -166,4 +158,4 @@ pm2 start index.mjs > /dev/null 2>&1
 separator
 
 success "🎉 Congratulations! Your setup is complete, and your domain is now live with Waves! 🎉"
-separator
+separator   
