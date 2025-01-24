@@ -69,12 +69,12 @@ if [ $? -ne 0 ]; then
 fi
 separator
 
-success "SSL configuration completeed for $DOMAIN!"
+success "SSL configuration completed for $DOMAIN!"
 separator
 
 info "Configuring Nginx..."
 NginxConfigFile="/etc/nginx/sites-available/default"
-BackupConfigFile="/etc/nginx/sites-available/default.bak"
+BackupConfigFile="/etc/nginx/sites-available/default.bak_$(date +%F_%T)"
 DhparamFile="/etc/ssl/certs/dhparam.pem"
 
 sudo cp $NginxConfigFile $BackupConfigFile
@@ -138,7 +138,7 @@ server {
     }
 EOF
 
-sudo nginx -t > /dev/null 2>&1
+sudo nginx -t
 if [ $? -eq 0 ]; then
   success "Nginx configuration is valid."
 else
@@ -174,8 +174,13 @@ pm2 startup > /dev/null 2>&1
 separator
 
 info "Starting the server with PM2..."
-pm2 start index.mjs > /dev/null 2>&1
+if [ -f "index.mjs" ]; then
+  pm2 start index.mjs > /dev/null 2>&1
+else
+  error "index.mjs not found. Please ensure the file exists before starting the server."
+  exit 1
+fi
 separator
 
 success "🎉 Congratulations! Your setup is complete, and your domain is now live with Waves! 🎉"
-separator   
+separator
