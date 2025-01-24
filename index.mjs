@@ -52,19 +52,11 @@ server.on("request", (req, res) => {
 });
 
 server.on('upgrade', (req, socket, head) => {
-<<<<<<< HEAD
-	if (req.url.endsWith('/w/')) {
-		wisp.routeRequest(req, socket, head);
-	} else {
-		socket.end();
-	}
-=======
   if (req.url.endsWith('/w/')) {
     wisp.routeRequest(req, socket, head);
   } else {
     socket.end();
   }
->>>>>>> c08c63fb8cdefdec034cea36443f19c96b4af5f9
 });
 
 server.on("listening", () => {
