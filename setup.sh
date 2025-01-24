@@ -68,23 +68,32 @@ info "Creating Caddyfile for domain: $DOMAIN..."
 sudo mkdir -p /etc/caddy
 
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
-$DOMAIN {
+{
+    on_demand_tls {
+        interval 2m
+        burst 10
+    }
+}
+
+:443 {
+    tls {
+        on_demand
+    }
     reverse_proxy localhost:3000 {
         transport http {
-            versions h2c  
+            versions h2c
         }
     }
-    encode gzip zstd 
+    encode gzip zstd
 }
 EOF
-separator
 
 info "Testing Caddy configuration..."
 sudo caddy fmt /etc/caddy/Caddyfile > /dev/null 2>&1
 if [ $? -eq 0 ]; then
   success "Caddyfile is valid."
 else
-  error "Caddyfile test failed. Check the configuration and try again."
+  error "Caddyfile test failed. Exiting."
   exit 1
 fi
 
@@ -97,20 +106,6 @@ separator
 info "Installing PM2 globally and configuring it to start on boot..."
 sudo npm install -g pm2 > /dev/null 2>&1
 pm2 startup > /dev/null 2>&1
-separator
-
-info "Cloning your Git repository..."
-read -p "Enter your Git repository URL (e.g., https://github.com/username/repo.git): " GIT_REPO
-APP_DIR="/var/www/app"
-
-if [ ! -d "$APP_DIR" ]; then
-  git clone $GIT_REPO $APP_DIR
-  success "Repository cloned into $APP_DIR."
-else
-  info "Repository already exists. Pulling latest changes..."
-  cd $APP_DIR && git reset --hard && git pull
-  success "Pulled the latest changes."
-fi
 separator
 
 info "Installing dependencies for your app..."
