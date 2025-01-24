@@ -30,11 +30,11 @@ highlight "╚███╔███╔╝██║  ██║ ╚████╔
 highlight " ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝"                                         
 
 separator
-info "Starting domain and SSL setup..."
+info "Installing packages..."
 separator
 
 sudo apt update -y > /dev/null 2>&1
-sudo apt install -y nodejs npm certbot python3-certbot-nginx nginx > /dev/null 2>&1
+sudo apt install -y nodejs npm certbot python3-certbot-nginx nginx git > /dev/null 2>&1
 separator
 
 info "Installing PM2..."
@@ -47,6 +47,7 @@ separator
 
 VPS_IP=$(curl -s ifconfig.me)
 MONITOR_LOG="/var/log/domain_monitor.log"
+GIT_REPO_PATH=$(pwd)
 
 monitor_domains() {
   while true; do
@@ -126,13 +127,41 @@ EOF
   done
 }
 
-# Run monitor_domains directly without declare -f
+update_repo() {
+  while true; do
+    if [ -d "$GIT_REPO_PATH" ]; then
+      cd $GIT_REPO_PATH
+      info "Checking for Git updates in the main branch..."
+      git fetch --all > /dev/null 2>&1
+
+      LOCAL=$(git rev-parse @)
+      REMOTE=$(git rev-parse origin/main)
+
+      if [ $LOCAL != $REMOTE ]; then
+        info "New updates found in the main branch. Pulling changes..."
+        git pull origin main > /dev/null 2>&1
+        success "Changes pulled successfully."
+
+        info "Restarting the application with PM2..."
+        pm2 restart index.mjs > /dev/null 2>&1
+        success "App restarted with PM2."
+      else
+        info "No updates found in the main branch."
+      fi
+    else
+      error "Git repository not found at $GIT_REPO_PATH."
+    fi
+    sleep 60
+  done
+}
+
 nohup bash -c "monitor_domains" > $MONITOR_LOG 2>&1 &
+nohup bash -c "update_repo" > /var/log/git_update.log 2>&1 &
 
 info "Starting sample server with PM2..."
 pm2 start index.mjs > /dev/null 2>&1
 separator
 
 success "🎉 Setup complete! Add domains pointing to $VPS_IP."
-success "Monitoring for new domains 24/7."
+success "Monitoring for new domains 24/7 and checking Git repository for updates every minute."
 separator
