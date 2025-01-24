@@ -101,18 +101,20 @@ server {
 
     location / {
         proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
 
-        access_log /var/log/nginx/access.log combined;
-    }
+        proxy_read_timeout 60s;
+        proxy_send_timeout 60s;
 
-    error_page 403 404 500 502 503 504 /custom_50x.html;
-    location = /custom_50x.html {
-        root /usr/share/nginx/html;
-        internal;
+        access_log /var/log/nginx/access.log combined;
     }
 }
 EOF
