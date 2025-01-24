@@ -49,22 +49,7 @@ sudo apt update -y > /dev/null 2>&1
 sudo apt install -y caddy > /dev/null 2>&1
 separator
 
-info "Please enter your domain or subdomain (e.g., example.com or subdomain.example.com):"
-read -p "Domain/Subdomain: " DOMAIN
-
-if [ -z "$DOMAIN" ]; then
-  error "No domain or subdomain entered. Exiting."
-  separator
-  exit 1
-fi
-
-if [[ ! "$DOMAIN" =~ ^[a-zA-Z0-9.-]+$ ]]; then
-  error "Invalid domain or subdomain. Please enter a valid domain."
-  separator
-  exit 1
-fi
-
-info "Creating Caddyfile for domain: $DOMAIN..."
+info "Creating Caddyfile to listen on port 443 for any incoming request..."
 sudo mkdir -p /etc/caddy
 
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
@@ -100,7 +85,7 @@ fi
 info "Starting Caddy..."
 sudo systemctl enable caddy > /dev/null 2>&1
 sudo systemctl restart caddy > /dev/null 2>&1
-success "Caddy is running with HTTPS and WebSocket support for $DOMAIN!"
+success "Caddy is running with HTTPS and WebSocket support for any incoming requests!"
 separator
 
 info "Installing PM2 globally and configuring it to start on boot..."
@@ -134,5 +119,5 @@ pm2 save > /dev/null 2>&1
 success "App server is now managed by PM2 and will start automatically on reboot."
 separator
 
-success "🎉 Setup complete! Your app is live on $DOMAIN with Git auto-update and WebSocket support! 🎉"
+success "🎉 Setup complete! Your app is live and listening for any incoming HTTPS requests! 🎉"
 separator
