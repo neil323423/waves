@@ -74,7 +74,6 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
         }
     }
     encode gzip zstd
-    health_path /
 }
 EOF
 
