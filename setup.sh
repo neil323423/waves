@@ -55,8 +55,12 @@ sudo mkdir -p /etc/caddy
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 {
     on_demand_tls {
-        interval 2m
-        burst 10
+        burst 100
+        interval 1m
+    }
+    log {
+        output stdout
+        level INFO
     }
 }
 
@@ -64,12 +68,13 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
     tls {
         on_demand
     }
-    reverse_proxy localhost:3000 {
+    reverse_proxy http://localhost:3000 {
         transport http {
             versions h2c
         }
     }
     encode gzip zstd
+    health_path /
 }
 EOF
 
