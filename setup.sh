@@ -27,7 +27,7 @@ highlight "██║    ██║██╔══██╗██║   ██║�
 highlight "██║ █╗ ██║███████║██║   ██║█████╗  ███████╗"
 highlight "██║███╗██║██╔══██║╚██╗ ██╔╝██╔══╝  ╚════██║"
 highlight "╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗███████║██╗"
-highlight " ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝"                                         
+highlight " ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝"
 
 separator
 info "Starting the setup process..."
@@ -41,9 +41,12 @@ info "Installing Node.js and npm..."
 sudo apt install -y nodejs npm > /dev/null 2>&1
 separator
 
-info "Installing necessary dependencies and packages for Waves..."
-npm install > /dev/null 2>&1
-sudo apt install -y certbot python3-certbot-nginx > /dev/null 2>&1
+info "Installing Caddy..."
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https > /dev/null 2>&1
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update -y > /dev/null 2>&1
+sudo apt install -y caddy > /dev/null 2>&1
 separator
 
 info "Please enter your domain or subdomain (e.g., example.com or subdomain.example.com):"
@@ -61,122 +64,80 @@ if [[ ! "$DOMAIN" =~ ^[a-zA-Z0-9.-]+$ ]]; then
   exit 1
 fi
 
-info "Requesting SSL certificate for $DOMAIN..."
-sudo certbot --nginx -d $DOMAIN
-if [ $? -ne 0 ]; then
-  error "Failed to obtain SSL certificate for $DOMAIN. Check DNS settings or try again."
-  exit 1
-fi
-separator
+info "Creating Caddyfile for domain: $DOMAIN..."
+sudo mkdir -p /etc/caddy
 
-success "SSL configuration completed for $DOMAIN!"
-separator
-
-info "Configuring Nginx..."
-NginxConfigFile="/etc/nginx/sites-available/default"
-BackupConfigFile="/etc/nginx/sites-available/default.bak"
-DhparamFile="/etc/ssl/certs/dhparam.pem"
-
-sudo cp $NginxConfigFile $BackupConfigFile
-
-if [ ! -f "$DhparamFile" ]; then
-  info "Diffie-Hellman parameters file not found, generating it..."
-  sudo openssl dhparam -out $DhparamFile 2048 > /dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    success "Diffie-Hellman parameters generated successfully."
-  else
-    error "Failed to generate Diffie-Hellman parameters."
-    exit 1
-  fi
-else
-  info "Diffie-Hellman parameters file already exists."
-fi
-
-cat <<EOF | sudo tee $NginxConfigFile > /dev/null
-server {
-    listen 80;
-    server_name $DOMAIN www.$DOMAIN;
-    return 301 https://\$host\$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-    server_name $DOMAIN www.$DOMAIN;
-
-    ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
-
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:ECDHE-RSA-AES128-GCM-SHA256';
-    ssl_prefer_server_ciphers on;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 10m;
-    ssl_dhparam /etc/ssl/certs/dhparam.pem;
-
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header Referrer-Policy "no-referrer-when-downgrade" always;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection "Upgrade";
-
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-
-        proxy_read_timeout 60s;
-        proxy_send_timeout 60s;
-
-        access_log /var/log/nginx/access.log combined;
+cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
+$DOMAIN {
+    reverse_proxy localhost:3000 {
+        transport http {
+            versions h2c  
+        }
     }
+    encode gzip zstd 
 }
 EOF
+separator
 
-sudo nginx -t > /dev/null 2>&1
+info "Testing Caddy configuration..."
+sudo caddy fmt /etc/caddy/Caddyfile > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-  success "Nginx configuration is valid."
+  success "Caddyfile is valid."
 else
-  error "Nginx configuration test failed. Restoring backup..."
-  sudo cp $BackupConfigFile $NginxConfigFile
+  error "Caddyfile test failed. Check the configuration and try again."
   exit 1
 fi
 
-sudo systemctl reload nginx
-success "Nginx reloaded successfully."
-separator
-
-info "Setting up automatic updates for Git changes..."
-nohup bash -c "
-while true; do
-    git fetch origin
-    LOCAL=\$(git rev-parse main)
-    REMOTE=\$(git rev-parse origin/main)
-
-    if [ \$LOCAL != \$REMOTE ]; then
-        echo \"Changes detected, pulling the latest updates...\"
-        git pull origin main
-        sudo systemctl reload nginx
-    fi
-    sleep 10
-done
-" &> /updates.log &
+info "Starting Caddy..."
+sudo systemctl enable caddy > /dev/null 2>&1
+sudo systemctl restart caddy > /dev/null 2>&1
+success "Caddy is running with HTTPS and WebSocket support for $DOMAIN!"
 separator
 
 info "Installing PM2 globally and configuring it to start on boot..."
-sudo npm install pm2 -g > /dev/null 2>&1
+sudo npm install -g pm2 > /dev/null 2>&1
 pm2 startup > /dev/null 2>&1
 separator
 
-info "Starting the server with PM2..."
-pm2 start index.mjs > /dev/null 2>&1
+info "Cloning your Git repository..."
+read -p "Enter your Git repository URL (e.g., https://github.com/username/repo.git): " GIT_REPO
+APP_DIR="/var/www/app"
+
+if [ ! -d "$APP_DIR" ]; then
+  git clone $GIT_REPO $APP_DIR
+  success "Repository cloned into $APP_DIR."
+else
+  info "Repository already exists. Pulling latest changes..."
+  cd $APP_DIR && git reset --hard && git pull
+  success "Pulled the latest changes."
+fi
 separator
 
-success "🎉 Congratulations! Your setup is complete, and your domain is now live with Waves! 🎉"
+info "Installing dependencies for your app..."
+cd $APP_DIR
+npm install > /dev/null 2>&1
+separator
+
+info "Setting up Git auto-update script..."
+cat <<EOF | sudo tee /usr/local/bin/update-app.sh > /dev/null
+#!/bin/bash
+cd $APP_DIR
+git reset --hard
+git pull
+npm install --silent
+pm2 restart all
+EOF
+
+sudo chmod +x /usr/local/bin/update-app.sh
+echo "*/5 * * * * root /usr/local/bin/update-app.sh" | sudo tee -a /etc/crontab > /dev/null
+success "Auto-update script set to run every 5 minutes."
+separator
+
+info "Starting the app server with PM2..."
+pm2 start index.mjs > /dev/null 2>&1
+pm2 save > /dev/null 2>&1
+success "App server is now managed by PM2 and will start automatically on reboot."
+separator
+
+success "🎉 Setup complete! Your app is live on $DOMAIN with Git auto-update and WebSocket support! 🎉"
 separator
