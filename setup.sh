@@ -33,66 +33,46 @@ separator
 info "Starting the setup process..."
 separator
 
-info "Updating package lists..."
+info "Updating package lists and installing required dependencies..."
 sudo apt update -y > /dev/null 2>&1
+sudo apt install -y nodejs npm certbot python3-certbot-nginx nginx > /dev/null 2>&1
 separator
 
-info "Installing Node.js and npm..."
-sudo apt install -y nodejs npm > /dev/null 2>&1
+info "Installing PM2 globally..."
+sudo npm install -g pm2 > /dev/null 2>&1
+pm2 startup > /dev/null 2>&1
 separator
 
-info "Installing necessary dependencies and packages for Waves..."
-npm install > /dev/null 2>&1
-sudo apt install -y certbot python3-certbot-nginx > /dev/null 2>&1
+info "Monitoring for domains pointing to this server's IP..."
 separator
 
-info "Please enter your domain or subdomain (e.g., example.com or subdomain.example.com):"
-read -p "Domain/Subdomain: " DOMAIN
+VPS_IP=$(curl -s ifconfig.me)
+MONITOR_LOG="/var/log/domain_monitor.log"
 
-if [ -z "$DOMAIN" ]; then
-  error "No domain or subdomain entered. Exiting."
-  separator
-  exit 1
-fi
+monitor_domains() {
+  while true; do
+    DOMAIN=$(dig -x $VPS_IP +short | grep -E '^[a-zA-Z0-9.-]+$' | head -n 1)
 
-if [[ ! "$DOMAIN" =~ ^[a-zA-Z0-9.-]+$ ]]; then
-  error "Invalid domain or subdomain. Please enter a valid domain."
-  separator
-  exit 1
-fi
+    if [ -n "$DOMAIN" ]; then
+      info "Detected domain: $DOMAIN"
+      
+      info "Requesting SSL certificate for $DOMAIN..."
+      sudo certbot --nginx -d $DOMAIN -d www.$DOMAIN --agree-tos --non-interactive --email admin@$DOMAIN > /dev/null 2>&1
+      
+      if [ $? -eq 0 ]; then
+        success "SSL configuration completed for $DOMAIN!"
+        separator
 
-info "Requesting SSL certificate for $DOMAIN..."
-sudo certbot --nginx -d $DOMAIN
-if [ $? -ne 0 ]; then
-  error "Failed to obtain SSL certificate for $DOMAIN. Check DNS settings or try again."
-  exit 1
-fi
-separator
+        info "Setting up Nginx for $DOMAIN..."
+        DhparamFile="/etc/ssl/certs/dhparam.pem"
 
-success "SSL configuration completeed for $DOMAIN!"
-separator
+        if [ ! -f "$DhparamFile" ]; then
+          info "Generating Diffie-Hellman parameters..."
+          sudo openssl dhparam -out $DhparamFile 2048 > /dev/null 2>&1
+          success "Diffie-Hellman parameters generated."
+        fi
 
-info "Configuring Nginx..."
-NginxConfigFile="/etc/nginx/sites-available/default"
-BackupConfigFile="/etc/nginx/sites-available/default.bak"
-DhparamFile="/etc/ssl/certs/dhparam.pem"
-
-sudo cp $NginxConfigFile $BackupConfigFile
-
-if [ ! -f "$DhparamFile" ]; then
-  info "Diffie-Hellman parameters file not found, generating it..."
-  sudo openssl dhparam -out $DhparamFile 2048 > /dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    success "Diffie-Hellman parameters generated successfully."
-  else
-    error "Failed to generate Diffie-Hellman parameters."
-    exit 1
-  fi
-else
-  info "Diffie-Hellman parameters file already exists."
-fi
-
-cat <<EOF | sudo tee $NginxConfigFile > /dev/null
+        cat <<EOF | sudo tee /etc/nginx/sites-available/$DOMAIN > /dev/null
 server {
     listen 80;
     server_name $DOMAIN www.$DOMAIN;
@@ -116,46 +96,43 @@ server {
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
+
+    location / {
+        proxy_pass http://localhost:3000; # Change this to your app's port
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_cache_bypass \$http_upgrade;
+    }
+}
 EOF
+        sudo ln -s /etc/nginx/sites-available/$DOMAIN /etc/nginx/sites-enabled/
+        sudo nginx -t > /dev/null 2>&1
 
-sudo nginx -t > /dev/null 2>&1
-if [ $? -eq 0 ]; then
-  success "Nginx configuration is valid."
-else
-  error "Nginx configuration test failed. Restoring backup..."
-  sudo cp $BackupConfigFile $NginxConfigFile
-  exit 1
-fi
-
-sudo systemctl reload nginx
-success "Nginx reloaded successfully."
-separator
-
-info "Setting up automatic updates for Git changes..."
-nohup bash -c "
-while true; do
-    git fetch origin
-    LOCAL=\$(git rev-parse main)
-    REMOTE=\$(git rev-parse origin/main)
-
-    if [ \$LOCAL != \$REMOTE ]; then
-        echo \"Changes detected, pulling the latest updates...\"
-        git pull origin main
-        sudo systemctl reload nginx
+        if [ $? -eq 0 ]; then
+          success "Nginx configuration for $DOMAIN is valid. Reloading Nginx..."
+          sudo systemctl reload nginx
+          success "Nginx reloaded successfully for $DOMAIN."
+        else
+          error "Failed to validate Nginx configuration for $DOMAIN."
+        fi
+      else
+        error "Failed to obtain SSL certificate for $DOMAIN. Check DNS settings."
+      fi
+    else
+      info "No new domains detected. Retrying in 60 seconds..."
     fi
-    sleep 10
-done
-" &> /updates.log &
-separator
+    sleep 60
+  done
+}
 
-info "Installing PM2 globally and configuring it to start on boot..."
-sudo npm install pm2 -g > /dev/null 2>&1
-pm2 startup > /dev/null 2>&1
-separator
+nohup bash -c "$(declare -f monitor_domains); monitor_domains" > $MONITOR_LOG 2>&1 &
 
-info "Starting the server with PM2..."
+info "Setting up a sample server with PM2..."
 pm2 start index.mjs > /dev/null 2>&1
 separator
 
-success "🎉 Congratulations! Your setup is complete, and your domain is now live with Waves! 🎉"
+success "🎉 Automated domain and SSL setup is complete! Add domains by pointing them to $VPS_IP."
+success "The script will monitor for new domains 24/7."
 separator
