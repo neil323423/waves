@@ -10,7 +10,12 @@ The following versions of this project that are currently supported:
 
 ## Best Practices
 
-- Always use the latest supported version of Waves.
+- Always ensure you’re using the latest supported version of Waves for optimal performance.
+
+## Why?
+
+Hosting multiple versions of Waves can codt a lot and i do **NOT** have the money for that.
+If you want a old version of Waves you can self host.
 
 ## Support
 
