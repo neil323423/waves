@@ -55,12 +55,17 @@ sudo mkdir -p /etc/caddy
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 {
     on_demand_tls {
-        burst 100
-        interval 1m
+        burst 100      
+        interval 1m     
     }
+
     log {
-        output stdout
+        output stdout 
         level INFO
+    }
+
+    http:// {
+        redir https://{host}{uri}  
     }
 }
 
@@ -68,12 +73,27 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
     tls {
         on_demand
     }
+
     reverse_proxy http://localhost:3000 {
+        # Specify HTTP/2 cleartext (h2c) for internal communication
         transport http {
             versions h2c
         }
     }
+
     encode gzip zstd
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"  
+        X-Frame-Options "DENY"                                       
+        X-Content-Type-Options "nosniff"                              
+        X-XSS-Protection "1; mode=block"                               
+        Referrer-Policy "no-referrer"                                 
+    }
+}
+
+:80 {
+    redir https://{host}{uri}
 }
 EOF
 
