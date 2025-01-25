@@ -116,8 +116,8 @@ success "Auto-update script set to run every 5 minutes."
 separator
 
 info "Starting the server with PM2..."
-pm2 start index.mjs > /dev/null 2>&1
-pm2 save > /dev/null 2>&1
+pm2 start index.mjs
+pm2 save
 success "Server started."
 separator
 
