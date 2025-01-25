@@ -53,19 +53,7 @@ info "Creating Caddyfile to listen on port 443 for any incoming request..."
 sudo mkdir -p /etc/caddy
 
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
-:443 {
-    tls {
-        on_demand
-    }
-    reverse_proxy http://localhost:3000 {
-        transport http {
-            versions h2c
-        }
-    }
-    encode gzip zstd
-}
-
-global {
+{
     on_demand_tls {
         burst 100
         interval 1m
@@ -76,17 +64,24 @@ global {
     }
 }
 
-    header {
-        Strict-Transport-Security "max-age=31536000; includeSubDomains"  
-        X-Frame-Options "DENY"                                       
-        X-Content-Type-Options "nosniff"                              
-        X-XSS-Protection "1; mode=block"                               
-        Referrer-Policy "no-referrer"                                 
+:443 {
+    tls {
+        on_demand
     }
-}
+    reverse_proxy http://localhost:3000 {
+        transport http {
+            versions h2c
+        }
+    }
+    encode gzip zstd
 
-:80 {
-    redir https://{host}{uri}
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "no-referrer"
+    }
 }
 EOF
 
