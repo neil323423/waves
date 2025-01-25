@@ -32,7 +32,10 @@
             <button class="tab-button active" id="proxy-tab">
                 <i class="fas fa-network-wired"></i> Proxy
             </button>
-              
+
+            <button class="tab-button" id="cloak-tab">
+                <i class="fas fa-user-secret"></i> Cloak
+            </button>            
                       
             <button class="tab-button" id="appearance-tab">
                 <i class="fas fa-palette"></i> Appearance
@@ -57,9 +60,15 @@
             <button id="save-wisp-url">Save</button>
         </div>
 
+        <div id="cloak-content" class="tab-content">
+            <label for="aboutblank-toggle">About:Blank</label>
+            <p>Turn this on to go into about:blank every time the page loads (Recommended).</p>
+            <input type="checkbox" id="aboutblank-toggle">
+        </div>
+
         <div id="appearance-content" class="tab-content">
             <label for="navbar-toggle">Navigation Bar</label>
-            <p>Keep this on for the NavBar when searching (Recommended).</p>
+            <p>Keep this on for the navigation bar when searching (Recommended).</p>
             <input type="checkbox" id="navbar-toggle">
 
         <label for="themes-selector">Themes</label>

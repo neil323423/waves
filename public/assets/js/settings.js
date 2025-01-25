@@ -224,20 +224,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.getElementById('proxy-content').classList.add('active');
 
-  function switchTab(tabId, contentId, otherTabId, otherContentId) {
-    document.getElementById(otherContentId).classList.remove('active');
+  function switchTab(tabId, contentId, otherTabId1, otherContentId1, otherTabId2, otherContentId2) {
+    document.getElementById(otherContentId1).classList.remove('active');
+    document.getElementById(otherContentId2).classList.remove('active');
+  
+    document.getElementById(otherTabId1).classList.remove('active');
+    document.getElementById(otherTabId2).classList.remove('active');
+  
     document.getElementById(contentId).classList.add('active');
     document.getElementById(tabId).classList.add('active');
-    document.getElementById(otherTabId).classList.remove('active');
   }
-
+  
   document.getElementById('proxy-tab').addEventListener('click', function() {
-    switchTab('proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content');
+    switchTab('proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content', 'cloak-tab', 'cloak-content');
   });
-
+  
+  document.getElementById('cloak-tab').addEventListener('click', function() {
+    switchTab('cloak-tab', 'cloak-content', 'proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content');
+  });
+  
   document.getElementById('appearance-tab').addEventListener('click', function() {
-    switchTab('appearance-tab', 'appearance-content', 'proxy-tab', 'proxy-content');
-  });
+    switchTab('appearance-tab', 'appearance-content', 'proxy-tab', 'proxy-content', 'cloak-tab', 'cloak-content');
+  });  
 
   navbarToggle.addEventListener('change', function() {
     if (this.checked) {
@@ -254,6 +262,68 @@ document.addEventListener('DOMContentLoaded', function () {
       showToast('error', 'Navigation Bar is now disabled.');
     }
   });
+
+  function runScriptIfChecked() {
+    let inFrame;
+
+    try {
+        inFrame = window !== top;
+    } catch (e) {
+        inFrame = true;
+    }
+
+    const aboutBlankChecked = JSON.parse(localStorage.getItem("aboutBlankChecked")) || false;
+
+    if (!aboutBlankChecked || inFrame) {
+        return;
+    }
+
+    const defaultTitle = "🌊 Google";
+    const defaultIcon = "https://www.google.com/favicon.ico";
+
+    const title = localStorage.getItem("siteTitle") || defaultTitle;
+    const icon = localStorage.getItem("faviconURL") || defaultIcon;
+
+    const iframeSrc = "/";
+
+    const popup = window.open("", "_blank");
+
+    if (!popup || popup.closed) {
+        alert("Failed to load automask. Please allow popups and try again.");
+        return;
+    }
+
+    popup.document.head.innerHTML = `
+        <title>${title}</title>
+        <link rel="icon" href="${icon}">
+    `;
+    popup.document.body.innerHTML = `
+        <iframe 
+            style="height: 100%; width: 100%; border: none; position: fixed; top: 0; right: 0; left: 0; bottom: 0;" 
+            src="${iframeSrc}">
+        </iframe>
+    `;
+
+    window.location.replace("https://bisd.schoology.com/home");
+}
+
+document.getElementById("aboutblank-toggle").addEventListener("change", function () {
+    localStorage.setItem("aboutBlankChecked", JSON.stringify(this.checked));
+    
+    if (this.checked) {
+        showToast('success', 'About:Blank is now enabled.');
+    } else {
+        showToast('error', 'About:Blank is now disabled.');
+    }
+    
+    runScriptIfChecked();  
+});
+
+window.addEventListener("load", function() {
+    const aboutBlankChecked = JSON.parse(localStorage.getItem("aboutBlankChecked")) || false;
+    document.getElementById("aboutblank-toggle").checked = aboutBlankChecked;
+    runScriptIfChecked(); 
+});
 
   function showToast(type, message) {
     const toast = document.createElement('div');
