@@ -1,23 +1,23 @@
 #!/bin/bash
 
 info() {
-  echo -e "\033[1;36m[INFO]\033[0m $1"
+  printf "\033[1;36m[INFO]\033[0m %s\n" "$1"
 }
 
 success() {
-  echo -e "\033[1;32m[SUCCESS]\033[0m $1"
+  printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"
 }
 
 error() {
-  echo -e "\033[1;31m[ERROR]\033[0m $1"
+  printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"
 }
 
 highlight() {
-  echo -e "\033[1;34m$1\033[0m"
+  printf "\033[1;34m%s\033[0m\n" "$1"
 }
 
 separator() {
-  echo -e "\033[1;37m---------------------------------------------\033[0m"
+  printf "\033[1;37m---------------------------------------------\033[0m\n"
 }
 
 clear
