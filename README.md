@@ -8,8 +8,6 @@ A sleek and minimalist Web Proxy.
 
 [![Join our Discord](https://invidget.switchblade.xyz/656PtwMx3H)](https://discord.gg/656PtwMx3H)
 
-https://discord.gg/656PtwMx3H
-
 ## Supported Sites:
 
 - [Google](https://google.com)
