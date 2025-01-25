@@ -107,11 +107,6 @@ else
 fi
 separator
 
-export PATH=$PATH:/usr/local/bin
-
-info "Adding PM2 binary path to environment variables..."
-. ~/.bashrc  
-
 info "Installing dependencies..."
 npm install > /dev/null 2>&1
 separator
