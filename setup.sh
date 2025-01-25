@@ -67,7 +67,8 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
-        X-Frame-Options "DENY"
+        # Allow embedding in iframes by removing the X-Frame-Options header or setting it to ALLOW-FROM
+        X-Frame-Options "ALLOWALL" 
         X-Content-Type-Options "nosniff"
         X-XSS-Protection "1; mode=block"
         Referrer-Policy "no-referrer"
