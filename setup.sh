@@ -107,11 +107,10 @@ else
 fi
 separator
 
-# Add PM2 binary path to environment variables
 export PATH=$PATH:/usr/local/bin
 
 info "Adding PM2 binary path to environment variables..."
-source ~/.bashrc
+. ~/.bashrc  
 
 info "Installing dependencies..."
 npm install > /dev/null 2>&1
@@ -138,7 +137,7 @@ while true; do
         pm2 save > /dev/null 2>&1
         echo \"Server restarted after Git pull.\"
     fi
-    sleep 10
+    sleep 1
 done
 " > /dev/null 2>&1 &
 success "Git auto-update setup completed."
