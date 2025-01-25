@@ -102,10 +102,10 @@ separator
 info "Setting up Git auto-update..."
 cat <<EOF | sudo tee /usr/local/bin/update-app.sh > /dev/null
 #!/bin/bash
-git reset --hard
-git pull
-npm install --silent
-pm2 restart all
+cd /path/to/your/repo || exit
+git fetch --quiet && git reset --hard origin/main &
+npm ci --silent &
+pm2 reload all --update-env --silent &
 EOF
 
 sudo chmod +x /usr/local/bin/update-app.sh
