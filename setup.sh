@@ -100,7 +100,7 @@ npm install > /dev/null 2>&1
 separator
 
 info "Setting up Git auto-update..."
-cat <<EOF | sudo tee /usr/local/bin/update-app.sh > /dev/null
+cat <<EOF | sudo tee /usr/local/bin/update.sh > /dev/null
 #!/bin/bash
 cd /path/to/your/repo || exit
 git fetch --quiet && git reset --hard origin/main &
@@ -109,7 +109,7 @@ pm2 reload all --update-env --silent &
 EOF
 
 sudo chmod +x /usr/local/bin/update-app.sh
-echo "*/1 * * * * root /usr/local/bin/update-app.sh" | sudo tee -a /etc/crontab > /dev/null
+echo "*/1 * * * * root /usr/local/bin/update.sh" | sudo tee -a /etc/crontab > /dev/null
 success "Auto-update set to run every 1 minute."
 separator
 
