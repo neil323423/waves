@@ -54,25 +54,15 @@ sudo mkdir -p /etc/caddy
 
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 {
-    on_demand_tls {
-        burst 100
-        interval 1m
-    }
-    log {
-        output stdout
-        level INFO
-    }
+    email sefiicc@gmail.com
 }
 
 :443 {
     tls {
-        on_demand
+        on_demand  
     }
-    reverse_proxy http://localhost:3000 {
-        transport http {
-            versions h2c
-        }
-    }
+
+    reverse_proxy http://localhost:3000  
     encode gzip zstd
 
     header {
