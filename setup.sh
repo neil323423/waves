@@ -38,6 +38,7 @@ if ! dpkg-query -l | grep -q nodejs; then
   info "Node.js not found. Installing..."
   sudo apt update -y > /dev/null 2>&1
   sudo apt install -y nodejs npm > /dev/null 2>&1
+  success "Node.js and npm installed successfully."
 else
   success "Node.js and npm are already installed."
 fi
@@ -47,10 +48,11 @@ info "Checking if Caddy is installed..."
 if ! dpkg-query -l | grep -q caddy; then
   info "Caddy not found. Installing..."
   sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https > /dev/null 2>&1
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg > /dev/null 2>&1
   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list > /dev/null
   sudo apt update -y > /dev/null 2>&1
   sudo apt install -y caddy > /dev/null 2>&1
+  success "Caddy installed successfully."
 else
   success "Caddy is already installed."
 fi
@@ -99,22 +101,30 @@ success "Caddy started."
 separator
 
 info "Checking if PM2 is installed..."
-if ! command -v pm2 &> /dev/null; then
-  info "PM2 not found. Installing..."
-  sudo npm install -g pm2 > /dev/null 2>&1
-else
+PM2_PATH=$(which pm2 2>/dev/null)
+if [ "$PM2_PATH" = "/usr/local/bin/pm2" ]; then
   success "PM2 is already installed."
+else
+  info "PM2 not found or not in the expected path. Installing..."
+  sudo npm install -g pm2 > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    success "PM2 installed successfully."
+  else
+    error "Failed to install PM2."
+    exit 1
+  fi
 fi
 separator
 
 info "Installing dependencies..."
 npm install > /dev/null 2>&1
+success "Dependencies installed."
 separator
 
 info "Starting the server with PM2..."
 pm2 start index.mjs > /dev/null 2>&1
 pm2 save > /dev/null 2>&1
-success "Server started."
+success "Server started and saved with PM2."
 separator
 
 info "Setting up Git auto-update..."
@@ -125,12 +135,9 @@ while true; do
     REMOTE=\$(git rev-parse origin/main)
 
     if [ \$LOCAL != \$REMOTE ]; then
-        echo \"Changes detected, pulling the latest updates...\"
-        git pull origin main
-        
+        git pull origin main > /dev/null 2>&1
         pm2 restart index.mjs > /dev/null 2>&1
         pm2 save > /dev/null 2>&1
-        echo \"Server restarted after Git pull.\"
     fi
     sleep 1
 done
