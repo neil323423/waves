@@ -93,5 +93,5 @@ npm start
 This project is licensed under the [GPL-3.0 License](LICENSE).
 
 > [!IMPORTANT]
-> Considering giving this repository a star if you do fork and use Waves. :)
+> Considering giving this repository a star if you do fork and use Waves. <3
 
