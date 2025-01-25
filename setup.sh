@@ -96,14 +96,12 @@ pm2 startup > /dev/null 2>&1
 separator
 
 info "Installing dependencies..."
-cd $APP_DIR
 npm install > /dev/null 2>&1
 separator
 
 info "Setting up Git auto-update..."
 cat <<EOF | sudo tee /usr/local/bin/update-app.sh > /dev/null
 #!/bin/bash
-cd $APP_DIR
 git reset --hard
 git pull
 npm install --silent
@@ -116,8 +114,8 @@ success "Auto-update set to run every 1 minute."
 separator
 
 info "Starting the server with PM2..."
-pm2 start "/home/usr/waves/index.mjs"
-pm2 save
+pm2 start index.mjs > /dev/null 2>&1
+pm2 save > /dev/null 2>&1
 success "Server started."
 separator
 
