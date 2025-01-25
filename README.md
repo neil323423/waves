@@ -6,7 +6,7 @@ A sleek and minimalist Web Proxy.
 
 ## Discord Server:
 
-[![Join our Discord](https://invidget.switchblade.xyz/xi)](https://discord.gg/xi)
+[![Join our Discord](https://invidget.switchblade.xyz/656PtwMx3H)](https://discord.gg/656PtwMx3H)
 
 https://discord.gg/656PtwMx3H
 
