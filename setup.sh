@@ -33,25 +33,30 @@ separator
 info "Starting the setup process..."
 separator
 
-info "Updating package lists..."
-sudo apt update -y > /dev/null 2>&1
+info "Checking if Node.js and npm are installed..."
+if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
+  info "Node.js or npm not found. Installing..."
+  sudo apt update -y | tee /dev/null
+  sudo apt install -y nodejs npm > /dev/null 2>&1
+else
+  success "Node.js and npm are already installed."
+fi
 separator
 
-info "Installing Node.js and npm..."
-sudo apt install -y nodejs npm > /dev/null 2>&1
-separator
-
-info "Installing Caddy..."
-sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https > /dev/null 2>&1
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-sudo apt update -y > /dev/null 2>&1
-sudo apt install -y caddy > /dev/null 2>&1
+info "Checking if Caddy is installed..."
+if ! dpkg -l | grep -q caddy; then
+  info "Caddy not found. Installing..."
+  sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https > /dev/null 2>&1
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+  sudo apt update -y | tee /dev/null
+  sudo apt install -y caddy > /dev/null 2>&1
+else
+  success "Caddy is already installed."
+fi
 separator
 
 info "Creating Caddyfile..."
-sudo mkdir -p /etc/caddy
-
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 {
     email sefiicc@gmail.com
@@ -67,7 +72,6 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
-        # Allow embedding in iframes by removing the X-Frame-Options header or setting it to ALLOW-FROM
         X-Frame-Options "ALLOWALL" 
         X-Content-Type-Options "nosniff"
         X-XSS-Protection "1; mode=block"
@@ -75,6 +79,7 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
     }
 }
 EOF
+separator
 
 info "Testing Caddy configuration..."
 sudo caddy fmt /etc/caddy/Caddyfile > /dev/null 2>&1
@@ -86,13 +91,20 @@ else
 fi
 
 info "Starting Caddy..."
-sudo systemctl enable caddy > /dev/null 2>&1
-sudo systemctl restart caddy > /dev/null 2>&1
+if ! sudo systemctl restart caddy; then
+  error "Failed to start Caddy."
+  exit 1
+fi
 success "Caddy started."
 separator
 
-info "Setting up PM2..."
-sudo npm install -g pm2 > /dev/null 2>&1
+info "Checking if PM2 is installed..."
+if ! command -v pm2 &> /dev/null; then
+  info "PM2 not found. Installing..."
+  sudo npm install -g pm2 > /dev/null 2>&1
+else
+  success "PM2 is already installed."
+fi
 pm2 startup > /dev/null 2>&1
 separator
 
@@ -101,17 +113,23 @@ npm install > /dev/null 2>&1
 separator
 
 info "Setting up Git auto-update..."
-cat <<EOF | sudo tee /usr/local/bin/update.sh > /dev/null
-#!/bin/bash
-cd /path/to/your/repo || exit
-git fetch --quiet && git reset --hard origin/main &
-npm ci --silent &
-pm2 reload all --update-env --silent &
-EOF
+nohup bash -c "
+while true; do
+    git fetch origin || { error \"Git fetch failed.\"; exit 1; }
+    LOCAL=\$(git rev-parse main)
+    REMOTE=\$(git rev-parse origin/main)
 
-sudo chmod +x /usr/local/bin/update-app.sh
-echo "*/1 * * * * root /usr/local/bin/update.sh" | sudo tee -a /etc/crontab > /dev/null
-success "Auto-update set to run every 1 minute."
+    if [ \$LOCAL != \$REMOTE ]; then
+        echo \"Changes detected, pulling the latest updates...\"
+        git pull origin main
+        
+        pm2 restart index.mjs > /dev/null 2>&1
+        pm2 save > /dev/null 2>&1
+        echo \"Server restarted after Git pull.\"
+    fi
+    sleep 10
+done
+" &> /updates.log &
 separator
 
 info "Starting the server with PM2..."
