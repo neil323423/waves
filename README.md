@@ -27,6 +27,18 @@ A sleek and minimalist Web Proxy.
 
 You **cannot** deploy Waves on any static hosting services.
 
+## Connecting Waves to Your Domain or Subdomain:
+
+1. Log in to your domain or subdomain provider’s control panel.
+2. Select the domain or subdomain you'd like to configure.
+3. Add a new A record with the following IP address as the destination:
+
+```bash
+   83.229.35.239
+```
+
+4. Save your changes and allow time for DNS propagation, which may take a long time.
+
 ## Deploy Waves Locally:
 
 1. Go into your local machine terminal
@@ -44,7 +56,7 @@ Once everything is set up, head over to http://localhost:3000 to experience Wave
 
 ## Deploying Waves on your own server:
 > [!NOTE] 
-> A subdomain or a domain is **required** for this.
+> A Domain or Subdomain is no longer required for this.
 
 1. Login your server
 2. Go to your server terminal
