@@ -111,12 +111,12 @@ pm2 restart all
 EOF
 
 sudo chmod +x /usr/local/bin/update-app.sh
-echo "*/5 * * * * root /usr/local/bin/update-app.sh" | sudo tee -a /etc/crontab > /dev/null
-success "Auto-update script set to run every 5 minutes."
+echo "*/1 * * * * root /usr/local/bin/update-app.sh" | sudo tee -a /etc/crontab > /dev/null
+success "Auto-update set to run every 1 minute."
 separator
 
 info "Starting the server with PM2..."
-pm2 start "/home/root/waves/index.mjs"
+pm2 start "/home/user/waves/index.mjs"
 pm2 save
 success "Server started."
 separator
