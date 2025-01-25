@@ -53,35 +53,28 @@ info "Creating Caddyfile to listen on port 443 for any incoming request..."
 sudo mkdir -p /etc/caddy
 
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
-{
-    on_demand_tls {
-        burst 100      
-        interval 1m     
-    }
-
-    log {
-        output stdout 
-        level INFO
-    }
-
-    http:// {
-        redir https://{host}{uri}  
-    }
-}
-
 :443 {
     tls {
         on_demand
     }
-
     reverse_proxy http://localhost:3000 {
-        # Specify HTTP/2 cleartext (h2c) for internal communication
         transport http {
             versions h2c
         }
     }
-
     encode gzip zstd
+}
+
+global {
+    on_demand_tls {
+        burst 100
+        interval 1m
+    }
+    log {
+        output stdout
+        level INFO
+    }
+}
 
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"  
