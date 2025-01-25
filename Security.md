@@ -6,7 +6,7 @@ The following versions of this project that are currently supported:
 
 | Version  | Supported          |
 |----------|--------------------|
-| 1.1.7    | :white_check_mark: |
+| 1.3.6    | :white_check_mark: |
 
 ## Best Practices
 
@@ -14,4 +14,4 @@ The following versions of this project that are currently supported:
 
 ## Support
 
-If you are having a problem with Waves feel free to send me a message to my [Email](dopphucs1456@gmail.com), i'll try to answer you as soon as possile.
+If you are having a problem with Waves feel free to send me a message to my [Email](sefiicc@gmail.com), i'll try to answer you as soon as possile.
