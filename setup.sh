@@ -49,7 +49,7 @@ sudo apt update -y > /dev/null 2>&1
 sudo apt install -y caddy > /dev/null 2>&1
 separator
 
-info "Creating Caddyfile to listen on port 443 for any incoming request..."
+info "Creating Caddyfile..."
 sudo mkdir -p /etc/caddy
 
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
@@ -87,20 +87,20 @@ fi
 info "Starting Caddy..."
 sudo systemctl enable caddy > /dev/null 2>&1
 sudo systemctl restart caddy > /dev/null 2>&1
-success "Caddy is running with HTTPS and WebSocket support for any incoming requests!"
+success "Caddy started."
 separator
 
-info "Installing PM2 globally and configuring it to start on boot..."
+info "Setting up PM2..."
 sudo npm install -g pm2 > /dev/null 2>&1
 pm2 startup > /dev/null 2>&1
 separator
 
-info "Installing dependencies for your app..."
+info "Installing dependencies..."
 cd $APP_DIR
 npm install > /dev/null 2>&1
 separator
 
-info "Setting up Git auto-update script..."
+info "Setting up Git auto-update..."
 cat <<EOF | sudo tee /usr/local/bin/update-app.sh > /dev/null
 #!/bin/bash
 cd $APP_DIR
@@ -115,10 +115,10 @@ echo "*/5 * * * * root /usr/local/bin/update-app.sh" | sudo tee -a /etc/crontab 
 success "Auto-update script set to run every 5 minutes."
 separator
 
-info "Starting the app server with PM2..."
+info "Starting the server with PM2..."
 pm2 start index.mjs > /dev/null 2>&1
 pm2 save > /dev/null 2>&1
-success "App server is now managed by PM2 and will start automatically on reboot."
+success "Server started."
 separator
 
 success "Setup completed."
