@@ -14,7 +14,7 @@ The following versions of this project that are currently supported:
 
 ## Why?
 
-Hosting multiple versions of Waves can codt a lot and i do **NOT** have the money for that.
+Hosting multiple versions of Waves can cost a lot and i do **NOT** have the money for that.
 If you want a old version of Waves you can self host.
 
 ## Support
