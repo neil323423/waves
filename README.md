@@ -88,7 +88,7 @@ npm start
 
 5. When done, click **"Public"** on the pop-up and access your given URL.
 
-## License
+## License:
 
 This project is licensed under the [GPL-3.0 License](LICENSE).
 
