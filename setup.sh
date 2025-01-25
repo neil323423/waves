@@ -105,6 +105,11 @@ if ! command -v pm2 &> /dev/null; then
 else
   success "PM2 is already installed."
 fi
+separator
+
+info "Adding PM2 binary path to environment variables..."
+export PATH=$PATH:$(npm bin -g)
+
 pm2 startup > /dev/null 2>&1
 separator
 
@@ -116,6 +121,27 @@ info "Starting the server with PM2..."
 pm2 start index.mjs > /dev/null 2>&1
 pm2 save > /dev/null 2>&1
 success "Server started."
+separator
+
+info "Setting up Git auto-update..."
+nohup bash -c "
+while true; do
+    git fetch origin
+    LOCAL=\$(git rev-parse main)
+    REMOTE=\$(git rev-parse origin/main)
+
+    if [ \$LOCAL != \$REMOTE ]; then
+        echo \"Changes detected, pulling the latest updates...\"
+        git pull origin main
+        
+        pm2 restart index.mjs > /dev/null 2>&1
+        pm2 save > /dev/null 2>&1
+        echo \"Server restarted after Git pull.\"
+    fi
+    sleep 10
+done
+" > /dev/null 2>&1 &
+success "Git auto-update setup completed."
 separator
 
 success "Setup completed."
