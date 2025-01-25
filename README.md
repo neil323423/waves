@@ -4,6 +4,12 @@ A sleek and minimalist Web Proxy.
 > [!NOTE] 
 > Waves is still in its early stages, so you might encounter a few occasional bugs. I am actively working on new features and improvements—stay tuned!
 
+## Discord Server:
+
+[![Join our Discord](https://invidget.switchblade.xyz/xi)](https://discord.gg/xi)
+
+https://discord.gg/656PtwMx3H
+
 ## Supported Sites:
 
 - [Google](https://google.com)
