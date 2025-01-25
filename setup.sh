@@ -116,7 +116,7 @@ success "Auto-update script set to run every 5 minutes."
 separator
 
 info "Starting the server with PM2..."
-pm2 start /waves/index.mjs
+pm2 start "/home/root/waves/index.mjs"
 pm2 save
 success "Server started."
 separator
