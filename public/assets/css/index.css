@@ -813,11 +813,11 @@ body {
     z-index: -1;
   }
   .hover-link {
-    color: #443ab6; 
+    color: #949494; 
     text-decoration: none;
     transition: color 0.3s ease;
   }
 
   .hover-link:hover {
-    color: #4f43d1;
+    color: #dadada;
   }
