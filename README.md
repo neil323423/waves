@@ -1,12 +1,10 @@
 # Waves.
 A sleek and minimalist Web Proxy.
 
+[![Better Stack Badge](https://uptime.betterstack.com/status-badges/v3/monitor/1r475.svg)](https://uptime.betterstack.com/?utm_source=status_badge)
+
 > [!NOTE] 
 > Waves is still in its early stages, so you might encounter a few occasional bugs. I am actively working on new features and improvements—stay tuned!
-
-## Discord Server:
-
-[![Join our Discord](https://invidget.switchblade.xyz/656PtwMx3H)](https://discord.gg/656PtwMx3H)
 
 ## Supported Sites:
 
@@ -92,10 +90,10 @@ npm start
 
 5. When done, click **"Public"** on the pop-up and access your given URL.
 
-## License:
+## License
 
 This project is licensed under the [GPL-3.0 License](LICENSE).
 
 > [!IMPORTANT]
-> Considering giving this repository a star if you do fork and use Waves. <3
+> Considering giving this repository a star if you do fork and use Waves. :)
 

@@ -224,27 +224,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.getElementById('proxy-content').classList.add('active');
 
-  function switchTab(tabId, contentId, otherTabId1, otherContentId1, otherTabId2, otherContentId2) {
+  function switchTab(tabId, contentId, otherTabId1, otherContentId1, otherTabId2, otherContentId2, otherTabId3, otherContentId3) {
     document.getElementById(otherContentId1).classList.remove('active');
     document.getElementById(otherContentId2).classList.remove('active');
+    document.getElementById(otherContentId3).classList.remove('active');
   
     document.getElementById(otherTabId1).classList.remove('active');
     document.getElementById(otherTabId2).classList.remove('active');
+    document.getElementById(otherTabId3).classList.remove('active');
   
     document.getElementById(contentId).classList.add('active');
     document.getElementById(tabId).classList.add('active');
   }
   
   document.getElementById('proxy-tab').addEventListener('click', function() {
-    switchTab('proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content', 'cloak-tab', 'cloak-content');
+    switchTab('proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content', 'cloak-tab', 'cloak-content', 'info-tab', 'info-content');
   });
   
   document.getElementById('cloak-tab').addEventListener('click', function() {
-    switchTab('cloak-tab', 'cloak-content', 'proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content');
+    switchTab('cloak-tab', 'cloak-content', 'proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content', 'info-tab', 'info-content');
   });
   
   document.getElementById('appearance-tab').addEventListener('click', function() {
-    switchTab('appearance-tab', 'appearance-content', 'proxy-tab', 'proxy-content', 'cloak-tab', 'cloak-content');
+    switchTab('appearance-tab', 'appearance-content', 'proxy-tab', 'proxy-content', 'cloak-tab', 'cloak-content', 'info-tab', 'info-content');
+  });
+  
+  document.getElementById('info-tab').addEventListener('click', function() {
+    switchTab('info-tab', 'info-content', 'proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content', 'cloak-tab', 'cloak-content');
   });  
 
   navbarToggle.addEventListener('change', function() {
