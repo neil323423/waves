@@ -345,6 +345,7 @@ body {
 .themes-selector {
     position: relative;
     width: 100%;
+    height: auto;
     max-width: 300px;
 }
 .themes-selected {
@@ -421,6 +422,7 @@ body {
 .settings-tabs {
     display: flex;
     justify-content: flex-start;
+    transition: 0.3 ease;
     margin-bottom: 20px;
 }
 
@@ -440,7 +442,6 @@ body {
 .tab-button:hover {
     background-color: #333333;
 }
-
 .tab-button.active {
     background-color: #333333;
     color: white;
@@ -448,16 +449,20 @@ body {
 }
 .tab-content {
     opacity: 0;
-    max-height: 0;
-    transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
-}
-
-.tab-content.active {
+    max-height: 0; 
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.5s ease-out, max-height 0.3s ease-in-out, visibility 0s linear 0.3s;
+  }
+  
+  .tab-content.active {
     opacity: 1;
-    max-height: 400px;  
-    transform: translateY(0);
-}
+    max-height: 430px; 
+    transform: translateX(0); 
+    visibility: visible;
+    transition: opacity 0.3s ease, transform 0.2s ease-out, max-height 0.5s ease-in-out; /* Smoother transition */
+  }
+  
 .light {
     box-shadow: 0 0 250px 100px #443ab6;
     border-radius: 5%;

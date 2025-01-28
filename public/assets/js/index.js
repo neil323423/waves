@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showLoadingScreen() {
         loadingScreen.style.display = "flex";
-        loadingScreen.querySelector(".loading-text").textContent = "Almost there! We're getting your content ready...";
+        loadingScreen.querySelector(".loading-text").textContent = "Almost ready, just waiting for everything to load...";
     }
 
     function hideLoadingScreen() {

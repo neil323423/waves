@@ -28,19 +28,43 @@ document.addEventListener('DOMContentLoaded', function () {
   themesSelected.textContent = selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1);
 
   function updateTheme(newTheme, glowStyle) {
-    document.body.classList.remove('default', 'sakura');
+    document.body.classList.remove('default', 'sakura', 'emerald');
+    
     document.body.classList.add(newTheme);
+
     updateGlowPointStyle(glowStyle);
+
     updateHighlightStyle(newTheme);
-    updateLightStyle(newTheme === 'sakura' ? '0 0 250px 100px #ff66cc' : '0 0 250px 100px #443ab6', newTheme === 'sakura' ? 'radial-gradient(farthest-corner at 50% 50%, #ff66cc)' : 'radial-gradient(farthest-corner at 50% 50%, #443ab6)');
+
+    let lightColor, gradientColor;
+    switch (newTheme) {
+        case 'sakura':
+            lightColor = '0 0 250px 100px #ff66cc';
+            gradientColor = 'radial-gradient(farthest-corner at 50% 50%, #ff66cc)';
+            break;
+        case 'emerald':
+            lightColor = '0 0 250px 100px #50C878';
+            gradientColor = 'radial-gradient(farthest-corner at 50% 50%, #50C878)'; 
+            break;
+        default: 
+            lightColor = '0 0 250px 100px #443ab6';
+            gradientColor = 'radial-gradient(farthest-corner at 50% 50%, #443ab6)';
+            break;
+    }
+    updateLightStyle(lightColor, gradientColor);
+
     updateSettingsMenuH2Style(newTheme);
+
     localStorage.setItem('selectedTheme', newTheme);
     localStorage.setItem('glowPointStyle', glowStyle);
+
     themesSelected.textContent = newTheme.charAt(0).toUpperCase() + newTheme.slice(1);
+
     themesOptions.classList.remove('transport-show');
     themesSelected.classList.remove('transport-arrow-active');
+
     showToast('success', `Theme changed to ${newTheme}`);
-  }
+}
 
   function updateLightStyle(boxShadow, backgroundImage) {
     const lightElement = document.querySelector('.light');
@@ -56,17 +80,25 @@ document.addEventListener('DOMContentLoaded', function () {
   function updateHighlightStyle(newTheme) {
     const highlightElement = document.querySelector('.highlight');
     if (highlightElement) {
-      if (newTheme === 'sakura') {
-        highlightElement.style.background = 'linear-gradient(to right, #5f274c,rgb(202, 74, 160), #5f274c)';
+        let gradientStyle;
+
+        switch (newTheme) {
+            case 'sakura':
+                gradientStyle = 'linear-gradient(to right, #5f274c, rgb(202, 74, 160), #5f274c)';
+                break;
+            case 'emerald':
+                gradientStyle = 'linear-gradient(to right, #1A5F1A, #50C878, #1A5F1A)'; 
+                break;
+            default: 
+                gradientStyle = 'linear-gradient(to right, #221d5e, #443ab6, #221d5e)';
+                break;
+        }
+
+        highlightElement.style.background = gradientStyle;
         highlightElement.style.webkitBackgroundClip = 'text';
         highlightElement.style.webkitTextFillColor = 'transparent';
-      } else {
-        highlightElement.style.background = 'linear-gradient(to right, #221d5e, #443ab6, #221d5e)';
-        highlightElement.style.webkitBackgroundClip = 'text';
-        highlightElement.style.webkitTextFillColor = 'transparent';
-      }
     }
-  }
+}
 
   function updateGlowPointStyle(style) {
     const glowPoints = document.querySelectorAll('.glow-point');
@@ -77,15 +109,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updateSettingsMenuH2Style(theme) {
     const settingsTitle = document.querySelector('#settings-menu h2');
-    
-    if (theme === 'sakura') {
-      settingsTitle.style.color = '#ff66cc'; 
-    } else {
-      settingsTitle.style.color = '#443ab6'; 
+
+    switch (theme) {
+        case 'sakura':
+            settingsTitle.style.color = '#ff66cc'; 
+            break;
+        case 'emerald':
+            settingsTitle.style.color = '#50C878'; 
+            break;
+        default: 
+            settingsTitle.style.color = '#443ab6'; 
+            break;
     }
-  
+
     localStorage.setItem('settingsMenuH2Color', settingsTitle.style.color);
-  }
+}
   
     themesSelector.addEventListener('click', function(e) {
       e.stopPropagation();
@@ -95,13 +133,23 @@ document.addEventListener('DOMContentLoaded', function () {
   
     const themeOptionsDivs = themesOptions.getElementsByTagName('div');
     for (let i = 0; i < themeOptionsDivs.length; i++) {
-      themeOptionsDivs[i].addEventListener('click', function(e) {
+      themeOptionsDivs[i].addEventListener('click', function (e) {
         e.stopPropagation();
         const selectedTheme = this.innerHTML.toLowerCase();
-        let glowStyle = '0rem 0rem 1.2rem 0.6rem #443ab6';
-        if (selectedTheme === 'sakura') {
-          glowStyle = '0rem 0rem 1.2rem 0.6rem #ff66cc';
+        let glowStyle = '0rem 0rem 1.2rem 0.6rem #443ab6'; 
+    
+        switch (selectedTheme) {
+          case 'sakura':
+            glowStyle = '0rem 0rem 1.2rem 0.6rem #ff66cc'; 
+            break;
+          case 'emerald':
+            glowStyle = '0rem 0rem 1.2rem 0.6rem #50C878'; 
+            break;
+          default:
+            glowStyle = '0rem 0rem 1.2rem 0.6rem #443ab6'; 
+            break;
         }
+    
         updateTheme(selectedTheme, glowStyle);
       });
     }
@@ -203,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById(otherTabId3).classList.remove('active');
   
     document.getElementById(contentId).classList.add('active');
+  
     document.getElementById(tabId).classList.add('active');
   }
   
