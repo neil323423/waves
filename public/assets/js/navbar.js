@@ -1,19 +1,27 @@
 document.getElementById('refreshIcon').addEventListener('click', function() {
     var iframe = document.getElementById('proxy-iframe');
-    iframe.contentWindow.location.reload(true);
+    if (iframe && iframe.tagName === 'IFRAME') {
+        iframe.contentWindow.location.reload(true);
+    }
 });
 
 document.getElementById('fullscreenIcon').addEventListener('click', function() {
     var iframe = document.getElementById('proxy-iframe');
-    iframe.requestFullscreen();
+    if (iframe && iframe.tagName === 'IFRAME') {
+        iframe.requestFullscreen();
+    }
 });
 
 document.getElementById('backIcon').addEventListener('click', function() {
     var iframe = document.getElementById('proxy-iframe');
-    iframe.contentWindow.history.back();
+    if (iframe && iframe.tagName === 'IFRAME') {
+        iframe.contentWindow.history.back();
+    }
 });
 
 document.getElementById('forwardIcon').addEventListener('click', function() {
     var iframe = document.getElementById('proxy-iframe');
-    iframe.contentWindow.history.forward();
+    if (iframe && iframe.tagName === 'IFRAME') {
+        iframe.contentWindow.history.forward();
+    }
 });
