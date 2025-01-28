@@ -620,7 +620,7 @@ body {
     color: white;
     font-size: 16px;
     border: none;
-    background-color: #16161681;
+    background-color: #2c2c2c81;
     backdrop-filter: blur(20px);
     text-indent: 0.5em;
     outline: none;
@@ -632,10 +632,10 @@ body {
     clip-path: inset(0 0 0 0);
 }
 .search-bar input[type=text]:focus {
-    background-color: #33333380;
+    background-color: #41414180;
 }
 .search-bar input[type=text]:hover {
-    background-color: #33333380;
+    background-color: #41414180;
 }
 .search-bar input[type=text]::placeholder {
     color: #525252;
@@ -700,45 +700,152 @@ body {
     text-align: center;
     font-weight: bold;
 }
+.moon {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle at 30% 30%, #d9d9d9, #bfbfbf, #a6a6a6);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 25px rgba(94, 94, 94, 0.712);
+}
+
+.moon::before,
+.moon::after {
+    content: "";
+    position: absolute;
+    background: radial-gradient(circle, #a6a6a6, #808080);
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.moon::before {
+    width: 20px;
+    height: 20px;
+    top: 15%;
+    left: 20%;
+    box-shadow: 5px 5px 0 #808080;
+}
+
+.moon::after {
+    width: 15px;
+    height: 15px;
+    top: 65%;
+    left: 30%;
+    box-shadow: -3px -3px 0 #808080;
+}
+
+.moon .crater {
+    position: absolute;
+    background: radial-gradient(circle, #bfbfbf, #8c8c8c);
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.moon .crater:nth-child(1) {
+    width: 10px;
+    height: 10px;
+    top: 5%;
+    left: 40%;
+}
+
+.moon .crater:nth-child(2) {
+    width: 12px;
+    height: 12px;
+    bottom: 10%;
+    right: 25%;
+}
+
+.moon .crater:nth-child(3) {
+    width: 8px;
+    height: 8px;
+    top: 25%;
+    right: 15%;
+}
+.rocket {
+    width: 20px;
+    height: 60px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform-origin: top center;
+    animation: orbit 2s linear infinite;
+}
+
+.rocket-body {
+    width: 100%;
+    height: 80%;
+    background-color: #929292;
+    border-radius: 90% 90% 0 0;
+    position: relative;
+}
+
+.rocket-fins {
+    width: 100%;
+    height: 20%;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.rocket-fin {
+    width: 30%;
+    height: 100%;
+    background-color: #292929;
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.rocket-flame {
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(to bottom, orange, red, transparent);
+    position: absolute;
+    bottom: -20px;
+    border-radius: 50%;
+    animation: flame 0.5s infinite alternate ease-in-out;
+}
+
+@keyframes orbit {
+    0% {
+        transform: rotate(0deg) translateX(80px) rotate(30deg); 
+    }
+    25% {
+        transform: rotate(-90deg) translateX(80px) rotate(30deg);
+    }
+    50% {
+        transform: rotate(-180deg) translateX(80px) rotate(30deg);
+    }
+    75% {
+        transform: rotate(-270deg) translateX(80px) rotate(30deg);
+    }
+    100% {
+        transform: rotate(-360deg) translateX(80px) rotate(30deg);
+    }
+}
+
+@keyframes flame {
+    0% {
+        transform: scaleY(0.8) scaleX(0.9);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scaleY(1.2) scaleX(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scaleY(0.8) scaleX(0.9);
+        opacity: 0.8;
+    }
+}
 .highlight {
     font-weight: bold;
     font-size: 90px;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     clip-path: inset(0 100% 0 0);
     transition: opacity 0.5s ease-out 0.3s, clip-path 0.5s ease-out 0.3s;
 }
 .highlight.loaded {
     opacity: 1;
     clip-path: inset(0 0 0 0);
-}
-.bar {
-    width: 8px;
-    height: 20px;
-    animation: bounce 1s infinite;
-}
-.bar:nth-child(1) {
-    animation-delay: 0s;
-}
-.bar:nth-child(2) {
-    animation-delay: 0.1s;
-}
-.bar:nth-child(3) {
-    animation-delay: 0.2s;
-}
-.bar:nth-child(4) {
-    animation-delay: 0.3s;
-}
-.bar:nth-child(5) {
-    animation-delay: 0.4s;
-}
-@keyframes bounce {
-    0%, 100% {
-        transform: scaleY(0.7);
-   }
-    50% {
-        transform: scaleY(2);
-   }
 }
 .toast {
     position: fixed;

@@ -25,10 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const settingsTitle = document.querySelector('#settings-menu h2');
   settingsTitle.style.color = savedH2Color;
 
-  const savedBarColor = localStorage.getItem('barColor') || '#443ab6';
-  const bar = document.querySelector('.bar');
-  bar.style.backgroundColor = savedBarColor;
-
   themesSelected.textContent = selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1);
 
   function updateTheme(newTheme, glowStyle) {
@@ -38,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
     updateHighlightStyle(newTheme);
     updateLightStyle(newTheme === 'sakura' ? '0 0 250px 100px #ff66cc' : '0 0 250px 100px #443ab6', newTheme === 'sakura' ? 'radial-gradient(farthest-corner at 50% 50%, #ff66cc)' : 'radial-gradient(farthest-corner at 50% 50%, #443ab6)');
     updateSettingsMenuH2Style(newTheme);
-    updateBarColor(newTheme);
     localStorage.setItem('selectedTheme', newTheme);
     localStorage.setItem('glowPointStyle', glowStyle);
     themesSelected.textContent = newTheme.charAt(0).toUpperCase() + newTheme.slice(1);
@@ -91,32 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
   
     localStorage.setItem('settingsMenuH2Color', settingsTitle.style.color);
   }
-
-  function updateBarColor(theme) {
-    const bars = document.querySelectorAll('.bar');
-    const barColor = theme === 'sakura' ? '#ff66cc' : '#443ab6';
-  
-    bars.forEach(bar => {
-      bar.style.backgroundColor = barColor;
-    });
-  
-    localStorage.setItem('barColor', barColor);
-  }
-  
-  function applySavedTheme() {
-    const savedColor = localStorage.getItem('barColor');
-  
-    if (savedColor) {
-      const bars = document.querySelectorAll('.bar');
-      bars.forEach(bar => {
-        bar.style.backgroundColor = savedColor;
-      });
-    }
-  }
-  
-  window.onload = function() {
-    applySavedTheme();
-  };
   
     themesSelector.addEventListener('click', function(e) {
       e.stopPropagation();
