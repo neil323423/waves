@@ -765,7 +765,7 @@ body {
     width: 20px;
     height: 60px;
     position: absolute;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform-origin: top center;
     animation: orbit 2s linear infinite;
