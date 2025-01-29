@@ -708,9 +708,7 @@ body {
 .moon {
     width: 80px;
     height: 80px;
-    background-image: url('lebron.png'); 
-    background-size: cover; 
-    background-position: center; 
+    background: radial-gradient(circle at 30% 30%, #d9d9d9, #bfbfbf, #a6a6a6);
     border-radius: 50%;
     position: relative;
     box-shadow: 0 0 25px rgba(94, 94, 94, 0.712);
