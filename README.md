@@ -3,7 +3,7 @@ A sleek and minimalist Web Proxy.
 
 [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v3/monitor/1r475.svg)](https://uptime.betterstack.com/?utm_source=status_badge)
 
-[![Join our Discord](https://invidget.switchblade.xyz/656PtwMx3H)](https://discord.gg/656PtwMx3H)
+[![Join our Discord](https://invidget.switchblade.xyz/dJvdkPRheV)](https://discord.gg/dJvdkPRheV)
 
 > [!NOTE] 
 > Waves is still in its early stages, so you might encounter a few occasional bugs. I am actively working on new features and improvements—stay tuned!
