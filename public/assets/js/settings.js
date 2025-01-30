@@ -183,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function () {
       localStorage.setItem('customWispUrl', defaultWispUrl);
       wispInput.value = defaultWispUrl;
       showToast('error', "Invalid URL. Reverting back to default...");
-      location.reload();
     }
   }
 
