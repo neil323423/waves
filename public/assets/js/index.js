@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     gamesIcon.addEventListener("click", (event) => {
         event.preventDefault();
-        handleSearch("https://shuttle.lol/");
+        handleSearch("https://selenite.cc/");
     });
 
     chatIcon.addEventListener("click", (event) => {
