@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const iframe = document.querySelector("iframe");
+    const iframe = document.querySelector("#proxy-iframe");
     const searchContainer = document.querySelector(".search-container");
     const navBar = document.querySelector(".navbar");
     const topBar = document.querySelector(".top-bar");
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     gamesIcon.addEventListener("click", (event) => {
         event.preventDefault();
-        handleSearch("https://selenite.cc/projects.html");
+        handleSearch("https://shuttle.lol/");
     });
 
     chatIcon.addEventListener("click", (event) => {
@@ -53,12 +53,18 @@ document.addEventListener('DOMContentLoaded', () => {
         iframe.style.display = "block";
         topBar.style.display = "none";
 
+        document.getElementById('backIcon').disabled = true;
+        document.getElementById('forwardIcon').disabled = true;
+
         iframe.src = await getUrl(searchURL);
+
+        // Add the new URL to the custom history stack
+        window.addToHistory(iframe.src);
 
         iframe.onload = () => {
             hideLoadingScreen();
             if (navbarToggle.checked) {
-                navBar.style.display = "block"; 
+                navBar.style.display = "block";
             }
             generateRandomId();
         };
@@ -123,3 +129,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+

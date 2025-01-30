@@ -492,7 +492,7 @@ body {
 }
 .navbar {
     top: 2%;
-    background-color: #11111180;
+    background-color: #11111198;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     left: 50%;
@@ -507,10 +507,10 @@ body {
     transform: translateX(-50%);
 }
 .nav-links li img {
-    width: 25px;
-    height: 25px;
+    width: 23px;
+    height: 23px;
     transition: background-color 1.3s;
-}
+}n
 .navbar ul {
     list-style-type: none;
     margin: 0;
@@ -541,24 +541,40 @@ body {
     transform-origin: center center;
     text-decoration: none;
     border-radius: 50%;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transform-origin: center;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
+
 .navbar a:hover {
     transform: scale(1.2);
 }
+
 .navbar a:active {
     transform: scale(0.9);
+}
+
+.navbar a.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none; 
+}
+
+.navbar a.disabled {
+    transition: opacity 0.3s ease-in-out;
 }
 @keyframes spin {
     0% {
         transform: rotate(0deg);
-   }
-    50% {
-        transform: rotate(360deg);
-   }
+    }
     100% {
-        transform: rotate(0deg);
-   }
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 0.3s ease-in-out    ;
+    transform: rotate(720deg); 
+    transform-origin: center; 
 }
 .small-searchbar {
     display: flex;
@@ -567,14 +583,19 @@ body {
     width: 700px;
 }
 .small-searchbar input[type=text] {
-    padding: 12px;
+    padding: 15px;
     width: 90%;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
+    padding-left: 40px;
+    background-image: url('/assets/images/icons/search.png');
+    background-size: 35px 35px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    border-radius: 20px;
     color: rgb(255, 255, 255);
-    font-size: 16px;
+    font-size: 15px;
     background-color: #11111180;
-    text-align: center;
+    text-align: left;
     text-indent: 0.5em;
     outline: none;
     transition: 0.5s;
