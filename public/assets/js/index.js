@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     gamesIcon.addEventListener("click", (event) => {
         event.preventDefault();
-        handleSearch("https://selenite.cc/projects.html");
+        handleSearch("https://crazygames.com/");
     });
 
     chatIcon.addEventListener("click", (event) => {
@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         iframe.src = await getUrl(searchURL);
 
-        // Add the new URL to the custom history stack
         window.addToHistory(iframe.src);
 
         iframe.onload = () => {
