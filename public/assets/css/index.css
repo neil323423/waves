@@ -282,7 +282,6 @@ body {
 #aboutblank-toggle:checked {
     background-color: #4caf50;
 }
-
 #aboutblank-toggle::before {
     content: '';
     width: 26px;
@@ -315,17 +314,14 @@ body {
                 inset 2px 2px 5px rgba(255, 255, 255, 0.2),
                 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
-
 #navbar-toggle:hover {
     box-shadow: inset -3px -3px 6px rgba(0, 0, 0, 0.3),
                 inset 3px 3px 6px rgba(255, 255, 255, 0.3),
                 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
-
 #navbar-toggle:checked {
     background-color: #4caf50;
 }
-
 #navbar-toggle::before {
     content: '';
     width: 26px;
@@ -338,7 +334,6 @@ body {
     left: 2px;
     transition: transform 0.5s, box-shadow 0.3s;
 }
-
 #navbar-toggle:checked::before {
     transform: translateX(30px);
 }
@@ -425,7 +420,6 @@ body {
     transition: 0.3 ease;
     margin-bottom: 20px;
 }
-
 .tab-button {
     background-color: #1b1b1b;
     color: #e0e0e0;
@@ -438,7 +432,6 @@ body {
     margin-top: -10px;
     margin-right: 8px;
 }
-
 .tab-button:hover {
     background-color: #333333;
 }
@@ -454,7 +447,6 @@ body {
     visibility: hidden;
     transition: opacity 0.3s ease, transform 0.5s ease-out, max-height 0.3s ease-in-out, visibility 0s linear 0.3s;
   }
-  
   .tab-content.active {
     opacity: 1;
     max-height: 430px; 
@@ -462,7 +454,6 @@ body {
     visibility: visible;
     transition: opacity 0.3s ease, transform 0.2s ease-out, max-height 0.5s ease-in-out; /* Smoother transition */
   }
-  
 .light {
     box-shadow: 0 0 250px 100px #443ab6;
     border-radius: 5%;
@@ -496,7 +487,7 @@ body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     left: 50%;
-    width: 1200px;
+    width: 1150px;
     max-width: 100%;
     display: none;
     border-radius: 20px;
@@ -510,7 +501,7 @@ body {
     width: 23px;
     height: 23px;
     transition: background-color 1.3s;
-}n
+}
 .navbar ul {
     list-style-type: none;
     margin: 0;
@@ -528,7 +519,7 @@ body {
 }
 .navbar li {
     padding: 10px -10px;
-    margin-left: 5px;
+    margin-left: 2px;
     font-size: 20px;
     font-weight: bold;
     position: relative;
@@ -544,11 +535,9 @@ body {
     transform-origin: center;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
-
 .navbar a:hover {
     transform: scale(1.2);
 }
-
 .navbar a:active {
     transform: scale(0.9);
 }
@@ -558,7 +547,6 @@ body {
     cursor: not-allowed;
     pointer-events: none; 
 }
-
 .navbar a.disabled {
     transition: opacity 0.3s ease-in-out;
 }
@@ -734,7 +722,6 @@ body {
     position: relative;
     box-shadow: 0 0 25px rgba(94, 94, 94, 0.712);
 }
-
 .moon::before,
 .moon::after {
     content: "";
@@ -743,7 +730,6 @@ body {
     border-radius: 50%;
     opacity: 0.7;
 }
-
 .moon::before {
     width: 20px;
     height: 20px;
@@ -751,7 +737,6 @@ body {
     left: 20%;
     box-shadow: 5px 5px 0 #808080;
 }
-
 .moon::after {
     width: 15px;
     height: 15px;
@@ -759,21 +744,18 @@ body {
     left: 30%;
     box-shadow: -3px -3px 0 #808080;
 }
-
 .moon .crater {
     position: absolute;
     background: radial-gradient(circle, #bfbfbf, #8c8c8c);
     border-radius: 50%;
     opacity: 0.8;
 }
-
 .moon .crater:nth-child(1) {
     width: 10px;
     height: 10px;
     top: 5%;
     left: 40%;
 }
-
 .moon .crater:nth-child(2) {
     width: 12px;
     height: 12px;
@@ -796,7 +778,6 @@ body {
     transform-origin: top center;
     animation: orbit 2s linear infinite;
 }
-
 .rocket-body {
     width: 100%;
     height: 80%;
@@ -804,7 +785,6 @@ body {
     border-radius: 90% 90% 0 0;
     position: relative;
 }
-
 .rocket-fins {
     width: 100%;
     height: 20%;
@@ -813,14 +793,12 @@ body {
     display: flex;
     justify-content: space-between;
 }
-
 .rocket-fin {
     width: 30%;
     height: 100%;
     background-color: #292929;
     clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }
-
 .rocket-flame {
     width: 100%;
     height: 20px;
@@ -830,7 +808,6 @@ body {
     border-radius: 50%;
     animation: flame 0.5s infinite alternate ease-in-out;
 }
-
 @keyframes orbit {
     0% {
         transform: rotate(0deg) translateX(80px) rotate(30deg); 
