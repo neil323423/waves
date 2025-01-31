@@ -7,6 +7,12 @@ document.getElementById('refreshIcon').addEventListener('click', function () {
 
     const iframe = document.getElementById('proxy-iframe');
     if (iframe && iframe.tagName === 'IFRAME') {
+        const currentUrl = iframe.contentWindow.location.href;
+        
+        if (historyStack[currentIndex] !== currentUrl) {
+            addToHistory(currentUrl);
+        }
+        
         iframe.contentWindow.location.reload(true);
     }
 
@@ -46,10 +52,12 @@ document.getElementById('forwardIcon').addEventListener('click', function () {
 
 function addToHistory(url) {
     if (currentIndex < historyStack.length - 1) {
-        historyStack.splice(currentIndex + 1);
     }
-    historyStack.push(url);
-    currentIndex++;
+    
+    if (url && !url.includes('%60') && !historyStack.includes(url)) {
+        historyStack.push(url);
+        currentIndex++;
+    }
     updateNavButtons();
 }
 
@@ -104,7 +112,7 @@ function detectIframeNavigation() {
 }
 
 function handleIframeNavigation(url) {
-    if (url && url !== historyStack[currentIndex]) {
+    if (url && url !== historyStack[currentIndex] && !url.includes('%60') && !historyStack.includes(url)) {
         addToHistory(url);
     }
 }
