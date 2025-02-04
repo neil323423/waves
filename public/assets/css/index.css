@@ -128,30 +128,31 @@ body {
 .settings-menu.open {
     display: block;
     opacity: 1;
-    animation: openMenu 0.3s forwards;
+    animation: openMenu 0.4s forwards;
 }
 .settings-menu.close {
-    animation: closeMenu 0.3s forwards;
+    animation: closeMenu 0.4s forwards;
 }
 @keyframes openMenu {
     0% {
         opacity: 0;
-        transform: translate(-50%, -60%);
-   }
+        transform: translate(-50%, -50%) scale(0);
+    }
     100% {
         opacity: 1;
-        transform: translate(-50%, -50%);
-   }
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
+
 @keyframes closeMenu {
     0% {
         opacity: 1;
-        transform: translate(-50%, -50%);
-   }
+        transform: translate(-50%, -50%) scale(1);
+    }
     100% {
         opacity: 0;
-        transform: translate(-50%, -60%);
-   }
+        transform: translate(-50%, -50%) scale(0);
+    }
 }
 .transport-selector {
     position: relative;
