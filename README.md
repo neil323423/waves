@@ -38,7 +38,7 @@ You **cannot** deploy Waves on any static hosting services.
 3. Add a new A record with the following IP address as the destination:
 
 ```bash
-   83.229.35.239
+83.229.35.239
 ```
 
 4. Save your changes and allow time for DNS propagation, which may take a long time.
