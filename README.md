@@ -47,21 +47,6 @@ You **cannot** deploy Waves on any static hosting services.
 
 4. Save your changes and allow time for DNS propagation, which may take a long time.
 
-## Deploy Waves Locally:
-
-1. Go into your local machine terminal
-2. Run the commands bellow
-
-```bash
-git clone https://github.com/xojw/waves
-
-npm i
-
-npm start
-```
-
-Once everything is set up, head over to http://localhost:3000 to experience Waves running smoothly on your local machine!
-
 ## Self-Hosting:
 
 1. Login your server.
@@ -75,6 +60,21 @@ cd waves
 
 sh setup.sh
 ```
+
+## Run Waves Locally:
+
+1. Go into your local machine terminal
+2. Run the commands bellow
+
+```bash
+git clone https://github.com/xojw/waves
+
+npm i
+
+npm start
+```
+
+Once everything is set up, head over to http://localhost:3000 to experience Waves running smoothly on your local machine!
 
 ## Run Waves on Github Codespaces:
 
