@@ -1,3 +1,5 @@
+
+
 # Waves.
 A sleek and minimalist Web Proxy.
 
@@ -32,6 +34,8 @@ A sleek and minimalist Web Proxy.
 You **cannot** deploy Waves on any static hosting services.
 
 ## Connecting Waves to Your Domain or Subdomain:
+> [!IMPORTANT]
+> This is temporarily unavailable due to issues with our VPS provider. We’re working on resolving the problem as soon as possible.
 
 1. Log in to your domain or subdomain provider’s control panel.
 2. Select the domain or subdomain you'd like to configure.
@@ -58,13 +62,11 @@ npm start
 
 Once everything is set up, head over to http://localhost:3000 to experience Waves running smoothly on your local machine!
 
-## Deploying Waves on your own server:
-> [!NOTE] 
-> A Domain or Subdomain is no longer required for this.
+## Self-Hosting:
 
-1. Login your server
-2. Go to your server terminal
-3. Run the commands bellow
+1. Login your server.
+2. Open the terminal.
+3. Run the commands bellow:
    
 ```bash
 sudo git clone https://github.com/xojw/waves
