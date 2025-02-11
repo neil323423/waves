@@ -34,10 +34,10 @@ info "Starting the setup process..."
 separator
 
 info "Checking if Node.js and npm are installed..."
-if ! dpkg-query -l | grep -q nodejs; then
+if ! command -v node > /dev/null 2>&1; then
   info "Node.js not found. Installing..."
-  sudo apt update -y > /dev/null 2>&1
-  sudo apt install -y nodejs npm > /dev/null 2>&1
+  apt update -y > /dev/null 2>&1
+  apt install -y nodejs npm > /dev/null 2>&1
   success "Node.js and npm installed successfully."
 else
   success "Node.js and npm are already installed."
@@ -45,13 +45,13 @@ fi
 separator
 
 info "Checking if Caddy is installed..."
-if ! dpkg-query -l | grep -q caddy; then
+if ! command -v caddy > /dev/null 2>&1; then
   info "Caddy not found. Installing..."
-  sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https > /dev/null 2>&1
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg > /dev/null 2>&1
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list > /dev/null
-  sudo apt update -y > /dev/null 2>&1
-  sudo apt install -y caddy > /dev/null 2>&1
+  apt install -y debian-keyring debian-archive-keyring apt-transport-https > /dev/null 2>&1
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg > /dev/null 2>&1
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | tee /etc/apt/sources.list.d/caddy-stable.list > /dev/null
+  apt update -y > /dev/null 2>&1
+  apt install -y caddy > /dev/null 2>&1
   success "Caddy installed successfully."
 else
   success "Caddy is already installed."
@@ -59,10 +59,7 @@ fi
 separator
 
 info "Creating caddyconf at /usr/local/etc/caddy/caddyconf..."
-
-sudo mkdir -p /usr/local/etc/caddy
-sudo chown "$USER":"$USER" /usr/local/etc/caddy
-
+mkdir -p /usr/local/etc/caddy
 cat <<EOF > /usr/local/etc/caddy/caddyconf
 {
     email sefiicc@gmail.com
@@ -85,30 +82,11 @@ cat <<EOF > /usr/local/etc/caddy/caddyconf
     }
 }
 EOF
-
-# Ensure the config file is world-readable so the Caddy service (running as a different user) can access it.
-sudo chmod 644 /usr/local/etc/caddy/caddyconf
+chmod 644 /usr/local/etc/caddy/caddyconf
 separator
-
-# ==========================================
-# Create a systemd override for the Caddy service so that it uses our custom configuration file.
-# ==========================================
-info "Creating systemd override for Caddy service..."
-sudo mkdir -p /etc/systemd/system/caddy.service.d
-cat <<EOF | sudo tee /etc/systemd/system/caddy.service.d/override.conf > /dev/null
-[Service]
-# Clear the existing ExecStart command.
-ExecStart=
-# Set ExecStart to use our custom configuration file.
-ExecStart=/usr/bin/caddy run --environ --config /usr/local/etc/caddy/caddyconf
-EOF
-separator
-
-# Reload systemd to pick up the new override file.
-sudo systemctl daemon-reload
 
 info "Testing Caddy configuration..."
-sudo caddy fmt /usr/local/etc/caddy/caddyconf > /dev/null 2>&1
+caddy fmt /usr/local/etc/caddy/caddyconf > /dev/null 2>&1
 if [ $? -eq 0 ]; then
   success "caddyconf is valid."
 else
@@ -117,17 +95,14 @@ else
 fi
 
 info "Starting Caddy..."
-if ! sudo systemctl restart caddy > /dev/null 2>&1; then
-  error "Failed to start Caddy."
-  exit 1
-fi
+caddy run --config /usr/local/etc/caddy/caddyconf --adapter caddyfile &
 success "Caddy started using /usr/local/etc/caddy/caddyconf."
 separator
 
 info "Checking if PM2 is installed..."
-if ! command -v pm2 &> /dev/null; then
+if ! command -v pm2 > /dev/null 2>&1; then
   info "PM2 not found. Installing..."
-  sudo npm install -g pm2 > /dev/null 2>&1
+  npm install -g pm2 > /dev/null 2>&1
   if [ $? -eq 0 ]; then
     success "PM2 installed successfully."
   else
@@ -169,4 +144,4 @@ success "Git auto-update setup completed."
 separator
 
 success "Setup completed."
-separator. 
+separator
