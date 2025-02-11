@@ -1,24 +1,10 @@
 #!/bin/bash
 
-info() {
-  printf "\033[1;36m[INFO]\033[0m %s\n" "$1"
-}
-
-success() {
-  printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"
-}
-
-error() {
-  printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"
-}
-
-highlight() {
-  printf "\033[1;34m%s\033[0m\n" "$1"
-}
-
-separator() {
-  printf "\033[1;37m---------------------------------------------\033[0m\n"
-}
+info() { printf "\033[1;36m[INFO]\033[0m %s\n" "$1"; }
+success() { printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"; }
+error() { printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"; }
+highlight() { printf "\033[1;34m%s\033[0m\n" "$1"; }
+separator() { printf "\033[1;37m---------------------------------------------\033[0m\n"; }
 
 clear
 
@@ -34,7 +20,7 @@ info "Starting the setup process..."
 separator
 
 info "Checking if Node.js and npm are installed..."
-if ! dpkg-query -l | grep -q nodejs; then
+if ! command -v node &> /dev/null; then
   info "Node.js not found. Installing..."
   sudo apt update -y > /dev/null 2>&1
   sudo apt install -y nodejs npm > /dev/null 2>&1
@@ -45,7 +31,7 @@ fi
 separator
 
 info "Checking if Caddy is installed..."
-if ! dpkg-query -l | grep -q caddy; then
+if ! command -v caddy &> /dev/null; then
   info "Caddy not found. Installing..."
   sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https > /dev/null 2>&1
   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg > /dev/null 2>&1
@@ -58,17 +44,9 @@ else
 fi
 separator
 
-# ==========================================
-# Create a user-editable Caddy configuration file
-# New location: /usr/local/etc/caddy/caddyconf
-# ==========================================
-info "Creating caddyconf at /usr/local/etc/caddy/caddyconf..."
-
-# Create the directory and give ownership to the current user so it can be edited without sudo.
-sudo mkdir -p /usr/local/etc/caddy
-sudo chown "$USER":"$USER" /usr/local/etc/caddy
-
-cat <<EOF > /usr/local/etc/caddy/caddyconf
+info "Creating Caddy configuration..."
+mkdir -p ~/caddy
+cat <<EOF > ~/caddy/caddyconf
 {
     email sefiicc@gmail.com
 }
@@ -90,43 +68,21 @@ cat <<EOF > /usr/local/etc/caddy/caddyconf
     }
 }
 EOF
-
-# Ensure the config file is world-readable so the Caddy service (running as a different user) can access it.
-sudo chmod 644 /usr/local/etc/caddy/caddyconf
+chmod 644 ~/caddy/caddyconf
 separator
-
-# ==========================================
-# Create a systemd override for the Caddy service so that it uses our custom configuration file.
-# ==========================================
-info "Creating systemd override for Caddy service..."
-sudo mkdir -p /etc/systemd/system/caddy.service.d
-cat <<EOF | sudo tee /etc/systemd/system/caddy.service.d/override.conf > /dev/null
-[Service]
-# Clear the existing ExecStart command.
-ExecStart=
-# Set ExecStart to use our custom configuration file.
-ExecStart=/usr/bin/caddy run --environ --config /usr/local/etc/caddy/caddyconf
-EOF
-separator
-
-# Reload systemd to pick up the new override file.
-sudo systemctl daemon-reload
 
 info "Testing Caddy configuration..."
-sudo caddy fmt /usr/local/etc/caddy/caddyconf > /dev/null 2>&1
+caddy fmt ~/caddy/caddyconf > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-  success "caddyconf is valid."
+  success "Caddy configuration is valid."
 else
-  error "caddyconf test failed. Exiting."
+  error "Caddy configuration test failed. Exiting."
   exit 1
 fi
 
 info "Starting Caddy..."
-if ! sudo systemctl restart caddy > /dev/null 2>&1; then
-  error "Failed to start Caddy."
-  exit 1
-fi
-success "Caddy started using /usr/local/etc/caddy/caddyconf."
+caddy run --config ~/caddy/caddyconf --adapter caddyfile > /dev/null 2>&1 &
+success "Caddy started."
 separator
 
 info "Checking if PM2 is installed..."
