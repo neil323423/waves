@@ -46,7 +46,7 @@ separator
 info "Checking if Caddy is installed..."
 if ! command -v caddy > /dev/null 2>&1; then
   info "Caddy not found. Installing..."
-  apt install -y debian-keyring debian-archive-keyring apt-transport-https
+  apt install -y debian-keyring debian-archive-keyring apt-transport-https curl gnupg
   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
   apt update -y && apt install -y caddy
