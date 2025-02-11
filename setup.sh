@@ -34,9 +34,10 @@ info "Starting the setup process..."
 separator
 
 info "Checking if Node.js and npm are installed..."
-if ! command -v node > /dev/null 2>&1; then
+if ! dpkg-query -l | grep -q nodejs; then
   info "Node.js not found. Installing..."
-  apt update -y && apt install -y nodejs npm
+  sudo apt update -y > /dev/null 2>&1
+  sudo apt install -y nodejs npm > /dev/null 2>&1
   success "Node.js and npm installed successfully."
 else
   success "Node.js and npm are already installed."
@@ -44,21 +45,30 @@ fi
 separator
 
 info "Checking if Caddy is installed..."
-if ! command -v caddy > /dev/null 2>&1; then
+if ! dpkg-query -l | grep -q caddy; then
   info "Caddy not found. Installing..."
-  apt install -y debian-keyring debian-archive-keyring apt-transport-https curl gnupg
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
-  apt update -y && apt install -y caddy
+  sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https > /dev/null 2>&1
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg > /dev/null 2>&1
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.debian.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list > /dev/null
+  sudo apt update -y > /dev/null 2>&1
+  sudo apt install -y caddy > /dev/null 2>&1
   success "Caddy installed successfully."
 else
   success "Caddy is already installed."
 fi
 separator
 
-info "Creating Caddyfile at /etc/caddy/Caddyfile..."
-mkdir -p /etc/caddy
-cat <<EOF > /etc/caddy/Caddyfile
+# ==========================================
+# Create a user-editable Caddy configuration file
+# New location: /usr/local/etc/caddy/caddyconf
+# ==========================================
+info "Creating caddyconf at /usr/local/etc/caddy/caddyconf..."
+
+# Create the directory and give ownership to the current user so it can be edited without sudo.
+sudo mkdir -p /usr/local/etc/caddy
+sudo chown "$USER":"$USER" /usr/local/etc/caddy
+
+cat <<EOF > /usr/local/etc/caddy/caddyconf
 {
     email sefiicc@gmail.com
 }
@@ -80,37 +90,69 @@ cat <<EOF > /etc/caddy/Caddyfile
     }
 }
 EOF
-chmod 644 /etc/caddy/Caddyfile
+
+# Ensure the config file is world-readable so the Caddy service (running as a different user) can access it.
+sudo chmod 644 /usr/local/etc/caddy/caddyconf
 separator
 
+# ==========================================
+# Create a systemd override for the Caddy service so that it uses our custom configuration file.
+# ==========================================
+info "Creating systemd override for Caddy service..."
+sudo mkdir -p /etc/systemd/system/caddy.service.d
+cat <<EOF | sudo tee /etc/systemd/system/caddy.service.d/override.conf > /dev/null
+[Service]
+# Clear the existing ExecStart command.
+ExecStart=
+# Set ExecStart to use our custom configuration file.
+ExecStart=/usr/bin/caddy run --environ --config /usr/local/etc/caddy/caddyconf
+EOF
+separator
+
+# Reload systemd to pick up the new override file.
+sudo systemctl daemon-reload
+
 info "Testing Caddy configuration..."
-if caddy fmt /etc/caddy/Caddyfile; then
-  success "Caddyfile is valid."
+sudo caddy fmt /usr/local/etc/caddy/caddyconf > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+  success "caddyconf is valid."
 else
-  error "Caddyfile test failed. Exiting."
+  error "caddyconf test failed. Exiting."
   exit 1
 fi
 
 info "Starting Caddy..."
-caddy run --config /etc/caddy/Caddyfile --adapter caddyfile &
-success "Caddy started using /etc/caddy/Caddyfile."
+if ! sudo systemctl restart caddy > /dev/null 2>&1; then
+  error "Failed to start Caddy."
+  exit 1
+fi
+success "Caddy started using /usr/local/etc/caddy/caddyconf."
 separator
 
 info "Checking if PM2 is installed..."
-if ! command -v pm2 > /dev/null 2>&1; then
+if ! command -v pm2 &> /dev/null; then
   info "PM2 not found. Installing..."
-  npm install -g pm2 && success "PM2 installed successfully." || { error "Failed to install PM2."; exit 1; }
+  sudo npm install -g pm2 > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    success "PM2 installed successfully."
+  else
+    error "Failed to install PM2."
+    exit 1
+  fi
 else
   success "PM2 is already installed."
 fi
 separator
 
 info "Installing dependencies..."
-npm install && success "Dependencies installed."
+npm install > /dev/null 2>&1
+success "Dependencies installed."
 separator
 
 info "Starting the server with PM2..."
-pm2 start index.mjs && pm2 save && success "Server started and saved with PM2."
+pm2 start index.mjs > /dev/null 2>&1
+pm2 save > /dev/null 2>&1
+success "Server started and saved with PM2."
 separator
 
 info "Setting up Git auto-update..."
@@ -120,10 +162,10 @@ while true; do
     LOCAL=\$(git rev-parse main)
     REMOTE=\$(git rev-parse origin/main)
 
-    if [ \"\$LOCAL\" != \"\$REMOTE\" ]; then
-        git pull origin main
-        pm2 restart index.mjs
-        pm2 save
+    if [ \$LOCAL != \$REMOTE ]; then
+        git pull origin main > /dev/null 2>&1
+        pm2 restart index.mjs > /dev/null 2>&1
+        pm2 save > /dev/null 2>&1
     fi
     sleep 1
 done
@@ -132,4 +174,4 @@ success "Git auto-update setup completed."
 separator
 
 success "Setup completed."
-separator
+separator. 
