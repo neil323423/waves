@@ -1,16 +1,21 @@
 #!/bin/bash
+
 info() {
   printf "\033[1;36m[INFO]\033[0m %s\n" "$1"
 }
+
 success() {
   printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"
 }
+
 error() {
   printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"
 }
+
 highlight() {
   printf "\033[1;34m%s\033[0m\n" "$1"
 }
+
 separator() {
   printf "\033[1;37m---------------------------------------------\033[0m\n"
 }
@@ -53,11 +58,12 @@ else
 fi
 separator
 
-info "Relocating Caddy configuration file..."
-USER_HOME=$(eval echo ~${SUDO_USER:-$USER})
-CADDY_CONF_DIR="$USER_HOME/caddy"
-mkdir -p "$CADDY_CONF_DIR"
-cat <<EOF > "$CADDY_CONF_DIR/caddyconf"
+info "Creating caddyconf at /usr/local/etc/caddy/caddyconf..."
+
+sudo mkdir -p /usr/local/etc/caddy
+sudo chown "$USER":"$USER" /usr/local/etc/caddy
+
+cat <<EOF > /usr/local/etc/caddy/caddyconf
 {
     email sefiicc@gmail.com
 }
@@ -66,8 +72,10 @@ cat <<EOF > "$CADDY_CONF_DIR/caddyconf"
     tls {
         on_demand  
     }
+
     reverse_proxy http://localhost:3000  
     encode gzip zstd
+
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
         X-Frame-Options "ALLOWALL" 
@@ -77,44 +85,43 @@ cat <<EOF > "$CADDY_CONF_DIR/caddyconf"
     }
 }
 EOF
-chmod 644 "$CADDY_CONF_DIR/caddyconf"
-info "Configuration file relocated to $CADDY_CONF_DIR/caddyconf"
+
+sudo chmod 644 /usr/local/etc/caddy/caddyconf
 separator
 
 info "Creating systemd override for Caddy service..."
-sudo mkdir -p /etc/systemd/system/caddy.service.d/
-sudo tee /etc/systemd/system/caddy.service.d/override.conf > /dev/null <<EOF
+sudo mkdir -p /etc/systemd/system/caddy.service.d
+cat <<EOF | sudo tee /etc/systemd/system/caddy.service.d/override.conf > /dev/null
 [Service]
+# Clear the existing ExecStart command.
 ExecStart=
-ExecStart=/usr/bin/caddy run --environ --config $CADDY_CONF_DIR/caddyconf
+# Set ExecStart to use our custom configuration file.
+ExecStart=/usr/bin/caddy run --environ --config /usr/local/etc/caddy/caddyconf
 EOF
-sudo systemctl daemon-reload
 separator
+
+sudo systemctl daemon-reload
 
 info "Testing Caddy configuration..."
-sudo caddy fmt "$CADDY_CONF_DIR/caddyconf" > /dev/null 2>&1
+sudo caddy fmt /usr/local/etc/caddy/caddyconf > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-  success "Configuration file is valid."
+  success "caddyconf is valid."
 else
-  error "Configuration file test failed. Exiting."
+  error "caddyconf test failed. Exiting."
   exit 1
 fi
-separator
 
-info "Restarting Caddy..."
+info "Starting Caddy..."
 if ! sudo systemctl restart caddy > /dev/null 2>&1; then
-  error "Failed to restart Caddy."
+  error "Failed to start Caddy."
   exit 1
 fi
-success "Caddy restarted successfully."
+success "Caddy started using /usr/local/etc/caddy/caddyconf."
 separator
 
 info "Checking if PM2 is installed..."
-PM2_PATH=$(which pm2 2>/dev/null)
-if [ "$PM2_PATH" = "/usr/local/bin/pm2" ]; then
-  success "PM2 is already installed."
-else
-  info "PM2 not found or not in the expected path. Installing..."
+if ! command -v pm2 &> /dev/null; then
+  info "PM2 not found. Installing..."
   sudo npm install -g pm2 > /dev/null 2>&1
   if [ $? -eq 0 ]; then
     success "PM2 installed successfully."
@@ -122,6 +129,8 @@ else
     error "Failed to install PM2."
     exit 1
   fi
+else
+  success "PM2 is already installed."
 fi
 separator
 
@@ -142,6 +151,7 @@ while true; do
     git fetch origin
     LOCAL=\$(git rev-parse main)
     REMOTE=\$(git rev-parse origin/main)
+
     if [ \$LOCAL != \$REMOTE ]; then
         git pull origin main > /dev/null 2>&1
         pm2 restart index.mjs > /dev/null 2>&1
