@@ -1,21 +1,16 @@
 #!/bin/bash
-
 info() {
   printf "\033[1;36m[INFO]\033[0m %s\n" "$1"
 }
-
 success() {
   printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"
 }
-
 error() {
   printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"
 }
-
 highlight() {
   printf "\033[1;34m%s\033[0m\n" "$1"
 }
-
 separator() {
   printf "\033[1;37m---------------------------------------------\033[0m\n"
 }
@@ -58,8 +53,11 @@ else
 fi
 separator
 
-info "Creating Caddyfile..."
-cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
+info "Relocating Caddy configuration file..."
+USER_HOME=$(eval echo ~${SUDO_USER:-$USER})
+CADDY_CONF_DIR="$USER_HOME/caddy"
+mkdir -p "$CADDY_CONF_DIR"
+cat <<EOF > "$CADDY_CONF_DIR/caddyconf"
 {
     email sefiicc@gmail.com
 }
@@ -68,10 +66,8 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
     tls {
         on_demand  
     }
-
     reverse_proxy http://localhost:3000  
     encode gzip zstd
-
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
         X-Frame-Options "ALLOWALL" 
@@ -81,23 +77,36 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
     }
 }
 EOF
+chmod 644 "$CADDY_CONF_DIR/caddyconf"
+info "Configuration file relocated to $CADDY_CONF_DIR/caddyconf"
+separator
+
+info "Creating systemd override for Caddy service..."
+sudo mkdir -p /etc/systemd/system/caddy.service.d/
+sudo tee /etc/systemd/system/caddy.service.d/override.conf > /dev/null <<EOF
+[Service]
+ExecStart=
+ExecStart=/usr/bin/caddy run --environ --config $CADDY_CONF_DIR/caddyconf
+EOF
+sudo systemctl daemon-reload
 separator
 
 info "Testing Caddy configuration..."
-sudo caddy fmt /etc/caddy/Caddyfile > /dev/null 2>&1
+sudo caddy fmt "$CADDY_CONF_DIR/caddyconf" > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-  success "Caddyfile is valid."
+  success "Configuration file is valid."
 else
-  error "Caddyfile test failed. Exiting."
+  error "Configuration file test failed. Exiting."
   exit 1
 fi
+separator
 
-info "Starting Caddy..."
+info "Restarting Caddy..."
 if ! sudo systemctl restart caddy > /dev/null 2>&1; then
-  error "Failed to start Caddy."
+  error "Failed to restart Caddy."
   exit 1
 fi
-success "Caddy started."
+success "Caddy restarted successfully."
 separator
 
 info "Checking if PM2 is installed..."
@@ -133,7 +142,6 @@ while true; do
     git fetch origin
     LOCAL=\$(git rev-parse main)
     REMOTE=\$(git rev-parse origin/main)
-
     if [ \$LOCAL != \$REMOTE ]; then
         git pull origin main > /dev/null 2>&1
         pm2 restart index.mjs > /dev/null 2>&1
