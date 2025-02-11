@@ -39,7 +39,7 @@ info "Checking if Node.js and npm are installed..."
 
 if ! command -v node >/dev/null 2>&1; then
   info "Node.js not found. Installing..."
-  apt update -y && apt install -y nodejs npm
+  apt update -y &>/dev/null && apt install -y nodejs npm &>/dev/null
   success "Node.js and npm installed successfully."
 else
   success "Node.js and npm are already installed."
@@ -51,10 +51,10 @@ info "Checking if Caddy is installed..."
 
 if ! command -v caddy >/dev/null 2>&1; then
   info "Caddy not found. Installing..."
-  apt install -y debian-keyring debian-archive-keyring apt-transport-https
-  curl -fsSL 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-keyring.gpg
+  apt install -y debian-keyring debian-archive-keyring apt-transport-https &>/dev/null
+  curl -fsSL 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-keyring.gpg &>/dev/null
   echo "deb [signed-by=/usr/share/keyrings/caddy-keyring.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main" > /etc/apt/sources.list.d/caddy.list
-  apt update -y && apt install -y caddy
+  apt update -y &>/dev/null && apt install -y caddy &>/dev/null
   success "Caddy installed successfully."
 else
   success "Caddy is already installed."
@@ -100,11 +100,10 @@ fi
 
 info "Starting Caddy..."
 
-caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
-
+caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile > /dev/null 2>&1
 success "Caddy reloaded with new configuration."
 
-caddy run --config /etc/caddy/Caddyfile --adapter caddyfile &
+caddy run --config /etc/caddy/Caddyfile --adapter caddyfile &>/dev/null &
 
 success "Caddy started using /etc/caddy/Caddyfile."
 
@@ -112,9 +111,9 @@ separator
 
 info "Checking if PM2 is installed..."
 
-if ! command -v pm2 &> /dev/null; then
+if ! command -v pm2 &>/dev/null; then
   info "PM2 not found. Installing..."
-  npm install -g pm2
+  npm install -g pm2 &>/dev/null
   success "PM2 installed successfully."
 else
   success "PM2 is already installed."
@@ -124,7 +123,7 @@ separator
 
 info "Installing dependencies..."
 
-npm install
+npm install &>/dev/null
 
 success "Dependencies installed."
 
@@ -132,8 +131,8 @@ separator
 
 info "Starting the server with PM2..."
 
-pm2 start index.mjs
-pm2 save
+pm2 start index.mjs &>/dev/null
+pm2 save &>/dev/null
 
 success "Server started and saved with PM2."
 
@@ -143,17 +142,17 @@ info "Setting up Git auto-update..."
 
 nohup bash -c "
 while true; do
-    git fetch origin
+    git fetch origin &>/dev/null
     LOCAL=\$(git rev-parse main)
     REMOTE=\$(git rev-parse origin/main)
     if [ \$LOCAL != \$REMOTE ]; then
-        git pull origin main
-        pm2 restart index.mjs
-        pm2 save
+        git pull origin main &>/dev/null
+        pm2 restart index.mjs &>/dev/null
+        pm2 save &>/dev/null
     fi
     sleep 1
 done
-" > /dev/null 2>&1 &
+" &>/dev/null &
 
 success "Git auto-update setup completed."
 
