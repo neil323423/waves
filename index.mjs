@@ -37,7 +37,7 @@ app.use(
 let port = parseInt(process.env.PORT || "");
 
 if (isNaN(port)) {
-  port = 3000;
+  port = 3005;
 }
 
 const server = createServer();
