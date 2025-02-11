@@ -34,11 +34,7 @@ app.use(
   })
 );
 
-let port = parseInt(process.env.PORT || "");
-
-if (isNaN(port)) {
-  port = 3000;
-}
+let port = parseInt(process.env.PORT || "3000");
 
 const server = createServer();
 
@@ -61,7 +57,8 @@ server.on('upgrade', (req, socket, head) => {
 
 server.on("listening", () => {
   const address = server.address();
-  console.log(chalk.bold.blue(`
+  if (address && typeof address === "object") {
+    console.log(chalk.bold.blue(`
 ██╗    ██╗ █████╗ ██╗   ██╗███████╗███████╗   
 ██║    ██║██╔══██╗██║   ██║██╔════╝██╔════╝   
 ██║ █╗ ██║███████║██║   ██║█████╗  ███████╗   
@@ -69,16 +66,19 @@ server.on("listening", () => {
 ╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗███████║██╗
  ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝                                          
     `));
-  
-  console.log(chalk.bold.green(`🟡 Server starting...`));
-  console.log(chalk.bold.green(`🟢 Server started successfully!`));
-  console.log(chalk.green(`🔗 Hostname: `) + chalk.bold(`http://${hostname()}:${address.port}`));
-  console.log(chalk.green(`🔗 LocalHost: `) + chalk.bold(`http://localhost:${address.port}`));
-  console.log(chalk.green('🕒 Time: ') + chalk.bold.magenta(new Date().toLocaleTimeString()));
-  console.log(chalk.green('📅 Date: ') + chalk.bold.magenta(new Date().toLocaleDateString()));
-  console.log(chalk.green('💻 Platform: ') + chalk.bold.yellow(process.platform));
-  console.log(chalk.green('📶 Server Status: ') + chalk.bold.green('Running'));
-  console.log(chalk.red('🔴 Do ctrl + c to shut down the server.'));
+
+    console.log(chalk.bold.green(`🟡 Server starting...`));
+    console.log(chalk.bold.green(`🟢 Server started successfully!`));
+    console.log(chalk.green(`🔗 Hostname: `) + chalk.bold(`http://${hostname()}:${address.port}`));
+    console.log(chalk.green(`🔗 LocalHost: `) + chalk.bold(`http://localhost:${address.port}`));
+    console.log(chalk.green('🕒 Time: ') + chalk.bold.magenta(new Date().toLocaleTimeString()));
+    console.log(chalk.green('📅 Date: ') + chalk.bold.magenta(new Date().toLocaleDateString()));
+    console.log(chalk.green('💻 Platform: ') + chalk.bold.yellow(process.platform));
+    console.log(chalk.green('📶 Server Status: ') + chalk.bold.green('Running'));
+    console.log(chalk.red('🔴 Do ctrl + c to shut down the server.'));
+  } else {
+    console.error(chalk.bold.red("❌ Server failed to start."));
+  }
 });
 
 process.on("SIGINT", () => shutdown("SIGINT"));
@@ -89,7 +89,6 @@ async function shutdown(signal) {
 
   try {
     await closeServer(server, "HTTP server");
-
     console.log(chalk.bold.green("✅ All servers shut down successfully."));
     process.exit(0);
   } catch (err) {
@@ -112,4 +111,4 @@ function closeServer(server, name) {
   });
 }
 
-server.listen({ port });
+server.listen(port);
