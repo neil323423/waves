@@ -62,11 +62,9 @@ fi
 
 separator
 
-info "Creating caddyconf at /usr/local/etc/caddy/caddyconf..."
+info "Creating a Caddyfile at /etc/caddy/Caddyfile..."
 
-mkdir -p /usr/local/etc/caddy
-
-cat <<EOF > /usr/local/etc/caddy/caddyconf
+cat <<EOF > /etc/caddy/Caddyfile
 {
     email sefiicc@gmail.com
 }
@@ -75,7 +73,7 @@ cat <<EOF > /usr/local/etc/caddy/caddyconf
     tls {
         on_demand
     }
-    reverse_proxy http://localhost:3005
+    reverse_proxy localhost:3005
     encode gzip zstd
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
@@ -87,28 +85,28 @@ cat <<EOF > /usr/local/etc/caddy/caddyconf
 }
 EOF
 
-chmod 644 /usr/local/etc/caddy/caddyconf
+chmod 644 /etc/caddy/Caddyfile
 
 separator
 
 info "Testing Caddy configuration..."
 
-if caddy adapt --config /usr/local/etc/caddy/caddyconf --adapter caddyfile > /dev/null 2>&1; then
-  success "caddyconf is valid."
+if caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile > /dev/null 2>&1; then
+  success "Caddyfile is valid."
 else
-  error "caddyconf test failed. Exiting."
+  error "Caddyfile test failed. Exiting."
   exit 1
 fi
 
 info "Starting Caddy..."
 
-caddy reload --config /usr/local/etc/caddy/caddyconf --adapter caddyfile
+caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
 
 success "Caddy reloaded with new configuration."
 
-caddy run --config /usr/local/etc/caddy/caddyconf --adapter caddyfile &
+caddy run --config /etc/caddy/Caddyfile --adapter caddyfile &
 
-success "Caddy started using /usr/local/etc/caddy/caddyconf."
+success "Caddy started using /etc/caddy/Caddyfile."
 
 separator
 
