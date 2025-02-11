@@ -1,20 +1,42 @@
 #!/bin/bash
-info() { printf "\033[1;36m[INFO]\033[0m %s\n" "$1"; }
-success() { printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"; }
-error() { printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"; }
-highlight() { printf "\033[1;34m%s\033[0m\n" "$1"; }
-separator() { printf "\033[1;37m---------------------------------------------\033[0m\n"; }
+
+info() { 
+  printf "\033[1;36m[INFO]\033[0m %s\n" "$1"; 
+}
+
+success() { 
+  printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"; 
+}
+
+error() { 
+  printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"; 
+}
+
+highlight() { 
+  printf "\033[1;34m%s\033[0m\n" "$1"; 
+}
+
+separator() { 
+  printf "\033[1;37m---------------------------------------------\033[0m\n"; 
+}
+
 clear
+
 highlight "██╗    ██╗ █████╗ ██╗   ██╗███████╗███████╗"
 highlight "██║    ██║██╔══██╗██║   ██║██╔════╝██╔════╝"
 highlight "██║ █╗ ██║███████║██║   ██║█████╗  ███████╗"
 highlight "██║███╗██║██╔══██║╚██╗ ██╔╝██╔══╝  ╚════██║"
 highlight "╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗███████║██╗"
 highlight " ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝"
+
 separator
+
 info "Starting the setup process..."
+
 separator
+
 info "Checking if Node.js and npm are installed..."
+
 if ! command -v node >/dev/null 2>&1; then
   info "Node.js not found. Installing..."
   apt update -y && apt install -y nodejs npm
@@ -22,8 +44,11 @@ if ! command -v node >/dev/null 2>&1; then
 else
   success "Node.js and npm are already installed."
 fi
+
 separator
+
 info "Checking if Caddy is installed..."
+
 if ! command -v caddy >/dev/null 2>&1; then
   info "Caddy not found. Installing..."
   apt install -y debian-keyring debian-archive-keyring apt-transport-https
@@ -34,9 +59,13 @@ if ! command -v caddy >/dev/null 2>&1; then
 else
   success "Caddy is already installed."
 fi
+
 separator
+
 info "Creating caddyconf at /usr/local/etc/caddy/caddyconf..."
+
 mkdir -p /usr/local/etc/caddy
+
 cat <<EOF > /usr/local/etc/caddy/caddyconf
 {
     email sefiicc@gmail.com
@@ -57,21 +86,30 @@ cat <<EOF > /usr/local/etc/caddy/caddyconf
     }
 }
 EOF
+
 chmod 644 /usr/local/etc/caddy/caddyconf
+
 separator
+
 info "Testing Caddy configuration..."
-caddy fmt /usr/local/etc/caddy/caddyconf
-if [ $? -eq 0 ]; then
+
+if caddy adapt --config /usr/local/etc/caddy/caddyconf --adapter caddyfile > /dev/null 2>&1; then
   success "caddyconf is valid."
 else
   error "caddyconf test failed. Exiting."
   exit 1
 fi
+
 info "Starting Caddy..."
+
 caddy run --config /usr/local/etc/caddy/caddyconf --adapter caddyfile &
+
 success "Caddy started using /usr/local/etc/caddy/caddyconf."
+
 separator
+
 info "Checking if PM2 is installed..."
+
 if ! command -v pm2 &> /dev/null; then
   info "PM2 not found. Installing..."
   npm install -g pm2
@@ -79,17 +117,28 @@ if ! command -v pm2 &> /dev/null; then
 else
   success "PM2 is already installed."
 fi
+
 separator
+
 info "Installing dependencies..."
+
 npm install
+
 success "Dependencies installed."
+
 separator
+
 info "Starting the server with PM2..."
+
 pm2 start index.mjs
 pm2 save
+
 success "Server started and saved with PM2."
+
 separator
+
 info "Setting up Git auto-update..."
+
 nohup bash -c "
 while true; do
     git fetch origin
@@ -103,7 +152,11 @@ while true; do
     sleep 1
 done
 " > /dev/null 2>&1 &
+
 success "Git auto-update setup completed."
+
 separator
+
 success "Setup completed."
+
 separator
