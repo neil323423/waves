@@ -73,7 +73,7 @@ cat <<EOF > /etc/caddy/Caddyfile
     tls {
         on_demand
     }
-    reverse_proxy http://localhost:3005
+    reverse_proxy http://localhost:3000
     encode gzip zstd
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
