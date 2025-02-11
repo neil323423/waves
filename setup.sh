@@ -102,6 +102,10 @@ fi
 
 info "Starting Caddy..."
 
+caddy reload --config /usr/local/etc/caddy/caddyconf --adapter caddyfile
+
+success "Caddy reloaded with new configuration."
+
 caddy run --config /usr/local/etc/caddy/caddyconf --adapter caddyfile &
 
 success "Caddy started using /usr/local/etc/caddy/caddyconf."
