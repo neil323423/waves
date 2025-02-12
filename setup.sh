@@ -1,23 +1,23 @@
 #!/bin/bash
 
-info() { 
-  printf "\033[1;36m[INFO]\033[0m %s\n" "$1"; 
+info() {
+  printf "\033[1;36m[INFO]\033[0m %s\n" "$1"
 }
 
-success() { 
-  printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"; 
+success() {
+  printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"
 }
 
-error() { 
-  printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"; 
+error() {
+  printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"
 }
 
-highlight() { 
-  printf "\033[1;34m%s\033[0m\n" "$1"; 
+highlight() {
+  printf "\033[1;34m%s\033[0m\n" "$1"
 }
 
-separator() { 
-  printf "\033[1;37m---------------------------------------------\033[0m\n"; 
+separator() {
+  printf "\n\033[1;37m---------------------------------------------\033[0m\n\n"
 }
 
 clear
@@ -35,46 +35,56 @@ info "Starting the setup process..."
 
 separator
 
-info "Checking if Node.js and npm are installed..."
-
-if ! command -v node >/dev/null 2>&1; then
-  info "Node.js not found. Installing..."
-  apt update -y &>/dev/null && apt install -y nodejs npm &>/dev/null
-  success "Node.js and npm installed successfully."
-else
-  success "Node.js and npm are already installed."
+if [ -z "$NVM_DIR" ]; then
+  export NVM_DIR="$HOME/.nvm"
 fi
+
+if [ ! -s "$NVM_DIR/nvm.sh" ]; then
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash \
+    && source "$NVM_DIR/nvm.sh"
+else
+  source "$NVM_DIR/nvm.sh"
+fi
+
+nvm install node --reinstall-packages-from=node
+
+success "Node.js installed/updated via nvm."
 
 separator
 
-info "Checking if Caddy is installed..."
+CADDY_BIN="$HOME/.local/bin/caddy"
 
-if ! command -v caddy >/dev/null 2>&1; then
-  info "Caddy not found. Installing..."
-  apt install -y debian-keyring debian-archive-keyring apt-transport-https &>/dev/null
-  curl -fsSL 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-keyring.gpg &>/dev/null
-  echo "deb [signed-by=/usr/share/keyrings/caddy-keyring.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main" > /etc/apt/sources.list.d/caddy.list
-  apt update -y &>/dev/null && apt install -y caddy &>/dev/null
-  success "Caddy installed successfully."
-else
-  success "Caddy is already installed."
+if [ ! -x "$CADDY_BIN" ]; then
+  mkdir -p "$HOME/.local/bin"
+  curl -L https://github.com/caddyserver/caddy/releases/latest/download/caddy_linux_amd64.tar.gz -o /tmp/caddy.tar.gz
+  tar -xzf /tmp/caddy.tar.gz -C /tmp
+  mv /tmp/caddy "$CADDY_BIN"
+  chmod +x "$CADDY_BIN"
+  rm /tmp/caddy.tar.gz
 fi
+
+curl -L https://github.com/caddyserver/caddy/releases/latest/download/caddy_linux_amd64.tar.gz -o /tmp/caddy.tar.gz
+tar -xzf /tmp/caddy.tar.gz -C /tmp
+mv /tmp/caddy "$CADDY_BIN"
+chmod +x "$CADDY_BIN"
+rm /tmp/caddy.tar.gz
+
+success "Caddy installed/updated locally."
 
 separator
 
-info "Creating a Caddyfile at /etc/caddy/Caddyfile..."
+CADDYFILE_DIR="$HOME/.caddy"
+mkdir -p "$CADDYFILE_DIR"
 
-cat <<EOF > /etc/caddy/Caddyfile
+cat <<EOF > "$CADDYFILE_DIR/Caddyfile"
 {
     email sefiicc@gmail.com
 }
 
-:443 {
-    tls {
-        on_demand
-    }
-    reverse_proxy http://localhost:3005
+:8080 {
+    reverse_proxy http://localhost:3000
     encode gzip zstd
+
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
         X-Frame-Options "ALLOWALL"
@@ -85,74 +95,65 @@ cat <<EOF > /etc/caddy/Caddyfile
 }
 EOF
 
-chmod 644 /etc/caddy/Caddyfile
+success "Caddyfile created locally."
 
 separator
 
-info "Testing Caddy configuration..."
-
-if caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile > /dev/null 2>&1; then
+if "$CADDY_BIN" fmt "$CADDYFILE_DIR/Caddyfile" > /dev/null 2>&1; then
   success "Caddyfile is valid."
 else
   error "Caddyfile test failed. Exiting."
   exit 1
 fi
 
-info "Starting Caddy..."
-
-caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile > /dev/null 2>&1
-success "Caddy reloaded with new configuration."
-
-caddy run --config /etc/caddy/Caddyfile --adapter caddyfile &>/dev/null &
-
-success "Caddy started using /etc/caddy/Caddyfile."
-
 separator
 
-info "Checking if PM2 is installed..."
+pkill -f "$CADDY_BIN" 2>/dev/null
 
-if ! command -v pm2 &>/dev/null; then
-  info "PM2 not found. Installing..."
-  npm install -g pm2 &>/dev/null
-  success "PM2 installed successfully."
+nohup "$CADDY_BIN" run --config "$CADDYFILE_DIR/Caddyfile" > "$HOME/.caddy/caddy.log" 2>&1 &
+sleep 2
+
+if pgrep -f "$CADDY_BIN" > /dev/null; then
+  success "Caddy started."
 else
-  success "PM2 is already installed."
+  error "Failed to start Caddy."
+  exit 1
 fi
 
 separator
 
-info "Installing dependencies..."
+if ! command -v pm2 > /dev/null 2>&1; then
+  npm install -g pm2
+else
+  npm update -g pm2
+fi
 
-npm install &>/dev/null
-
-success "Dependencies installed."
+success "PM2 installed/updated."
 
 separator
 
-info "Starting the server with PM2..."
+npm install && npm update
 
-pm2 start index.mjs &>/dev/null
-pm2 save &>/dev/null
+success "Dependencies installed/updated."
+
+separator
+
+pm2 start index.mjs --name "server" || pm2 restart "server"
+pm2 save
 
 success "Server started and saved with PM2."
 
 separator
 
-info "Setting up Git auto-update..."
-
-nohup bash -c "
-while true; do
-    git fetch origin &>/dev/null
-    LOCAL=\$(git rev-parse main)
-    REMOTE=\$(git rev-parse origin/main)
-    if [ \$LOCAL != \$REMOTE ]; then
-        git pull origin main &>/dev/null
-        pm2 restart index.mjs &>/dev/null
-        pm2 save &>/dev/null
-    fi
-    sleep 1
-done
-" &>/dev/null &
+nohup bash -c 'while true; do 
+  git fetch origin
+  LOCAL=$(git rev-parse main)
+  REMOTE=$(git rev-parse origin/main)
+  if [ "$LOCAL" != "$REMOTE" ]; then 
+    git pull origin main && pm2 restart "server" && pm2 save
+  fi
+  sleep 1
+done' > /dev/null 2>&1 &
 
 success "Git auto-update setup completed."
 
