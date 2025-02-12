@@ -34,7 +34,7 @@ app.use(
   })
 );
 
-let port = parseInt(process.env.PORT || "3005");
+let port = parseInt(process.env.PORT || "3000");
 
 const server = createServer();
 
