@@ -63,6 +63,20 @@ if ! command -v caddy >/dev/null 2>&1; then
 else
   success "Caddy is already installed."
 fi
+
+if [ "$(id -u)" -ne 0 ]; then
+  info "Non-root user detected. Attempting to set capability for binding to port 443..."
+  if command -v setcap >/dev/null 2>&1; then
+    sudo setcap 'cap_net_bind_service=+ep' "$HOME/bin/caddy"
+    if [ $? -eq 0 ]; then
+      success "Capability set successfully on Caddy."
+    else
+      error "Failed to set capability. Caddy may not be able to bind to port 443."
+    fi
+  else
+    error "setcap command not found. Please install libcap2-bin (Debian/Ubuntu) or the equivalent for your distribution."
+  fi
+fi
 separator
 
 info "Creating local Caddyfile..."
@@ -100,12 +114,12 @@ else
 fi
 
 info "Starting Caddy with on-demand TLS enabled..."
-nohup "$HOME/bin/caddy" run --enable-on-demand-tls --config "$HOME/.caddy/Caddyfile" > /dev/null 2>&1 &
+nohup "$HOME/bin/caddy" run --enable-on-demand-tls --config "$HOME/.caddy/Caddyfile" > "$HOME/caddy.log" 2>&1 &
 sleep 2
 if pgrep -f "caddy run" > /dev/null 2>&1; then
-  success "Caddy started."
+  success "Caddy started successfully."
 else
-  error "Failed to start Caddy."
+  error "Failed to start Caddy. Check the log at \$HOME/caddy.log for details."
   exit 1
 fi
 separator
