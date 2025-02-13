@@ -14,8 +14,10 @@ highlight() {
 separator() {
   printf "\033[1;37m---------------------------------------------\033[0m\n"
 }
+
 clear
 export PATH="$HOME/bin:$PATH"
+
 highlight "██╗    ██╗ █████╗ ██╗   ██╗███████╗███████╗"
 highlight "██║    ██║██╔══██╗██║   ██║██╔════╝██╔════╝"
 highlight "██║ █╗ ██║███████║██║   ██║█████╗  ███████╗"
@@ -23,8 +25,10 @@ highlight "██║███╗██║██╔══██║╚██╗ �
 highlight "╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗███████║██╗"
 highlight " ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝"
 separator
+
 info "Starting the setup process..."
 separator
+
 info "Checking if Node.js is installed..."
 if ! command -v node >/dev/null 2>&1; then
   info "Node.js not found. Installing via nvm..."
@@ -42,33 +46,25 @@ else
   success "Node.js is already installed."
 fi
 separator
+
 info "Checking if Caddy is installed locally..."
 if ! command -v caddy >/dev/null 2>&1; then
   info "Caddy not found. Installing locally..."
   mkdir -p "$HOME/bin"
   cd "$HOME" || { error "Cannot change directory to \$HOME"; exit 1; }
-  curl -sfL "https://caddyserver.com/api/download?os=linux&arch=amd64" -o caddy.tar.gz
+  curl -sfL "https://caddyserver.com/api/download?os=linux&arch=amd64" -o caddy_download
   if [ $? -ne 0 ]; then
     error "Failed to download Caddy."
     exit 1
   fi
-  tar -xzf caddy.tar.gz
-  if [ -f "caddy" ]; then
-    mv caddy "$HOME/bin/caddy"
-  elif [ -f "caddy/caddy" ]; then
-    mv caddy/caddy "$HOME/bin/caddy"
-    rm -rf caddy
-  else
-    error "Caddy binary not found in the archive."
-    exit 1
-  fi
+  mv caddy_download "$HOME/bin/caddy"
   chmod +x "$HOME/bin/caddy"
-  rm caddy.tar.gz
   success "Caddy installed locally in \$HOME/bin."
 else
   success "Caddy is already installed."
 fi
 separator
+
 info "Creating local Caddyfile..."
 mkdir -p "$HOME/.caddy"
 cat <<'EOF' > "$HOME/.caddy/Caddyfile"
@@ -92,6 +88,7 @@ cat <<'EOF' > "$HOME/.caddy/Caddyfile"
 }
 EOF
 separator
+
 info "Testing Caddy configuration..."
 "$HOME/bin/caddy" fmt "$HOME/.caddy/Caddyfile" > /dev/null 2>&1
 if [ $? -eq 0 ]; then
@@ -100,6 +97,7 @@ else
   error "Caddyfile test failed. Exiting."
   exit 1
 fi
+
 info "Starting Caddy with on-demand TLS enabled..."
 nohup "$HOME/bin/caddy" run --enable-on-demand-tls --config "$HOME/.caddy/Caddyfile" > /dev/null 2>&1 &
 sleep 2
@@ -110,6 +108,7 @@ else
   exit 1
 fi
 separator
+
 info "Checking if PM2 is installed..."
 if ! command -v pm2 >/dev/null 2>&1; then
   info "PM2 not found. Installing via npm..."
@@ -124,6 +123,7 @@ else
   success "PM2 is already installed."
 fi
 separator
+
 info "Installing Node.js dependencies..."
 npm install > /dev/null 2>&1
 if [ $? -eq 0 ]; then
@@ -133,6 +133,7 @@ else
   exit 1
 fi
 separator
+
 info "Starting the server with PM2..."
 pm2 start index.mjs > /dev/null 2>&1
 pm2 save > /dev/null 2>&1
@@ -143,6 +144,7 @@ else
   exit 1
 fi
 separator
+
 info "Setting up Git auto-update..."
 nohup bash -c "
 while true; do
@@ -159,5 +161,6 @@ done
 " > /dev/null 2>&1 &
 success "Git auto-update setup completed."
 separator
+
 success "Setup completed."
 separator
