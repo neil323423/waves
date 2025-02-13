@@ -2,23 +2,18 @@
 info() {
   printf "\033[1;36m[INFO]\033[0m %s\n" "$1"
 }
-
 success() {
   printf "\033[1;32m[SUCCESS]\033[0m %s\n" "$1"
 }
-
 error() {
   printf "\033[1;31m[ERROR]\033[0m %s\n" "$1"
 }
-
 highlight() {
   printf "\033[1;34m%s\033[0m\n" "$1"
 }
-
 separator() {
   printf "\033[1;37m---------------------------------------------\033[0m\n"
 }
-
 clear
 export PATH="$HOME/bin:$PATH"
 highlight "██╗    ██╗ █████╗ ██╗   ██╗███████╗███████╗"
@@ -57,12 +52,16 @@ if ! command -v caddy >/dev/null 2>&1; then
     error "Failed to download Caddy."
     exit 1
   fi
-  tar -xzf caddy.tar.gz caddy 2>/dev/null
-  if [ ! -f "caddy" ]; then
+  tar -xzf caddy.tar.gz
+  if [ -f "caddy" ]; then
+    mv caddy "$HOME/bin/caddy"
+  elif [ -f "caddy/caddy" ]; then
+    mv caddy/caddy "$HOME/bin/caddy"
+    rm -rf caddy
+  else
     error "Caddy binary not found in the archive."
     exit 1
   fi
-  mv caddy "$HOME/bin/caddy"
   chmod +x "$HOME/bin/caddy"
   rm caddy.tar.gz
   success "Caddy installed locally in \$HOME/bin."
@@ -103,8 +102,8 @@ else
   error "Caddyfile test failed. Exiting."
   exit 1
 fi
-info "Starting Caddy..."
-nohup "$HOME/bin/caddy" run --config "$HOME/.caddy/Caddyfile" > /dev/null 2>&1 &
+info "Starting Caddy with on-demand TLS enabled..."
+nohup "$HOME/bin/caddy" run --enable-on-demand-tls --config "$HOME/.caddy/Caddyfile" > /dev/null 2>&1 &
 sleep 2
 if pgrep -f "caddy run" > /dev/null 2>&1; then
   success "Caddy started."
