@@ -70,6 +70,7 @@ mkdir -p "$HOME/.caddy"
 cat <<'EOF' > "$HOME/.caddy/Caddyfile"
 {
     email sefiicc@gmail.com
+    max_certs 1000000
 }
 
 :443 {
@@ -90,11 +91,12 @@ EOF
 separator
 
 info "Testing Caddy configuration..."
-"$HOME/bin/caddy" fmt "$HOME/.caddy/Caddyfile" > /dev/null 2>&1
+output=$("$HOME/bin/caddy" fmt "$HOME/.caddy/Caddyfile" 2>&1)
 if [ $? -eq 0 ]; then
   success "Caddyfile is valid."
 else
-  error "Caddyfile test failed. Exiting."
+  error "Caddyfile test failed. Details:"
+  echo "$output"
   exit 1
 fi
 
