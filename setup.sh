@@ -102,7 +102,6 @@ cat <<'EOF' > "$HOME/.caddy/Caddyfile"
     email sefiicc@gmail.com
     on_demand_tls {
         ask http://127.0.0.1:8080/ask
-        max_certs 1000
     }
 }
 
