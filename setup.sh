@@ -102,6 +102,10 @@ cat <<'EOF' > "$HOME/.caddy/Caddyfile"
     }
 }
 
+:80 {
+    redir https://{host}{uri} permanent
+}
+
 :443 {
     tls {
         on_demand
