@@ -74,7 +74,7 @@ if [ "$(id -u)" -ne 0 ]; then
       error "Failed to set capability. Caddy may not be able to bind to port 443."
     fi
   else
-    error "setcap command not found. Please install libcap2-bin (Debian/Ubuntu) or the equivalent for your distribution."
+    error "setcap command not found. Please install libcap2-bin or equivalent."
   fi
 fi
 separator
@@ -84,7 +84,9 @@ mkdir -p "$HOME/.caddy"
 cat <<'EOF' > "$HOME/.caddy/Caddyfile"
 {
     email sefiicc@gmail.com
-    max_certs 1000000
+    on_demand_tls {
+        max_certs 1000000
+    }
 }
 
 :443 {
@@ -113,7 +115,7 @@ else
   exit 1
 fi
 
-info "Starting Caddy with on-demand TLS enabled..."
+info "Starting Caddy..."
 nohup "$HOME/bin/caddy" run --config "$HOME/.caddy/Caddyfile" > "$HOME/caddy.log" 2>&1 &
 sleep 2
 if pgrep -f "caddy run" > /dev/null 2>&1; then
