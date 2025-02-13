@@ -32,17 +32,14 @@ separator
 
 info "Checking if Node.js is installed..."
 if ! command -v node >/dev/null 2>&1; then
-  info "Node.js not found. Installing via nvm..."
-  if [ ! -d "$HOME/.nvm" ]; then
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  info "Node.js not found. Installing Node.js and npm via apt-get..."
+  apt-get update && apt-get install -y nodejs npm
+  if [ $? -eq 0 ]; then
+    success "Node.js and npm installed."
   else
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    error "Failed to install Node.js and npm."
+    exit 1
   fi
-  nvm install --lts
-  success "Node.js installed via nvm."
 else
   success "Node.js is already installed."
 fi
@@ -68,7 +65,7 @@ fi
 if [ "$(id -u)" -ne 0 ]; then
   info "Non-root user detected. Attempting to set capability for binding to port 443..."
   if command -v setcap >/dev/null 2>&1; then
-    sudo setcap 'cap_net_bind_service=+ep' "$HOME/bin/caddy"
+    setcap 'cap_net_bind_service=+ep' "$HOME/bin/caddy"
     if [ $? -eq 0 ]; then
       success "Capability set successfully on Caddy."
     else
