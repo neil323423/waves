@@ -76,14 +76,12 @@ cat <<'EOF' > "$HOME/.caddy/Caddyfile"
     email sefiicc@gmail.com
 }
 
-:8443 {
+:443 {
     tls {
         on_demand
     }
-
     reverse_proxy http://localhost:3000
     encode gzip zstd
-
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
         X-Frame-Options "ALLOWALL"
