@@ -90,13 +90,12 @@ cat <<'EOF' > "$HOME/.caddy/Caddyfile"
 EOF
 separator
 
-info "Testing Caddy configuration..."
-output=$("$HOME/bin/caddy" fmt "$HOME/.caddy/Caddyfile" 2>&1)
+info "Formatting and testing Caddy configuration..."
+"$HOME/bin/caddy" fmt --overwrite "$HOME/.caddy/Caddyfile" > /dev/null 2>&1
 if [ $? -eq 0 ]; then
-  success "Caddyfile is valid."
+  success "Caddyfile is valid and formatted."
 else
-  error "Caddyfile test failed. Details:"
-  echo "$output"
+  error "Caddyfile test failed. Exiting."
   exit 1
 fi
 
