@@ -80,20 +80,29 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 separator
 
+info "Starting inline ask endpoint using Python..."
+nohup python3 -c "import http.server, socketserver
+class Handler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/ask':
+            self.send_response(200)
+            self.send_header('Content-type','text/plain')
+            self.end_headers()
+            self.wfile.write(b'OK')
+        else:
+            self.send_error(404)
+socketserver.TCPServer(('127.0.0.1', 8080), Handler).serve_forever()" > /dev/null 2>&1 &
+success "Inline ask endpoint running on 127.0.0.1:8080."
+separator
+
 info "Creating local Caddyfile..."
 mkdir -p "$HOME/.caddy"
 cat <<'EOF' > "$HOME/.caddy/Caddyfile"
 {
     email sefiicc@gmail.com
     on_demand_tls {
-        ask http://localhost:8080/ask
+        ask http://127.0.0.1:8080/ask
         max_certs 1000
-    }
-}
-
-:8080 {
-    handle /ask {
-        respond "OK"
     }
 }
 
