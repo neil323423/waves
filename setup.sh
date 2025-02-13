@@ -85,7 +85,11 @@ mkdir -p "$HOME/.caddy"
 cat <<'EOF' > "$HOME/.caddy/Caddyfile"
 {
     email sefiicc@gmail.com
+    on_demand_tls {
+        max_certs 1000
+    }
 }
+
 :443 {
     tls {
         on_demand
