@@ -17,6 +17,7 @@ separator() {
 
 clear
 export PATH="$HOME/bin:$PATH"
+export CADDY_MAX_ON_DEMAND_CERTS=0
 
 highlight "██╗    ██╗ █████╗ ██╗   ██╗███████╗███████╗"
 highlight "██║    ██║██╔══██╗██║   ██║██╔════╝██╔════╝"
@@ -84,11 +85,7 @@ mkdir -p "$HOME/.caddy"
 cat <<'EOF' > "$HOME/.caddy/Caddyfile"
 {
     email sefiicc@gmail.com
-    on_demand_tls {
-        max_certs 1000000
-    }
 }
-
 :443 {
     tls {
         on_demand
