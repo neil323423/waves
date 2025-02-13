@@ -114,7 +114,7 @@ else
 fi
 
 info "Starting Caddy with on-demand TLS enabled..."
-nohup "$HOME/bin/caddy" run --enable-on-demand-tls --config "$HOME/.caddy/Caddyfile" > "$HOME/caddy.log" 2>&1 &
+nohup "$HOME/bin/caddy" run --config "$HOME/.caddy/Caddyfile" > "$HOME/caddy.log" 2>&1 &
 sleep 2
 if pgrep -f "caddy run" > /dev/null 2>&1; then
   success "Caddy started successfully."
