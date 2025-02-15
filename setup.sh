@@ -32,14 +32,9 @@ separator
 
 info "Checking if Node.js is installed..."
 if ! command -v node >/dev/null 2>&1; then
-  info "Node.js not found. Installing Node.js and npm via apt-get..."
-  apt-get update && apt-get install -y nodejs npm
-  if [ $? -eq 0 ]; then
-    success "Node.js and npm installed."
-  else
-    error "Failed to install Node.js and npm."
-    exit 1
-  fi
+  info "Node.js not found. Installing..."
+  apt-get update && apt-get install -y nodejs
+  [ $? -eq 0 ] && success "Node.js installed." || { error "Failed to install Node.js."; exit 1; }
 else
   success "Node.js is already installed."
 fi
@@ -50,45 +45,22 @@ if ! command -v caddy >/dev/null 2>&1; then
   info "Caddy not found. Installing locally..."
   mkdir -p "$HOME/bin"
   cd "$HOME" || { error "Cannot change directory to \$HOME"; exit 1; }
-  curl -sfL "https://caddyserver.com/api/download?os=linux&arch=amd64" -o caddy_download
-  if [ $? -ne 0 ]; then
-    error "Failed to download Caddy."
-    exit 1
-  fi
-  mv caddy_download "$HOME/bin/caddy"
+  curl -sfL "https://caddyserver.com/api/download?os=linux&arch=amd64" -o "$HOME/bin/caddy"
   chmod +x "$HOME/bin/caddy"
-  success "Caddy installed locally in \$HOME/bin."
+  success "Caddy installed locally."
 else
   success "Caddy is already installed."
 fi
 
 if [ "$(id -u)" -ne 0 ]; then
-  info "Non-root user detected. Attempting to set capability for binding to port 443..."
-  if command -v setcap >/dev/null 2>&1; then
-    setcap 'cap_net_bind_service=+ep' "$HOME/bin/caddy"
-    if [ $? -eq 0 ]; then
-      success "Capability set successfully on Caddy."
-    else
-      error "Failed to set capability. Caddy may not be able to bind to port 443."
-    fi
-  else
-    error "setcap command not found. Please install libcap2-bin or equivalent."
-  fi
+  info "Setting capability for binding to port 443..."
+  command -v setcap >/dev/null 2>&1 && setcap 'cap_net_bind_service=+ep' "$HOME/bin/caddy"
+  [ $? -eq 0 ] && success "Capability set." || error "Failed to set capability."
 fi
 separator
 
-info "Starting inline ask endpoint using Python..."
-nohup python3 -c "import http.server, socketserver
-class Handler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == '/ask':
-            self.send_response(200)
-            self.send_header('Content-type','text/plain')
-            self.end_headers()
-            self.wfile.write(b'OK')
-        else:
-            self.send_error(404)
-socketserver.TCPServer(('127.0.0.1', 8080), Handler).serve_forever()" > /dev/null 2>&1 &
+info "Starting inline ask endpoint..."
+nohup python3 -m http.server 8080 > /dev/null 2>&1 &
 success "Inline ask endpoint running on 127.0.0.1:8080."
 separator
 
@@ -123,36 +95,21 @@ cat <<'EOF' > "$HOME/.caddy/Caddyfile"
 EOF
 separator
 
-info "Formatting and testing Caddy configuration..."
+info "Testing Caddy configuration..."
 "$HOME/bin/caddy" fmt --overwrite "$HOME/.caddy/Caddyfile" > /dev/null 2>&1
-if [ $? -eq 0 ]; then
-  success "Caddyfile is valid and formatted."
-else
-  error "Caddyfile test failed. Exiting."
-  exit 1
-fi
+[ $? -eq 0 ] && success "Caddyfile formatted and valid." || { error "Caddyfile test failed."; exit 1; }
 
 info "Starting Caddy..."
 nohup "$HOME/bin/caddy" run --config "$HOME/.caddy/Caddyfile" > "$HOME/caddy.log" 2>&1 &
 sleep 2
-if pgrep -f "caddy run" > /dev/null 2>&1; then
-  success "Caddy started successfully."
-else
-  error "Failed to start Caddy. Check the log at \$HOME/caddy.log for details."
-  exit 1
-fi
+pgrep -f "caddy run" > /dev/null 2>&1 && success "Caddy started successfully." || { error "Failed to start Caddy."; exit 1; }
 separator
 
 info "Checking if PM2 is installed..."
 if ! command -v pm2 >/dev/null 2>&1; then
-  info "PM2 not found. Installing via npm..."
+  info "PM2 not found. Installing..."
   npm install -g pm2 > /dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    success "PM2 installed successfully."
-  else
-    error "Failed to install PM2."
-    exit 1
-  fi
+  [ $? -eq 0 ] && success "PM2 installed." || { error "Failed to install PM2."; exit 1; }
 else
   success "PM2 is already installed."
 fi
@@ -160,23 +117,12 @@ separator
 
 info "Installing Node.js dependencies..."
 npm install > /dev/null 2>&1
-if [ $? -eq 0 ]; then
-  success "Dependencies installed."
-else
-  error "npm install failed. Exiting."
-  exit 1
-fi
+[ $? -eq 0 ] && success "Dependencies installed." || { error "npm install failed."; exit 1; }
 separator
 
 info "Starting the server with PM2..."
-pm2 start index.mjs > /dev/null 2>&1
-pm2 save > /dev/null 2>&1
-if [ $? -eq 0 ]; then
-  success "Server started and saved with PM2."
-else
-  error "Failed to start the server with PM2."
-  exit 1
-fi
+pm2 start index.mjs > /dev/null 2>&1 && pm2 save > /dev/null 2>&1
+[ $? -eq 0 ] && success "Server started with PM2." || { error "Failed to start server with PM2."; exit 1; }
 separator
 
 info "Setting up Git auto-update..."
@@ -197,4 +143,3 @@ success "Git auto-update setup completed."
 separator
 
 success "Setup completed."
-separator
