@@ -2,5 +2,13 @@
   "version": 2,
   "builds": [
     { "src": "index.mjs", "use": "@vercel/node" }
-  ]
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "index.mjs" }
+  ],
+  "functions": {
+    "index.mjs": {
+      "runtime": "nodejs21.x"
+    }
+  }
 }
