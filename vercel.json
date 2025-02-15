@@ -5,10 +5,5 @@
   ],
   "routes": [
     { "src": "/(.*)", "dest": "index.mjs" }
-  ],
-  "functions": {
-    "index.mjs": {
-      "runtime": "nodejs21.x"
-    }
-  }
+  ]
 }
