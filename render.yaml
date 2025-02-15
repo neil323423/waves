@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: waves
+    env: node
+    buildCommand: "npm install"
+    startCommand: "node index.mjs"
+    envVars:
+      - key: NODE_VERSION
+        value: "21.0.0"
