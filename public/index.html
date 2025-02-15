@@ -1,178 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:title" content="Waves"/>
-    <meta name="theme-color" content="#443ab6"/>
-    <meta name="msapplication-TileColor" content="#443ab6"/>
-    <meta property="og:image" content="/favicon.ico"/>
-    <meta name="description" content="Waves. A sleek and minimalist web proxy."/>
-    <title>Waves</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="/assets/css/index.css">
-    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="Waves" />
+  <meta name="theme-color" content="#443ab6" />
+  <meta name="msapplication-TileColor" content="#443ab6" />
+  <meta property="og:image" content="/favicon.ico" />
+  <meta name="description" content="Waves. A sleek and minimalist web proxy." />
+  <title>Waves</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="/assets/css/index.css">
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
+
 <body>
-    <script src="/baremux/index.js"></script>
-    <script src="/uv/uv.bundle.js" defer></script>
-    <script src="/uv/uv.config.js" defer></script>
-    <script src="/assets/js/navbar.js" defer></script>
-    <script src="/assets/js/load.js" defer></script>
-    <script src="/assets/js/eruda.js" defer></script>
-    <script src="/assets/js/register.js" defer></script>
-    <script src="/assets/js/settings.js" defer></script>
-    <script src="/assets/js/cursor-trail.js" defer></script>
-    <script src="/assets/js/index.js" defer></script>
-    <div class="light"></div>
-    <div class="top-bar">
-        <a href="#" id="games-icon"><i class="fas fa-gamepad"></i></a>
-        <a href="#" id="chat-icon"><i class="fas fa-comments"></i></a>
-        <a href="#" id="settings-icon"><i class="fas fa-gear"></i></a>
-    </div>    
-    <div id="settings-menu" class="settings-menu">
-        <h2>Settings</h2>  
-        <div class="settings-tabs">
-            <button class="tab-button active" id="proxy-tab">
-                <i class="fas fa-network-wired"></i> Proxy
-            </button>
+  <script src="/baremux/index.js"></script>
+  <script src="/uv/uv.bundle.js" defer></script>
+  <script src="/uv/uv.config.js" defer></script>
+  <script src="/assets/js/navbar.js" defer></script>
+  <script src="/assets/js/load.js" defer></script>
+  <script src="/assets/js/eruda.js" defer></script>
+  <script src="/assets/js/register.js" defer></script>
+  <script src="/assets/js/settings.js" defer></script>
+  <script src="/assets/js/cursor-trail.js" defer></script>
+  <script src="/assets/js/ping.js" defer></script>
+  <script src="/assets/js/index.js" defer></script>
 
-            <button class="tab-button" id="cloak-tab">
-                <i class="fas fa-user-secret"></i> Cloak
-            </button>            
-                      
-            <button class="tab-button" id="appearance-tab">
-                <i class="fas fa-palette"></i> Appearance
-            </button> 
-            
-            <button class="tab-button" id="info-tab">
-                <i class="fas fa-info"></i> Info
-            </button>             
-        </div>
+  <div class="light"></div>
+  <div class="top-bar">
+    <a href="#" id="games-icon"><i class="fas fa-gamepad"></i></a>
+    <a href="#" id="chat-icon"><i class="fas fa-comments"></i></a>
+    <a href="#" id="settings-icon"><i class="fas fa-gear"></i></a>
+  </div>
 
-        <div id="proxy-content" class="tab-content">
-            <label for="transport-selector">Transport</label>
-            <p>Transport is how the proxy will send information.</p>
-            <div class="transport-selector">
-                <div class="transport-selected">Epoxy</div>
-                <div class="transport-options">
-                    <div>Epoxy</div>
-                    <div>Libcurl</div>
-                </div>
-            </div>
-
-            <label for="wisp-server">Wisp Server</label>
-            <p>Enter a different Wisp Server to connect to.</p>
-            <p>The server URL must begin with <code>ws(s)://</code> and end with a <code>/</code>.</p>
-            <input type="text" id="wisp-server" placeholder="Wisp Server URL Here..." autocomplete="off">
-            <button id="save-wisp-url">Save</button>
-        </div>
-
-        <div id="cloak-content" class="tab-content">
-            <label for="aboutblank-toggle">About:Blank</label>
-            <p>Turn this on to go into about:blank every time the page loads (Recommended).</p>
-            <input type="checkbox" id="aboutblank-toggle">
-        </div>
-
-        <div id="appearance-content" class="tab-content">
-            <label for="navbar-toggle">Navigation Bar</label>
-            <p>Keep this on for the navigation bar when searching (Recommended).</p>
-            <input type="checkbox" id="navbar-toggle">
-
-        <label for="themes-selector">Themes</label>
-        <p>Choose your preferred theme.</p>
-        <div class="themes-selector">
-            <div class="themes-selected">Default</div>
-            <div class="themes-options">
-                <div>Default</div>
-                <div>Sakura</div>
-                <div>Emerald</div>
-            </div>
-        </div>
-        </div>
-
-        <div id="info-content" class="tab-content">
-            <label>Version 1.4.0</label>
-            <label onmouseover="this.querySelector('span').style.color='lime'" 
-            onmouseout="this.querySelector('span').style.color='green'">
-         Server Status: <span style="color: green; transition: color 0.3s ease;">Running</span>
-     </label>
-             <p>If you want to see Waves up time please visit 
-                <a href="https://uptime.macha.icu" target="_blank" class="hover-link">https://uptime.macha.icu</a>.
-              </p>
-              <div style="display: flex; gap: 10px; justify-content: left; align-items: left; margin-top: 10px; margin-bottom: -20px;">
-                <label>
-                    <a href="https://discord.gg/656PtwMx3H" target="_blank" class="hover-link">
-                        <i class="fab fa-discord" style="font-size: 20px;"></i>
-                    </a>
-                </label>
-                <label>
-                    <a href="https://github.com/xojw/waves" target="_blank" class="hover-link">
-                        <i class="fab fa-github" style="font-size: 20px;"></i> 
-                    </a>
-                </label>
-            </div>            
-            </div>
-
-        <button id="close-settings">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>    
-    
-    <div class="navbar">
-        <ul class="nav-links">
-            <li>
-                <a id="backIcon" href="#"><img src="/assets/images/icons/back.png" alt="Back"></a>
-            </li>
-            <li>
-                <a id="refreshIcon" href="#"><img src="/assets/images/icons/refresh.png" alt="Refresh"></a>
-            </li>
-            <li>
-                <a id="forwardIcon" href="#"><img src="/assets/images/icons/forward.png" alt="Forward"></a>
-            </li>
-            <li>
-                <div class="search-containersmall">
-                    <div class="small-searchbar">
-                        <input class="waves" type="text" id="searchInputt" placeholder="Search for a query or enter a URL..." autocomplete="off">
-                    </div>
-                </div>
-            </li>
-            <li>
-                <a id="erudaIcon" href="#"><img src="/assets/images/icons/eruda.png" alt="Eruda"></a>
-            </li>
-            <li>
-                <a id="fullscreenIcon" href="#"><img src="/assets/images/icons/fullscreen.png" alt="Full-Screen"></a>
-            </li>
-            <li>
-                <a href="/"><img src="/assets/images/icons/out.png" alt="X out"></a>
-            </li>
-        </ul>
+  <div id="settings-menu" class="settings-menu">
+    <h2>Settings</h2>
+    <div class="settings-tabs">
+      <button class="tab-button active" id="proxy-tab"><i class="fas fa-network-wired"></i> Proxy</button>
+      <button class="tab-button" id="cloak-tab"><i class="fas fa-user-secret"></i> Cloak</button>
+      <button class="tab-button" id="appearance-tab"><i class="fas fa-palette"></i> Appearance</button>
+      <button class="tab-button" id="info-tab"><i class="fas fa-info"></i> Info</button>
     </div>
-    <div class="loading-screen">
-        <div class="loading-text">Loading...</div>
-        <div class="moon">
-            <div class="crater"></div>
-            <div class="crater"></div>
-            <div class="crater"></div>
-            <div class="rocket">
-                <div class="rocket-body"></div>
-                <div class="rocket-fins">
-                    <div class="rocket-fin"></div>
-                    <div class="rocket-fin"></div>
-                </div>
-                <div class="rocket-flame"></div>
-            </div>
+    <div id="proxy-content" class="tab-content">
+      <label for="transport-selector">Transport</label>
+      <p>Transport is how the proxy will send information.</p>
+      <div class="transport-selector">
+        <div class="transport-selected">Epoxy</div>
+        <div class="transport-options">
+          <div>Epoxy</div>
+          <div>Libcurl</div>
         </div>
+      </div>
+      <label for="wisp-server">Wisp Server</label>
+      <p>Enter a different Wisp Server to connect to.</p>
+      <p>The server URL must begin with <code>ws(s)://</code> and end with a <code>/</code>.</p>
+      <input type="text" id="wisp-server" placeholder="Wisp Server URL Here..." autocomplete="off">
+      <button id="save-wisp-url">Save</button>
     </div>
-</div>
-    <div class="search-container">
-        <div class="search-title"><span></span><span class="highlight">Waves.</span></div>
-        <div class="search-bar">
-            <input class="waves" type="text" id="searchInput" placeholder="What's on your mind?" autocomplete="off">
-        </div>        
+    <div id="cloak-content" class="tab-content">
+      <label for="aboutblank-toggle">About:Blank</label>
+      <p>Turn this on to go into about:blank every time the page loads (Recommended).</p>
+      <input type="checkbox" id="aboutblank-toggle">
     </div>
-    <div id="erudaLoadingScreen" style="display: none;">Eruda is loading...</div> 
-    <iframe id="proxy-iframe" class="iframe"></iframe>
+    <div id="appearance-content" class="tab-content">
+      <label for="navbar-toggle">Navigation Bar</label>
+      <p>Keep this on for the navigation bar when searching (Recommended).</p>
+      <input type="checkbox" id="navbar-toggle">
+      <label for="themes-selector">Themes</label>
+      <p>Choose your preferred theme.</p>
+      <div class="themes-selector">
+        <div class="themes-selected">Default</div>
+        <div class="themes-options">
+          <div>Default</div>
+          <div>Sakura</div>
+          <div>Emerald</div>
+        </div>
+      </div>
+    </div>
+    <div id="info-content" class="tab-content">
+      <label>Version 1.4.0</label>
+      <label onmouseover="this.querySelector('span').style.color='lime'" onmouseout="this.querySelector('span').style.color='green'">
+        Server Status: <span style="color: green; transition: color 0.3s ease;">Running</span>
+      </label>
+      <p>If you want to see Waves up time please visit <a href="https://uptime.macha.icu" target="_blank" class="hover-link">https://uptime.macha.icu</a>.</p>
+      <div style="display: flex; gap: 10px; justify-content: left; align-items: left; margin-top: 10px; margin-bottom: -20px;">
+        <label><a href="https://discord.gg/656PtwMx3H" target="_blank" class="hover-link"><i class="fab fa-discord" style="font-size: 20px;"></i></a></label>
+        <label><a href="https://github.com/xojw/waves" target="_blank" class="hover-link"><i class="fab fa-github" style="font-size: 20px;"></i></a></label>
+      </div>
+    </div>
+    <button id="close-settings"><i class="fas fa-times"></i></button>
+  </div>
+
+  <div class="navbar">
+    <ul class="nav-links">
+      <li><a id="backIcon" href="#"><img src="/assets/images/icons/back.png" alt="Back"></a></li>
+      <li><a id="refreshIcon" href="#"><img src="/assets/images/icons/refresh.png" alt="Refresh"></a></li>
+      <li><a id="forwardIcon" href="#"><img src="/assets/images/icons/forward.png" alt="Forward"></a></li>
+      <li>
+        <div class="search-containersmall">
+          <div class="small-searchbar">
+            <input class="waves" type="text" id="searchInputt" placeholder="Search for a query or enter a URL..." autocomplete="off">
+          </div>
+        </div>
+      </li>
+      <li><a id="erudaIcon" href="#"><img src="/assets/images/icons/eruda.png" alt="Eruda"></a></li>
+      <li><a id="fullscreenIcon" href="#"><img src="/assets/images/icons/fullscreen.png" alt="Full-Screen"></a></li>
+      <li><a href="/"><img src="/assets/images/icons/out.png" alt="X out"></a></li>
+    </ul>
+  </div>
+
+  <div class="loading-screen">
+    <div class="loading-text"></div>
+    <div class="moon">
+      <div class="crater"></div>
+      <div class="crater"></div>
+      <div class="crater"></div>
+      <div class="rocket">
+        <div class="rocket-body"></div>
+        <div class="rocket-fins">
+          <div class="rocket-fin"></div>
+          <div class="rocket-fin"></div>
+        </div>
+        <div class="rocket-flame"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-container">
+    <div class="search-title"><span></span><span class="highlight">Waves.</span></div>
+    <div class="search-bar">
+      <input class="waves" type="text" id="searchInput" placeholder="What's on your mind?" autocomplete="off">
+    </div>
+  </div>
+
+  <div id="erudaLoadingScreen" style="display: none;">Eruda is loading...</div>
+  <iframe id="proxy-iframe" class="iframe"></iframe>
+  <div id="pingDisplay">Ping: Connecting...</div>
+
 </body>
+
 </html>
