@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +14,6 @@
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
-
 <body>
   <script src="/baremux/index.js"></script>
   <script src="/uv/uv.bundle.js" defer></script>
@@ -37,24 +35,6 @@
   </div>
 
   <div id="settings-menu" class="settings-menu"></div>
-
-  <div class="navbar">
-    <ul class="nav-links">
-      <li><a id="backIcon" href="#"><img src="/assets/images/icons/back.png" alt="Back"></a></li>
-      <li><a id="refreshIcon" href="#"><img src="/assets/images/icons/refresh.png" alt="Refresh"></a></li>
-      <li><a id="forwardIcon" href="#"><img src="/assets/images/icons/forward.png" alt="Forward"></a></li>
-      <li>
-        <div class="search-containersmall">
-          <div class="small-searchbar">
-            <input class="waves" type="text" id="searchInputt" placeholder="Search for a query or enter a URL..." autocomplete="off">
-          </div>
-        </div>
-      </li>
-      <li><a id="erudaIcon" href="#"><img src="/assets/images/icons/eruda.png" alt="Eruda"></a></li>
-      <li><a id="fullscreenIcon" href="#"><img src="/assets/images/icons/fullscreen.png" alt="Full-Screen"></a></li>
-      <li><a href="/"><img src="/assets/images/icons/out.png" alt="X out"></a></li>
-    </ul>
-  </div>
 
   <div class="loading-screen">
     <div class="loading-text"></div>
@@ -84,6 +64,6 @@
   <iframe id="proxy-iframe" class="iframe"></iframe>
   <div id="pingDisplay">Ping: Connecting...</div>
 
+  <script src="/assets/js/app.js" defer></script>
 </body>
-
 </html>
