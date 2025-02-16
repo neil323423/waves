@@ -36,63 +36,7 @@
     <a href="#" id="settings-icon"><i class="fas fa-gear"></i></a>
   </div>
 
-  <div id="settings-menu" class="settings-menu">
-    <h2>Settings</h2>
-    <div class="settings-tabs">
-      <button class="tab-button active" id="proxy-tab"><i class="fas fa-network-wired"></i> Proxy</button>
-      <button class="tab-button" id="cloak-tab"><i class="fas fa-user-secret"></i> Cloak</button>
-      <button class="tab-button" id="appearance-tab"><i class="fas fa-palette"></i> Appearance</button>
-      <button class="tab-button" id="info-tab"><i class="fas fa-info"></i> Info</button>
-    </div>
-    <div id="proxy-content" class="tab-content">
-      <label for="transport-selector">Transport</label>
-      <p>Transport is how the proxy will send information.</p>
-      <div class="transport-selector">
-        <div class="transport-selected">Epoxy</div>
-        <div class="transport-options">
-          <div>Epoxy</div>
-          <div>Libcurl</div>
-        </div>
-      </div>
-      <label for="wisp-server">Wisp Server</label>
-      <p>Enter a different Wisp Server to connect to.</p>
-      <p>The server URL must begin with <code>ws(s)://</code> and end with a <code>/</code>.</p>
-      <input type="text" id="wisp-server" placeholder="Wisp Server URL Here..." autocomplete="off">
-      <button id="save-wisp-url">Save</button>
-    </div>
-    <div id="cloak-content" class="tab-content">
-      <label for="aboutblank-toggle">About:Blank</label>
-      <p>Turn this on to go into about:blank every time the page loads (Recommended).</p>
-      <input type="checkbox" id="aboutblank-toggle">
-    </div>
-    <div id="appearance-content" class="tab-content">
-      <label for="navbar-toggle">Navigation Bar</label>
-      <p>Keep this on for the navigation bar when searching (Recommended).</p>
-      <input type="checkbox" id="navbar-toggle">
-      <label for="themes-selector">Themes</label>
-      <p>Choose your preferred theme.</p>
-      <div class="themes-selector">
-        <div class="themes-selected">Default</div>
-        <div class="themes-options">
-          <div>Default</div>
-          <div>Sakura</div>
-          <div>Emerald</div>
-        </div>
-      </div>
-    </div>
-    <div id="info-content" class="tab-content">
-      <label>Version 1.4.0</label>
-      <label onmouseover="this.querySelector('span').style.color='lime'" onmouseout="this.querySelector('span').style.color='green'">
-        Server Status: <span style="color: green; transition: color 0.3s ease;">Running</span>
-      </label>
-      <p>If you want to see Waves up time please visit <a href="https://uptime.macha.icu" target="_blank" class="hover-link">https://uptime.macha.icu</a>.</p>
-      <div style="display: flex; gap: 10px; justify-content: left; align-items: left; margin-top: 10px; margin-bottom: -20px;">
-        <label><a href="https://discord.gg/656PtwMx3H" target="_blank" class="hover-link"><i class="fab fa-discord" style="font-size: 20px;"></i></a></label>
-        <label><a href="https://github.com/xojw/waves" target="_blank" class="hover-link"><i class="fab fa-github" style="font-size: 20px;"></i></a></label>
-      </div>
-    </div>
-    <button id="close-settings"><i class="fas fa-times"></i></button>
-  </div>
+  <div id="settings-menu" class="settings-menu"></div>
 
   <div class="navbar">
     <ul class="nav-links">
