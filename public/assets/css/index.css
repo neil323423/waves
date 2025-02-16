@@ -470,35 +470,49 @@ input[type="checkbox"].toggle:checked::before {
   background: #3b3b3b;
 }
 
+/* Navbar (original CSS) */
 .navbar {
-  position: fixed;
   top: 2%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1150px;
-  max-width: 100%;
   background-color: #11111198;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+  left: 50%;
+  width: 1150px;
+  max-width: 100%;
   display: none;
+  border-radius: 20px;
   align-items: center;
   overflow: hidden;
+  position: fixed;
   z-index: 999;
+  transform: translateX(-50%);
 }
 
-.navbar ul,
-.nav-links {
-  list-style: none;
+.nav-links li img {
+  width: 23px;
+  height: 23px;
+  transition: background-color 1.3s;
+}
+
+.navbar ul {
+  list-style-type: none;
   margin: 0;
   padding: 0;
+  overflow: hidden;
+}
+
+.nav-links {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .navbar li {
-  padding: 10px;
+  padding: 10px -10px;
   margin-left: 4px;
   font-size: 20px;
   font-weight: bold;
@@ -510,7 +524,10 @@ input[type="checkbox"].toggle:checked::before {
   color: #fff;
   text-align: center;
   padding: 16px 20px;
+  transform-origin: center center;
+  text-decoration: none;
   border-radius: 50%;
+  transform-origin: center;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 
@@ -524,22 +541,12 @@ input[type="checkbox"].toggle:checked::before {
 
 .navbar a.disabled {
   opacity: 0.3;
+  cursor: not-allowed;
   pointer-events: none;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.spin {
-  animation: spin 0.3s ease-in-out;
-  transform: rotate(720deg);
-  transform-origin: center;
+.navbar a.disabled {
+  transition: opacity 0.3s ease-in-out;
 }
 
 .small-searchbar {
@@ -813,36 +820,17 @@ input[type="checkbox"].toggle:checked::before {
 }
 
 @keyframes orbit {
-  0% {
-    transform: rotate(0deg) translateX(80px) rotate(30deg);
-  }
-  25% {
-    transform: rotate(-90deg) translateX(80px) rotate(30deg);
-  }
-  50% {
-    transform: rotate(-180deg) translateX(80px) rotate(30deg);
-  }
-  75% {
-    transform: rotate(-270deg) translateX(80px) rotate(30deg);
-  }
-  100% {
-    transform: rotate(-360deg) translateX(80px) rotate(30deg);
-  }
+  0% { transform: rotate(0deg) translateX(80px) rotate(30deg); }
+  25% { transform: rotate(-90deg) translateX(80px) rotate(30deg); }
+  50% { transform: rotate(-180deg) translateX(80px) rotate(30deg); }
+  75% { transform: rotate(-270deg) translateX(80px) rotate(30deg); }
+  100% { transform: rotate(-360deg) translateX(80px) rotate(30deg); }
 }
 
 @keyframes flame {
-  0% {
-    transform: scaleY(0.8) scaleX(0.9);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scaleY(1.2) scaleX(1.1);
-    opacity: 1;
-  }
-  100% {
-    transform: scaleY(0.8) scaleX(0.9);
-    opacity: 0.8;
-  }
+  0% { transform: scaleY(0.8) scaleX(0.9); opacity: 0.8; }
+  50% { transform: scaleY(1.2) scaleX(1.1); opacity: 1; }
+  100% { transform: scaleY(0.8) scaleX(0.9); opacity: 0.8; }
 }
 
 .highlight {
@@ -885,25 +873,13 @@ input[type="checkbox"].toggle:checked::before {
 }
 
 @keyframes slideIn {
-  from {
-    right: -300px;
-    opacity: 0;
-  }
-  to {
-    right: 20px;
-    opacity: 1;
-  }
+  from { right: -300px; opacity: 0; }
+  to { right: 20px; opacity: 1; }
 }
 
 @keyframes slideOut {
-  from {
-    right: 20px;
-    opacity: 1;
-  }
-  to {
-    right: -300px;
-    opacity: 0;
-  }
+  from { right: 20px; opacity: 1; }
+  to { right: -300px; opacity: 0; }
 }
 
 .toast.show {
