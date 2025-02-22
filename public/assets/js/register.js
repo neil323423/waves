@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
       await ensureWebSocketConnection(wispUrl);
 
       console.log("%c[⚙️]%c Registering Service Worker...", "color: #007bff; font-weight: bold;", "color: #007bff;");
-      await navigator.serviceWorker.register("/sw.js", { scope: '/$/' });
+      await navigator.serviceWorker.register("/sw.js", { scope: '/service/' });
       console.log("%c[✅]%c Service Worker registered successfully.", "color: green; font-weight: bold;", "color: green;");
       
       const savedTransport = localStorage.getItem('transport') || "epoxy";

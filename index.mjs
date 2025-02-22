@@ -1,183 +1,107 @@
-import { createBareServer } from '@tomphttp/bare-server-node';
+import express from "express";
+import { createServer } from "http";
+import path from "path";
+import { fileURLToPath } from "url";
+import { hostname } from "os";
+import chalk from "chalk";
+import compression from "compression";
+import WebSocket from "ws";
+import morgan from "morgan";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
-import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
-import express from "express";
-import { createServer } from "node:http";
+import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import wisp from "wisp-server-node";
-import compression from 'compression';
-import { hostname } from "node:os";
-import { fileURLToPath } from "url";
-import chalk from "chalk";
-import routes from './src/routes.js';
-import WebSocket from 'ws';
-import http from 'http';
-import https from 'https';
 
-const publicPath = fileURLToPath(new URL("./public/", import.meta.url));
-const bare = createBareServer("/@/");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const publicPath = path.join(__dirname, "public");
+
 const app = express();
+app.use(compression({ level: 6, threshold: 0 }));
+const oneYear = 365 * 24 * 60 * 60 * 1000;
+app.use("/baremux/", express.static(baremuxPath, { maxAge: oneYear }));
+app.use("/epoxy/", express.static(epoxyPath, { maxAge: oneYear }));
+app.use("/libcurl/", express.static(libcurlPath, { maxAge: oneYear }));
+app.use("/uv/", express.static(uvPath, { maxAge: oneYear }));
+app.use(express.static(publicPath, { maxAge: oneYear }));
+app.use(morgan("combined"));
+app.get("/", (req, res) => res.sendFile(path.join(publicPath, "index.html")));
+app.use((req, res) => res.status(404).sendFile(path.join(publicPath, "404.html")));
 
-app.use("/baremux/", express.static(baremuxPath));
-app.use("/epoxy/", express.static(epoxyPath));
-app.use('/libcurl/', express.static(libcurlPath));
-app.use(express.static(publicPath));
-app.use("/uv/", express.static(uvPath));
-
-app.get('/estimated-loading-time', async (req, res) => {
-  const targetUrl = req.query.url;
-  if (!targetUrl) {
-    return res.status(400).json({ error: 'No URL provided. Please provide a valid URL as a query parameter, e.g., ?url=https://example.com' });
-  }
-  let parsedUrl;
-  try {
-    parsedUrl = new URL(targetUrl);
-  } catch (error) {
-    return res.status(400).json({ error: 'Invalid URL provided.' });
-  }
-  const requestModule = parsedUrl.protocol === 'https:' ? https : http;
-  const numRequests = 3;
-  let totalTime = 0;
-  function measureTime() {
-    return new Promise((resolve, reject) => {
-      const startTime = process.hrtime.bigint();
-      const reqObj = requestModule.request(
-        targetUrl,
-        { method: 'HEAD', timeout: 5000 },
-        (response) => {
-          response.resume();
-          const endTime = process.hrtime.bigint();
-          const durationMs = Number(endTime - startTime) / 1e6;
-          resolve(durationMs);
-        }
-      );
-      reqObj.on('timeout', () => {
-        reqObj.abort();
-        reject(new Error('Request timed out'));
-      });
-      reqObj.on('error', reject);
-      reqObj.end();
-    });
-  }
-  try {
-    for (let i = 0; i < numRequests; i++) {
-      const dt = await measureTime();
-      totalTime += dt;
-    }
-    const avgTime = totalTime / numRequests;
-    res.json({ estimatedTime: avgTime, message: 'Ping measurement successful' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.use('/', routes);
-
-app.use(compression({
-  level: 1,
-  threshold: 0,
-  filter: () => true,
-  memLevel: 1,
-  strategy: 1,
-  windowBits: 9
-}));
-
-let port = parseInt(process.env.PORT || "3000");
-const server = createServer();
+const port = parseInt(process.env.PORT || "3000", 10);
+const server = createServer(app);
 
 const pingWSS = new WebSocket.Server({ noServer: true });
-pingWSS.on('connection', (ws, req) => {
+pingWSS.on("connection", (ws, req) => {
+  ws.isAlive = true;
+  ws.on("pong", () => {
+    const latency = Date.now() - ws.lastPing;
+    ws.send(JSON.stringify({ type: "latency", latency }));
+    ws.isAlive = true;
+  });
   const pingInterval = setInterval(() => {
-    const timestamp = Date.now();
-    ws.send(JSON.stringify({ type: 'ping', timestamp }));
-  }, 1000);
-  ws.on('message', (message) => {
-    try {
-      const data = JSON.parse(message);
-      if (data.type === 'pong' && data.timestamp) {
-        const latency = Date.now() - data.timestamp;
-        ws.send(JSON.stringify({ type: 'latency', latency }));
-      }
-    } catch (error) {}
-  });
-  ws.on('close', () => {
-    clearInterval(pingInterval);
-  });
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.lastPing = Date.now();
+      ws.ping();
+    }
+  }, 10000);
+  ws.on("close", () => clearInterval(pingInterval));
 });
 
-server.on("request", (req, res) => {
-  if (req.url === "/w/") {
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("hi");
-  } else {
-    app(req, res);
-  }
-});
-
-server.on('upgrade', (req, socket, head) => {
-  if (req.url === '/w/ping') {
-    pingWSS.handleUpgrade(req, socket, head, (ws) => {
-      pingWSS.emit('connection', ws, req);
-    });
-  } else if (req.url.startsWith('/w/')) {
+server.on("upgrade", (req, socket, head) => {
+  if (req.url === "/w/ping") {
+    pingWSS.handleUpgrade(req, socket, head, (ws) => pingWSS.emit("connection", ws, req));
+  } else if (req.url.startsWith("/w/")) {
     wisp.routeRequest(req, socket, head);
   } else {
-    socket.end();
+    socket.destroy();
   }
 });
 
 server.on("listening", () => {
   const address = server.address();
   if (address && typeof address === "object") {
-    console.log(chalk.bold.blue(`
-██╗    ██╗ █████╗ ██╗   ██╗███████╗███████╗
-██║    ██║██╔══██╗██║   ██║██╔════╝██╔════╝
-██║ █╗ ██║███████║██║   ██║█████╗  ███████╗
-██║███╗██║██╔══██║╚██╗ ██╔╝██╔══╝  ╚════██║
-╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗███████║██╗
- ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝`));
-    console.log(chalk.bold.green("🟡 Server starting..."));
-    console.log(chalk.bold.green("🟢 Server started successfully!"));
-    console.log(chalk.green("🔗 Hostname: ") + chalk.bold(`http://${hostname()}:${address.port}`));
-    console.log(chalk.green("🔗 LocalHost: ") + chalk.bold(`http://localhost:${address.port}`));
-    console.log(chalk.green("🕒 Time: ") + chalk.bold.magenta(new Date().toLocaleTimeString()));
-    console.log(chalk.green("📅 Date: ") + chalk.bold.magenta(new Date().toLocaleDateString()));
-    console.log(chalk.green("💻 Platform: ") + chalk.bold.yellow(process.platform));
-    console.log(chalk.green("📶 Server Status: ") + chalk.bold.green("Running"));
-    console.log(chalk.red("🔴 Do ctrl + c to shut down the server."));
+    const host = hostname();
+    console.log(chalk.green("Server is running:"));
+    console.log(chalk.cyan(`Local: http://localhost:${address.port}`));
+    console.log(chalk.cyan(`Host: http://${host}:${address.port}`));
+    console.log(chalk.magenta(`Platform: ${process.platform}`));
+    console.log(chalk.yellow("Press Ctrl + C to shut down the server."));
   } else {
-    console.error(chalk.bold.red("❌ Server failed to start."));
+    console.error(chalk.red("Error: Could not determine server address."));
   }
 });
 
-process.on("SIGINT", () => shutdown("SIGINT"));
-process.on("SIGTERM", () => shutdown("SIGTERM"));
-
-async function shutdown(signal) {
-  console.log(chalk.bold.red(`🔴 ${signal} received. Shutting down...`));
+const shutdown = async (signal) => {
+  console.log(chalk.red(`Received ${signal}. Initiating graceful shutdown...`));
   try {
     await closeServer(server, "HTTP server");
-    console.log(chalk.bold.green("✅ All servers shut down successfully."));
+    console.log(chalk.green("All servers have shut down gracefully."));
     process.exit(0);
   } catch (err) {
-    console.error(chalk.bold.red("⚠️ Error during shutdown:"), err);
+    console.error(chalk.red("Error during shutdown:"), err);
     process.exit(1);
   }
-}
+};
+
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
 
 function closeServer(server, name) {
   return new Promise((resolve, reject) => {
     server.close((err) => {
       if (err) {
-        console.error(chalk.bold.red(`❌ Error closing ${name}:`), err);
+        console.error(chalk.red(`Error closing ${name}: ${err.message}`));
         reject(err);
       } else {
-        console.log(chalk.bold.red(`🔴 ${name} closed.`));
+        console.log(chalk.blue(`${name} closed successfully.`));
         resolve();
       }
     });
   });
 }
 
-server.listen(port);
+server.listen(port, () => {
+  console.log(chalk.green(`Server listening on port ${port}`));
+});

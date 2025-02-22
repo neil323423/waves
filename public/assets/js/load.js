@@ -1,9 +1,10 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById('searchInput');
-    const topBar = document.querySelector('.top-bar');
-    const highlight = document.querySelector('.highlight');
+const titleElement = document.querySelector('.search-title');
+const text = titleElement.textContent;
+titleElement.innerHTML = ''; 
 
-    searchInput.classList.add('loaded');    
-    topBar.classList.add('loaded')
-    highlight.classList.add('loaded');
+text.split('').forEach((letter, index) => {
+    const span = document.createElement('span');
+    span.textContent = letter;
+    span.style.animationDelay = `${index * 0.2}s`; 
+    titleElement.appendChild(span);
 });

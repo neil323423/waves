@@ -4,14 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Waves" />
-  <meta name="theme-color" content="#443ab6" />
-  <meta name="msapplication-TileColor" content="#443ab6" />
+  <meta name="theme-color" content="#b6b6b6" />
+  <meta name="msapplication-TileColor" content="#b6b6b6" />
   <meta property="og:image" content="/favicon.ico" />
   <meta name="description" content="Waves. A sleek and minimalist web proxy." />
   <title>Waves</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="/assets/css/index.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/settings.css">
+  <link rel="stylesheet" href="/assets/css/toast.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
   <script src="/baremux/index.js"></script>
@@ -22,45 +24,75 @@
   <script src="/assets/js/eruda.js" defer></script>
   <script src="/assets/js/register.js" defer></script>
   <script src="/assets/js/settings.js" defer></script>
-  <script src="/assets/js/cursor-trail.js" defer></script>
   <script src="/assets/js/ping.js" defer></script>
+  <script src="/assets/js/greeting.js" defer></script>
   <script src="/assets/js/index.js" defer></script>
-
-  <div class="light"></div>
+  <div class="relative flex flex-col h-[100vh] items-center justify-center bg-white transition-bg">
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="god-rays absolute -inset-[10px] opacity-50"></div>
+    </div>
+  </div>
   <div class="top-bar">
-    <a href="#" id="games-icon"><i class="fas fa-gamepad"></i></a>
-    <a href="#" id="chat-icon"><i class="fas fa-comments"></i></a>
-    <a href="#" id="settings-icon"><i class="fas fa-gear"></i></a>
-  </div>
-
+    <img src="favicon.ico" class="favicon">
+    <span id="waves">Waves</span>
+    <a href="#" id="games">Games</a>
+    <a href="#" id="movies">Movies</a>
+    <a href="#" id="ai">AI</a>
+    <a href="#" id="settings-icon">
+      <i class="settings-icon fas fa-gear"></i>
+    </a>
+  </div>   
   <div id="settings-menu" class="settings-menu"></div>
-
+  <div class="navbar">
+    <ul class="nav-links">
+      <li><a id="backIcon" href="#"><img src="/assets/images/icons/back.png" alt="Back"></a></li>
+      <li><a id="refreshIcon" href="#"><img src="/assets/images/icons/refresh.png" alt="Refresh"></a></li>
+      <li><a id="forwardIcon" href="#"><img src="/assets/images/icons/forward.png" alt="Forward"></a></li>
+      <li>
+        <div class="search-containersmall">
+          <div class="small-searchbar" style="position: relative;">
+            <i id="lockIcon" class="fa-solid fa-lock"></i>
+            <input class="waves" type="text" id="searchInputt" 
+                   placeholder="Search for a query or enter a URL..." autocomplete="off" 
+                   style="padding-left: 40px;">
+          </div>
+        </div>            
+      </li>
+      <li><a id="erudaIcon" href="#"><img src="/assets/images/icons/eruda.png" alt="Eruda"></a></li>
+      <li><a id="fullscreenIcon" href="#"><img src="/assets/images/icons/fullscreen.png" alt="Full-Screen"></a></li>
+      <li><a href="/"><img src="/assets/images/icons/out.png" alt="X out"></a></li>
+    </ul>
+  </div>
   <div class="loading-screen">
-    <div class="loading-text"></div>
-    <div class="moon">
-      <div class="crater"></div>
-      <div class="crater"></div>
-      <div class="crater"></div>
-      <div class="rocket">
-        <div class="rocket-body"></div>
-        <div class="rocket-fins">
-          <div class="rocket-fin"></div>
-          <div class="rocket-fin"></div>
-        </div>
-        <div class="rocket-flame"></div>
-      </div>
-    </div>
+    <div class="spinner"></div>
+    <div class="loading-text">Loading...</div>
   </div>
-
   <div class="search-container">
-    <div class="search-title"><span></span><span class="highlight">Waves.</span></div>
+    <div class="search-title">Waves.</div>
     <div class="search-bar">
-      <input class="waves" type="text" id="searchInput" placeholder="What's on your mind?" autocomplete="off">
+      <input class="waves" type="text" id="searchInput" placeholder="What been on your mind lately?" autocomplete="off">
     </div>
   </div>
-
   <div id="erudaLoadingScreen" style="display: none;">Eruda is loading...</div>
-  <iframe id="proxy-iframe" class="iframe"></iframe>
   <div id="pingDisplay">Ping: Connecting...</div>
+  <div id="overlay" class="overlay"></div>
+  <div id="namePrompt" class="popup">
+    <div class="input-container">
+      <label for="userName">Please enter a name so we know what to call you:</label>
+      <div class="input-wrapper">
+        <input type="text" id="userName" placeholder="Your name" oninput="checkInput()" autocomplete="off">
+      </div>
+      <button id="doneButton" onclick="submitName()" disabled>
+        <i class="fas fa-check"></i> Done
+      </button>
+  </div>
+  </div>  
+  </div>
+  <div id="greeting"></div>
+  <iframe id="cool-iframe" class="iframe"></iframe>
+  <div id="copyright">
+    &copy; 2025 Sent services. All rights reserved.
+  </div>
 </body>
 </html>
+ 

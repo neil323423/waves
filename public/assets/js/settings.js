@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
     <label for="wisp-server">Wisp Server</label>
     <p>Enter a different Wisp Server to connect to.</p>
-    <p>The server URL must begin with <code>ws(s)://</code> and end with a <code>/</code>.</p>
+    <p>Recommended to keep this as default.</p>
     <input type="text" id="wisp-server" placeholder="Wisp Server URL Here..." autocomplete="off">
     <button id="save-wisp-url">Save</button>
   </div>
@@ -33,19 +33,9 @@ document.addEventListener('DOMContentLoaded', function () {
     <label for="navbar-toggle">Navigation Bar</label>
     <p>Keep this on for the navigation bar when searching (Recommended).</p>
     <input type="checkbox" id="navbar-toggle">
-    <label for="themes-selector">Themes</label>
-    <p>Choose your preferred theme.</p>
-    <div class="themes-selector">
-      <div class="themes-selected">Default</div>
-      <div class="themes-options">
-        <div>Default</div>
-        <div>Sakura</div>
-        <div>Emerald</div>
-      </div>
-    </div>
   </div>
   <div id="info-content" class="tab-content">
-    <label>Version 1.4.0</label>
+    <label>Version 2.0.0</label>
     <label onmouseover="this.querySelector('span').style.color='lime'" onmouseout="this.querySelector('span').style.color='green'">
       Server Status: <span style="color: green; transition: color 0.3s ease;">Running</span>
     </label>
@@ -63,130 +53,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const transportSelector = document.querySelector('.transport-selector');
   const transportSelected = transportSelector.querySelector('.transport-selected');
   const transportOptions = transportSelector.querySelector('.transport-options');
-  const themesSelector = document.querySelector('.themes-selector');
-  const themesSelected = themesSelector.querySelector('.themes-selected');
-  const themesOptions = themesSelector.querySelector('.themes-options');
   const navbarToggle = document.getElementById('navbar-toggle');
-  const selectedTheme = localStorage.getItem('selectedTheme') || 'default';
-  const savedGlowStyle = localStorage.getItem('glowPointStyle') || '0rem 0rem 1.2rem 0.6rem #443ab6';
-  const savedLightBoxShadow = localStorage.getItem('lightBoxShadow') || '0 0 250px 100px #443ab6';
-  const savedLightBackgroundImage = localStorage.getItem('lightBackgroundImage') || 'radial-gradient(farthest-corner at 50% 50%, #443ab6)';
-  document.body.classList.add(selectedTheme);
-  updateGlowPointStyle(savedGlowStyle);
-  updateHighlightStyle(selectedTheme);
-  updateLightStyle(savedLightBoxShadow, savedLightBackgroundImage);
-  const savedH2Color = localStorage.getItem('settingsMenuH2Color') || '#443ab6';
-  const settingsTitle = document.querySelector('#settings-menu h2');
-  settingsTitle.style.color = savedH2Color;
-  themesSelected.textContent = selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1);
-  function updateTheme(newTheme, glowStyle) {
-    document.body.classList.remove('default', 'sakura', 'emerald');
-    document.body.classList.add(newTheme);
-    updateGlowPointStyle(glowStyle);
-    updateHighlightStyle(newTheme);
-    let lightColor, gradientColor;
-    switch (newTheme) {
-      case 'sakura':
-        lightColor = '0 0 250px 100px #ff66cc';
-        gradientColor = 'radial-gradient(farthest-corner at 50% 50%, #ff66cc)';
-        break;
-      case 'emerald':
-        lightColor = '0 0 250px 100px #50C878';
-        gradientColor = 'radial-gradient(farthest-corner at 50% 50%, #50C878)';
-        break;
-      default:
-        lightColor = '0 0 250px 100px #443ab6';
-        gradientColor = 'radial-gradient(farthest-corner at 50% 50%, #443ab6)';
-        break;
-    }
-    updateLightStyle(lightColor, gradientColor);
-    updateSettingsMenuH2Style(newTheme);
-    localStorage.setItem('selectedTheme', newTheme);
-    localStorage.setItem('glowPointStyle', glowStyle);
-    themesSelected.textContent = newTheme.charAt(0).toUpperCase() + newTheme.slice(1);
-    themesOptions.classList.remove('transport-show');
-    themesSelected.classList.remove('transport-arrow-active');
-    showToast('success', `Theme changed to ${newTheme}`);
-  }
-  function updateLightStyle(boxShadow, backgroundImage) {
-    const lightElement = document.querySelector('.light');
-    if (lightElement) {
-      lightElement.style.boxShadow = boxShadow;
-      lightElement.style.backgroundImage = backgroundImage;
-      localStorage.setItem('lightBoxShadow', boxShadow);
-      localStorage.setItem('lightBackgroundImage', backgroundImage);
-    }
-  }
-  function updateHighlightStyle(newTheme) {
-    const highlightElement = document.querySelector('.highlight');
-    if (highlightElement) {
-      let gradientStyle;
-      switch (newTheme) {
-        case 'sakura':
-          gradientStyle = 'linear-gradient(to right, #5f274c, rgb(202, 74, 160), #5f274c)';
-          break;
-        case 'emerald':
-          gradientStyle = 'linear-gradient(to right, #1A5F1A, #50C878, #1A5F1A)';
-          break;
-        default:
-          gradientStyle = 'linear-gradient(to right, #221d5e, #443ab6, #221d5e)';
-          break;
-      }
-      highlightElement.style.background = gradientStyle;
-      highlightElement.style.webkitBackgroundClip = 'text';
-      highlightElement.style.webkitTextFillColor = 'transparent';
-    }
-  }
-  function updateGlowPointStyle(style) {
-    const glowPoints = document.querySelectorAll('.glow-point');
-    glowPoints.forEach(point => {
-      point.style.boxShadow = style;
-    });
-  }
-  function updateSettingsMenuH2Style(theme) {
-    const settingsTitle = document.querySelector('#settings-menu h2');
-    switch (theme) {
-      case 'sakura':
-        settingsTitle.style.color = '#ff66cc';
-        break;
-      case 'emerald':
-        settingsTitle.style.color = '#50C878';
-        break;
-      default:
-        settingsTitle.style.color = '#443ab6';
-        break;
-    }
-    localStorage.setItem('settingsMenuH2Color', settingsTitle.style.color);
-  }
-  themesSelector.addEventListener('click', function(e) {
-    e.stopPropagation();
-    themesOptions.classList.toggle('transport-show');
-    themesSelected.classList.toggle('transport-arrow-active');
-  });
-  const themeOptionsDivs = themesOptions.getElementsByTagName('div');
-  for (let i = 0; i < themeOptionsDivs.length; i++) {
-    themeOptionsDivs[i].addEventListener('click', function(e) {
-      e.stopPropagation();
-      const selectedTheme = this.innerHTML.toLowerCase();
-      let glowStyle = '0rem 0rem 1.2rem 0.6rem #443ab6';
-      switch (selectedTheme) {
-        case 'sakura':
-          glowStyle = '0rem 0rem 1.2rem 0.6rem #ff66cc';
-          break;
-        case 'emerald':
-          glowStyle = '0rem 0rem 1.2rem 0.6rem #50C878';
-          break;
-        default:
-          glowStyle = '0rem 0rem 1.2rem 0.6rem #443ab6';
-          break;
-      }
-      updateTheme(selectedTheme, glowStyle);
-    });
-  }
   const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
   let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
   const wispInput = document.querySelector("#wisp-server");
-  wispInput.value = localStorage.getItem('customWispUrl') || defaultWispUrl;
+  wispInput.value = currentWispUrl;
   function isValidUrl(url) {
     try {
       const parsedUrl = new URL(url);
@@ -286,13 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
       showToast('error', 'Navigation Bar is now disabled.');
     }
   });
-  navbarToggle.addEventListener('change', function() {
-    if (this.checked) {
-      showToast('success', 'Navigation Bar is now enabled.');
-    } else {
-      showToast('error', 'Navigation Bar is now disabled.');
-    }
-  });
   function runScriptIfChecked() {
     let inFrame;
     try {
@@ -340,10 +204,17 @@ document.addEventListener('DOMContentLoaded', function () {
   function showToast(type, message) {
     const toast = document.createElement('div');
     toast.className = `toast ${type} show`;
-    toast.textContent = message;
+    const icons = {
+      success: '<i class="fa-solid fa-check-circle" style="margin-right: 8px;"></i>',
+      error: '<i class="fa-solid fa-times-circle" style="margin-right: 8px;"></i>',
+      info: '<i class="fa-solid fa-info-circle" style="margin-right: 8px;"></i>',
+      warning: '<i class="fa-solid fa-exclamation-triangle" style="margin-right: 8px;"></i>'
+    };
+    const icon = icons[type] || '';
+    toast.innerHTML = `${icon}${message} `;
     const closeBtn = document.createElement('button');
     closeBtn.className = 'toast-close';
-    closeBtn.innerHTML = '&times;';
+    closeBtn.innerHTML = '<i class="fa-solid fa-xmark" style="margin-left: 8px; font-size: 0.8em;"></i>';
     closeBtn.addEventListener('click', () => {
       toast.classList.remove('show');
       toast.classList.add('hide');
