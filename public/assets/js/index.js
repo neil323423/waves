@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (url.hostname.includes(".")) return url.toString();
       } catch {}
     }
-    return `https://searx.be/search?q=${encodeURIComponent(query)}&language=en`;
+    return `https://search.brave.com/search?q=${encodeURIComponent(query)}`;
   }
   function showToast(message, type = "success", iconType = "check") {
     const toast = document.createElement("div");
