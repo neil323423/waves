@@ -26,7 +26,6 @@ A sleek and minimalist Web Proxy.
 - DevTools
 - Sleek & Clean UI
 - Search Bar
-- Themes
 - And a lot more features coming soon...
 
 ## Usage:
