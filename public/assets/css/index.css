@@ -30,6 +30,7 @@ body {
     transform: translateX(-50%);
     width: 550px;
     margin-top: 1%;
+    margin-bottom: -10px;
     margin-left: 50%;
     background-color: #08080894;
     border: 1px solid #ffffff21;
