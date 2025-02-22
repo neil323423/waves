@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
     iframe.onload = () => {
       hideLoadingScreen();
       if (navbarToggle.checked) navBar.style.display = "block";
-      generateError();
+      generateSubject();
       updateDecodedSearchInput();
       try {
         if (iframe.contentDocument && !iframe.contentDocument.getElementById('uv-postmessage-hook')) {
@@ -279,10 +279,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function getUrl(url) {
     return Promise.resolve(__uv$config.prefix + __uv$config.encodeUrl(url));
   }
-  function generateError() {
-    const code = '404';
-    history.replaceState({}, '', '/error?code=' + code);
-  }
+  function generateSubject() {
+    const subjects = ['math', 'science', 'history', 'art', 'programming', 'philosophy'];
+    const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
+    history.replaceState({}, '', '/learning?subject=' + randomSubject);
+  }  
   function decodeUrl(encodedUrl) {
     try {
       const urlObj = new URL(encodedUrl, window.location.origin);
