@@ -223,16 +223,6 @@ body {
     animation: fadeInFromLeft 0.5s ease-in-out forwards;
     margin-right: -1px;
 }
-@keyframes fadeInFromLeft {
-    0% {
-        opacity: 0;
-        transform: translateX(-50px);
-   }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-   }
-}
 .search-title:hover {
     color: #ffffff;
 }
@@ -333,21 +323,27 @@ body {
     letter-spacing: 1px;
     margin-top: 25px;
 }
-.spinner {
-    border: 8px solid rgba(255, 255, 255, 0.2);
-    border-top: 8px solid #fff;
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    animation: spin 2s linear infinite;
+svg path {
+    fill: none;
+    stroke: #bdbdbd;
+    stroke-width: 2;
 }
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-   }
-    100% {
-        transform: rotate(360deg);
-   }
+#teabag {
+    transform-origin: top center;
+    transform: rotate(3deg);
+    stroke: #bdbdbd;
+    stroke-width: 2;
+    animation: swing 2s ease-in-out infinite;
+}
+#steamL {
+    stroke-dasharray: 13;
+    stroke-dashoffset: 13;
+    animation: steamLarge 2s infinite;
+}
+#steamR {
+    stroke-dasharray: 9;
+    stroke-dashoffset: 9;
+    animation: steamSmall 2s infinite;
 }
 .hover-link {
     color: #949494;
@@ -373,14 +369,6 @@ body {
 }
 #pingDisplay:hover {
     color: #b6b6b6;
-}
-@keyframes god-rays {
-    from {
-        background-position: 50% 50%, 50% 50%;
-   }
-    to {
-        background-position: 350% 50%, 350% 50%;
-   }
 }
 .god-rays {
     position: fixed;
@@ -523,6 +511,36 @@ body {
     cursor: default;
     z-index: -1;
 }
+#namePrompt.fade-out {
+    animation: fadeOutPrompt 0.3s ease-in-out forwards;
+}
+#copyright {
+    position: fixed;
+    bottom: 10px;
+    z-index: -1;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #888888;
+    font-size: 13px;
+    cursor: default;
+    animation: fadeIn 2s ease;
+    transition: color 0.3s ease;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+#copyright:hover {
+    color: #b6b6b6;
+}
+@keyframes fadeInFromLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+   }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+   }
+}
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -560,23 +578,51 @@ body {
         opacity: 0;
    }
 }
-#namePrompt.fade-out {
-    animation: fadeOutPrompt 0.3s ease-in-out forwards;
+@keyframes god-rays {
+    from {
+        background-position: 50% 50%, 50% 50%;
+   }
+    to {
+        background-position: 350% 50%, 350% 50%;
+   }
 }
-#copyright {
-    position: fixed;
-    bottom: 10px;
-    z-index: -1;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #888888;
-    font-size: 13px;
-    cursor: default;
-    animation: fadeIn 2s ease;
-    transition: color 0.3s ease;
-    padding: 5px 10px;
-    border-radius: 5px;
+@keyframes swing {
+    0%, 100% {
+        transform: rotate(3deg);
+   }
+    50% {
+        transform: rotate(-3deg);
+   }
 }
-#copyright:hover {
-    color: #b6b6b6;
+@keyframes steamLarge {
+    0% {
+        stroke-dashoffset: 13;
+        opacity: 0.6;
+   }
+    100% {
+        stroke-dashoffset: 39;
+        opacity: 0;
+   }
+}
+@keyframes steamSmall {
+    10% {
+        stroke-dashoffset: 9;
+        opacity: 0.6;
+   }
+    80% {
+        stroke-dashoffset: 27;
+        opacity: 0;
+   }
+    100% {
+        stroke-dashoffset: 27;
+        opacity: 0;
+   }
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+   }
+    100% {
+        transform: rotate(360deg);
+   }
 }

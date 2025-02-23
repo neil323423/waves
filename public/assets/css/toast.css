@@ -27,26 +27,6 @@
     margin-left: 5px;
     display: inline-block;
 }
-@keyframes slideIn {
-    0% {
-        right: -300px;
-        opacity: 0;
-   }
-    100% {
-        right: 20px;
-        opacity: 1;
-   }
-}
-@keyframes slideOut {
-    0% {
-        right: 20px;
-        opacity: 1;
-   }
-    100% {
-        right: -300px;
-        opacity: 0;
-   }
-}
 .toast.show {
     animation: slideIn 0.5s forwards;
 }
@@ -69,4 +49,24 @@
 }
 .toast-close:hover {
     color: #f44336;
+}
+@keyframes slideIn {
+    0% {
+        right: -300px;
+        opacity: 0;
+   }
+    100% {
+        right: 20px;
+        opacity: 1;
+   }
+}
+@keyframes slideOut {
+    0% {
+        right: 20px;
+        opacity: 1;
+   }
+    100% {
+        right: -300px;
+        opacity: 0;
+   }
 }
