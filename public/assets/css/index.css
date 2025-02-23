@@ -200,7 +200,7 @@ body {
 }
 .search-container {
     position: relative;
-    margin-top: 16%;
+    margin-top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
     animation: fadeIn 2s ease;
