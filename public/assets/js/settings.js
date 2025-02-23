@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
     </label>
     <p>If you want to see Waves up time please visit <a href="https://uptime.macha.icu" target="_blank" class="hover-link">https://uptime.macha.icu</a>.</p>
     <div style="display: flex; gap: 10px; justify-content: left; align-items: left; margin-top: 10px; margin-bottom: -20px;">
-      <label><a href="https://discord.gg/656PtwMx3H" target="_blank" class="hover-link"><i class="fab fa-discord" style="font-size: 20px;"></i></a></label>
+      <label><a href="https://discord.gg/dJvdkPRheV" target="_blank" class="hover-link"><i class="fab fa-discord" style="font-size: 20px;"></i></a></label>
       <label><a href="https://github.com/xojw/waves" target="_blank" class="hover-link"><i class="fab fa-github" style="font-size: 20px;"></i></a></label>
     </div>
   </div>
