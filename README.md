@@ -33,8 +33,6 @@ A sleek and minimalist Web Proxy.
 You **cannot** deploy Waves on any static hosting services.
 
 ## Connecting Waves to Your Domain or Subdomain:
-> [!IMPORTANT]
-> This is temporarily unavailable due to issues with our VPS provider. We’re working on resolving the problem as soon as possible.
 
 1. Log in to your domain or subdomain provider’s control panel.
 2. Select the domain or subdomain you'd like to configure.
