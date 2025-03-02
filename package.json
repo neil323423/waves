@@ -4,28 +4,33 @@
     "description": "A sleek and minimalist Web Proxy.",
     "type": "module",
     "engines": {
-        "npm": ">=17.6.0",
-        "node": ">=21.0.0"
+        "npm": ">=7.0.0",
+        "node": ">=16.0.0"
     },
     "scripts": {
-        "start": "node index.mjs"
+        "start": "node index.mjs",
+        "dev": "nodemon index.mjs",
+        "lint": "eslint ."
     },
     "author": "xojw",
     "dependencies": {
-        "@mercuryworkshop/bare-mux": "^2.1.7",
-        "@mercuryworkshop/epoxy-transport": "^2.1.27",
-        "@mercuryworkshop/libcurl-transport": "^1.4.0",
+        "@mercuryworkshop/bare-mux": "latest",
+        "@mercuryworkshop/epoxy-transport": "latest",
+        "@mercuryworkshop/libcurl-transport": "latest",
         "@titaniumnetwork-dev/ultraviolet": "latest",
-        "compression": "^1.7.5",
-        "express": "^4.21.2",
-        "node-fetch": "^3.3.2",
-        "@mercuryworkshop/wisp-js": "^0.3.3",
+        "@tomphttp/bare-server-node": "latest",
+        "compression": "latest",
+        "express": "latest",
+        "node-fetch": "latest",
         "wisp-server-node": "latest",
-        "morgan": "latest",
-        "ws": "^8.18.0"
+        "ws": "latest",
+        "lru-cache": "latest"
     },
     "devDependencies": {
-        "eslint": "^8.36.0",
-        "prettier": "^2.8.4"
+        "eslint": "latest",
+        "glob": "latest",
+        "prettier": "latest",
+        "rimraf": "latest",
+        "nodemon": "latest"
     }
 }
