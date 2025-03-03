@@ -35,11 +35,11 @@ document.addEventListener('DOMContentLoaded', function () {
     <input type="checkbox" id="navbar-toggle">
   </div>
   <div id="info-content" class="tab-content">
-    <label>Version 2.0.0</label>
+    <label>Version 2.1.0</label>
     <label onmouseover="this.querySelector('span').style.color='lime'" onmouseout="this.querySelector('span').style.color='green'">
       Server Status: <span style="color: green; transition: color 0.3s ease;">Running</span>
     </label>
-    <p>If you want to see Waves up time please visit <a href="https://uptime.macha.icu" target="_blank" class="hover-link">https://uptime.macha.icu</a>.</p>
+    <p>If you want to see Waves status please visit <a href="https://status.usewaves.site" target="_blank" class="hover-link">https://uptime.macha.icu</a>.</p>
     <div style="display: flex; gap: 10px; justify-content: left; align-items: left; margin-top: 10px; margin-bottom: -20px;">
       <label><a href="https://discord.gg/dJvdkPRheV" target="_blank" class="hover-link"><i class="fab fa-discord" style="font-size: 20px;"></i></a></label>
       <label><a href="https://github.com/xojw/waves" target="_blank" class="hover-link"><i class="fab fa-github" style="font-size: 20px;"></i></a></label>

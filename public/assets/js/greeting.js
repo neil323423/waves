@@ -1,38 +1,71 @@
 window.onload = function () {
     var storedName = localStorage.getItem('userName');
-    var greeting = getGreeting();
-
-    if (storedName) {
-        document.getElementById('greeting').innerHTML = `<i class="${greeting.iconClass}"></i> ${greeting.text}, ${storedName}!`;
-        document.getElementById('greeting').style.opacity = 1;
-        document.getElementById('namePrompt').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-        showToast(`Welcome back, ${storedName}!`, "success", "wave");
-    } else {
-        setTimeout(function () {
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('namePrompt').style.display = 'block';
-        }, 0);
+    var greetingElement = document.getElementById('greeting');
+    
+    // If no name is stored, show the name prompt.
+    if (!storedName) {
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('namePrompt').style.display = 'block';
+    } else if (greetingElement) {
+        // If a name exists and there's a greeting div, update it.
+        updateGreeting(storedName);
     }
 
     var nameInput = document.getElementById('userName');
     var doneButton = document.getElementById('doneButton');
 
+    // Enable/disable the button based on input.
+    doneButton.disabled = nameInput.value.trim() === '';
     nameInput.addEventListener('input', function () {
         doneButton.disabled = nameInput.value.trim() === '';
     });
 };
+
+function submitName() {
+    var nameInput = document.getElementById('userName');
+    var name = nameInput.value.trim();
+
+    if (name) {
+        // Save the name to localStorage.
+        localStorage.setItem('userName', name);
+
+        // Check if a greeting element exists before updating it.
+        var greetingElement = document.getElementById('greeting');
+        if (greetingElement) {
+            updateGreeting(name);
+        }
+
+        // Hide the name prompt and overlay.
+        document.getElementById('namePrompt').classList.add('fade-out');
+        showToast(`Hey, ${name}! Welcome to Waves!`);
+
+        setTimeout(function () {
+            document.getElementById('namePrompt').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }, 300);
+    }
+}
+
+function updateGreeting(name) {
+    var greeting = getGreeting();
+    var greetingElement = document.getElementById('greeting');
+    
+    if (greetingElement) {
+        greetingElement.innerHTML = `<i class="${greeting.iconClass}"></i> ${greeting.text}, ${name}!`;
+        greetingElement.style.opacity = 1;
+    }
+}
 
 function showToast(message, type = "success", iconType = "check") {
     const toast = document.createElement("div");
     toast.className = `toast show ${type}`;
     
     const icons = {
-      success: '<i class="fas fa-check-circle" style="margin-right: 8px;"></i>',
-      error: '<i class="fas fa-times-circle" style="margin-right: 8px;"></i>',
-      info: '<i class="fas fa-info-circle" style="margin-right: 8px;"></i>',
-      warning: '<i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>',
-      smile: '<i class="fas fa-smile" style="margin-right: 8px;"></i>'  
+        success: '<i class="fas fa-check-circle" style="margin-right: 8px;"></i>',
+        error: '<i class="fas fa-times-circle" style="margin-right: 8px;"></i>',
+        info: '<i class="fas fa-info-circle" style="margin-right: 8px;"></i>',
+        warning: '<i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>',
+        smile: '<i class="fas fa-smile" style="margin-right: 8px;"></i>'
     };
 
     const icon = icons[iconType] || icons['smile'];
@@ -42,41 +75,16 @@ function showToast(message, type = "success", iconType = "check") {
     closeBtn.className = "toast-close";
     closeBtn.innerHTML = '<i class="fas fa-xmark" style="margin-left: 8px; font-size: 0.8em;"></i>';
     closeBtn.addEventListener("click", () => {
-      toast.classList.add("hide");
-      setTimeout(() => toast.remove(), 500);
+        toast.classList.add("hide");
+        setTimeout(() => toast.remove(), 500);
     });
     toast.appendChild(closeBtn);
     document.body.appendChild(toast);
     
     setTimeout(() => {
-      toast.classList.add("hide");
-      setTimeout(() => toast.remove(), 500);
+        toast.classList.add("hide");
+        setTimeout(() => toast.remove(), 500);
     }, 3000);
-}
-
-function submitName() {
-    var nameInput = document.getElementById('userName');
-    var name = nameInput.value.trim();
-    if (name) {
-        localStorage.setItem('userName', name);
-        var greeting = getGreeting();
-
-        document.getElementById('greeting').innerHTML = `<i class="${greeting.iconClass}"></i> ${greeting.text}, ${name}!`;
-        document.getElementById('namePrompt').classList.add('fade-out');
-        showToast(`Hey, ${name} Welcome to Waves!`);
-        
-        setTimeout(function () {
-            document.getElementById('namePrompt').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('greeting').style.opacity = 1;
-        }, 300);
-    }
-}
-
-function checkInput() {
-    var nameInput = document.getElementById('userName');
-    var doneButton = document.getElementById('doneButton');
-    doneButton.disabled = nameInput.value.trim() === '';
 }
 
 function getGreeting() {

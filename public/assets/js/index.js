@@ -6,9 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const backIcon = document.getElementById('backIcon');
   const forwardIcon = document.getElementById('forwardIcon');
   const iframe = document.getElementById('cool-iframe');
+
+  if (!refreshIcon || !fullscreenIcon || !backIcon || !forwardIcon || !iframe) {
+    console.error("One or more essential elements are missing from the DOM.");
+    return;
+  }
+
   refreshIcon.addEventListener('click', function () {
     refreshIcon.classList.add('spin');
-    if (iframe && iframe.tagName === 'IFRAME') {
+    if (iframe.tagName === 'IFRAME') {
       const currentUrl = iframe.contentWindow.location.href;
       if (normalizeUrl(currentUrl) !== normalizeUrl(historyStack[currentIndex] || '')) {
         addToHistory(currentUrl);
@@ -19,8 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
       refreshIcon.classList.remove('spin');
     }, 300);
   });
+
   fullscreenIcon.addEventListener('click', function () {
-    if (iframe && iframe.tagName === 'IFRAME') {
+    if (iframe.tagName === 'IFRAME') {
       if (iframe.requestFullscreen) {
         iframe.requestFullscreen();
       } else if (iframe.mozRequestFullScreen) {
@@ -32,26 +39,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
   backIcon.addEventListener('click', function () {
     if (currentIndex > 0) {
       currentIndex--;
-      if (iframe && iframe.tagName === 'IFRAME') {
-        iframe.src = historyStack[currentIndex];
-      }
+      iframe.src = historyStack[currentIndex];
       updateNavButtons();
       updateDecodedSearchInput();
     }
   });
+
   forwardIcon.addEventListener('click', function () {
     if (currentIndex < historyStack.length - 1) {
       currentIndex++;
-      if (iframe && iframe.tagName === 'IFRAME') {
-        iframe.src = historyStack[currentIndex];
-      }
+      iframe.src = historyStack[currentIndex];
       updateNavButtons();
       updateDecodedSearchInput();
     }
   });
+
   function normalizeUrl(urlStr) {
     try {
       const url = new URL(urlStr);
@@ -61,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return urlStr;
     }
   }
+
   function addToHistory(url) {
     const normalized = normalizeUrl(url);
     if (currentIndex >= 0 && normalizeUrl(historyStack[currentIndex]) === normalized) return;
@@ -72,12 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavButtons();
     updateDecodedSearchInput();
   }
+
   function updateNavButtons() {
     backIcon.disabled = (currentIndex <= 0);
     forwardIcon.disabled = (currentIndex >= historyStack.length - 1);
     backIcon.classList.toggle('disabled', currentIndex <= 0);
     forwardIcon.classList.toggle('disabled', currentIndex >= historyStack.length - 1);
   }
+
   function updateDecodedSearchInput() {
     const searchInput2 = document.getElementById('searchInputt');
     if (searchInput2) {
@@ -85,11 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (currentIndex >= 0 && historyStack[currentIndex]) {
         url = historyStack[currentIndex];
         searchInput2.value = decodeUrl(url);
-      } else {
-        if (iframe && iframe.src) {
-          url = iframe.src;
-          searchInput2.value = decodeUrl(url);
-        }
+      } else if (iframe.src) {
+        url = iframe.src;
+        searchInput2.value = decodeUrl(url);
       }
       const lockIcon = document.getElementById('lockIcon');
       if (lockIcon) {
@@ -104,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
+
   function detectIframeNavigation() {
     try {
       const iframeWindow = iframe.contentWindow;
@@ -127,11 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("Error detecting iframe navigation:", error);
     }
   }
+
   function handleIframeNavigation(url) {
     if (url && normalizeUrl(url) !== normalizeUrl(historyStack[currentIndex] || '')) {
       addToHistory(url);
     }
   }
+
   iframe.addEventListener('load', () => {
     try {
       detectIframeNavigation();
@@ -145,76 +155,107 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("Error detecting iframe navigation:", error);
     }
   });
+
   const searchContainer = document.querySelector(".search-container");
   const navBar = document.querySelector(".navbar");
   const topBar = document.querySelector(".top-bar");
   const searchInput1 = document.getElementById("searchInput");
   const searchInput2 = document.getElementById("searchInputt");
   const loadingScreen = document.querySelector(".loading-screen");
-  const games = document.getElementById("games");
   const movies = document.getElementById("movies");
   const ai = document.getElementById("ai");
   const navbarToggle = document.getElementById("navbar-toggle");
-  const savedNavbarState = localStorage.getItem('navbarToggled');
-  navbarToggle.checked = savedNavbarState === null ? true : savedNavbarState === 'true';
-  navBar.style.display = (iframe.style.display === "block" && navbarToggle.checked) ? "block" : "none";
-  navbarToggle.addEventListener("change", () => {
-    localStorage.setItem('navbarToggled', navbarToggle.checked);
+
+  if (navbarToggle && navBar) {
+    const savedNavbarState = localStorage.getItem('navbarToggled');
+    navbarToggle.checked = savedNavbarState === null ? true : savedNavbarState === 'true';
     navBar.style.display = (iframe.style.display === "block" && navbarToggle.checked) ? "block" : "none";
-  });
+    navbarToggle.addEventListener("change", () => {
+      localStorage.setItem('navbarToggled', navbarToggle.checked);
+      navBar.style.display = (iframe.style.display === "block" && navbarToggle.checked) ? "block" : "none";
+    });
+  }
+
   iframe.style.display = "none";
   window.addEventListener('load', () => {
     hideLoadingScreen();
   });
+
   [searchInput1, searchInput2].forEach(input => {
-    input.addEventListener("keyup", (e) => {
-      if (e.key === "Enter") handleSearch(input.value);
+    if (input) { 
+      input.addEventListener("keyup", (e) => {
+        if (e.key === "Enter") handleSearch(input.value);
+      });
+    }
+  });
+
+  if (movies) {
+    movies.addEventListener("click", (e) => {
+      e.preventDefault();
+      handleSearch("https://xojw.github.io/waves-movies/");
     });
-  });
-  games.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleSearch("https://crazygames.com/");
-  });
-  movies.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleSearch("https://xojw.github.io/waves-movies/");
-  });
-  ai.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleSearch("https://chat.vercel.ai/");
-  });
+  }
+  
+  if (ai) {
+    ai.addEventListener("click", (e) => {
+      e.preventDefault();
+      handleSearch("https://chat.vercel.ai/");
+    });
+  }
+
   async function handleSearch(query) {
     const searchURL = generateSearchUrl(query);
-    searchInput2.value = searchURL;
+    if (searchInput2) {
+      searchInput2.value = searchURL;
+    }
     preloadResources(searchURL);
     showLoadingScreen();
-    searchContainer.style.display = "none";
+    if (searchContainer) searchContainer.style.display = "none";
     iframe.style.display = "block";
-    topBar.style.display = "none";
+    if (topBar) topBar.style.display = "none";
     backIcon.disabled = true;
     forwardIcon.disabled = true;
-    iframe.src = await getUrl(searchURL);
+    try {
+      iframe.src = await getUrl(searchURL);
+    } catch (error) {
+      console.error("Error setting iframe src", error);
+    }
     historyStack.length = 0;
     currentIndex = -1;
     iframe.onload = () => {
       hideLoadingScreen();
-      if (navbarToggle.checked) navBar.style.display = "block";
+      if (navbarToggle && navbarToggle.checked && navBar) {
+        navBar.style.display = "block";
+      }
       generateSubject();
       updateDecodedSearchInput();
       try {
         if (iframe.contentDocument && !iframe.contentDocument.getElementById('uv-postmessage-hook')) {
           const script = iframe.contentDocument.createElement('script');
           script.id = 'uv-postmessage-hook';
-          script.textContent = `(function(){const origPush=history.pushState;const origReplace=history.replaceState;function notify(){window.parent.postMessage({type:'uv-url-change',url:location.href},'*');}history.pushState=function(){origPush.apply(history,arguments);notify();};history.replaceState=function(){origReplace.apply(history,arguments);notify();};window.addEventListener('popstate',notify);window.addEventListener('hashchange',notify);notify();})();`;
+          script.textContent = `(function(){
+            const origPush = history.pushState;
+            const origReplace = history.replaceState;
+            function notify(){window.parent.postMessage({type:'uv-url-change',url:location.href},'*');}
+            history.pushState = function(){origPush.apply(history, arguments);notify();};
+            history.replaceState = function(){origReplace.apply(history, arguments);notify();};
+            window.addEventListener('popstate', notify);
+            window.addEventListener('hashchange', notify);
+            notify();
+          })();`;
           iframe.contentDocument.head.appendChild(script);
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error("Error injecting postmessage hook", e);
+      }
     };
     iframe.onerror = () => {
       hideLoadingScreen();
       alert('Failed to load content.');
     };
   }
+  window.handleSearch = handleSearch;
+
   function generateSearchUrl(query) {
     try {
       const url = new URL(query);
@@ -227,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
   }
+
   function showToast(message, type = "success", iconType = "check") {
     const toast = document.createElement("div");
     toast.className = `toast show ${type}`;
@@ -253,22 +295,36 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => toast.remove(), 500);
     }, 3000);
   }
+
   function showLoadingScreen(withToast = true) {
+    if (!loadingScreen) {
+      console.error("Loading screen element not found.");
+      return;
+    }
     loadingScreen.style.display = 'flex';
     setTimeout(() => {
       loadingScreen.style.transition = 'opacity 0.5s ease';
       loadingScreen.style.opacity = 1;
     }, 10);
-    loadingScreen.querySelector(".loading-text").innerHTML = "Were getting your content ready, please wait...";
+    const loadingText = loadingScreen.querySelector(".loading-text");
+    if (loadingText) {
+      loadingText.innerHTML = "Were getting your content ready, please wait...";
+    }
     if (withToast) {
       showToast('Consider joining our <a href="https://discord.gg/dJvdkPRheV" target="_blank" class="hover-link">Discord</a>&nbsp;<3');
     }
   }
+
   function hideLoadingScreen() {
+    if (!loadingScreen) {
+      console.error("Loading screen element not found.");
+      return;
+    }
     loadingScreen.style.transition = 'opacity 0.5s ease';
     loadingScreen.style.opacity = 0;
     setTimeout(() => { loadingScreen.style.display = 'none'; }, 500);
   }
+
   function preloadResources(url) {
     const link = document.createElement("link");
     link.rel = "preload";
@@ -276,18 +332,21 @@ document.addEventListener('DOMContentLoaded', () => {
     link.as = "fetch";
     document.head.appendChild(link);
   }
+
   function getUrl(url) {
     return Promise.resolve(__uv$config.prefix + __uv$config.encodeUrl(url));
   }
+
   function generateSubject() {
     const subjects = ['math', 'science', 'history', 'art', 'programming', 'philosophy'];
     const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
     history.replaceState({}, '', '/learning?subject=' + randomSubject);
-  }  
+  }
+
   function decodeUrl(encodedUrl) {
     try {
       const urlObj = new URL(encodedUrl, window.location.origin);
-      const proxyPrefix = __uv$config && __uv$config.prefix ? __uv$config.prefix : '/$/';
+      const proxyPrefix = (__uv$config && __uv$config.prefix) ? __uv$config.prefix : '/$/';
       if (urlObj.pathname.startsWith(proxyPrefix)) {
         const encodedPart = urlObj.pathname.substring(proxyPrefix.length);
         if (__uv$config && typeof __uv$config.decodeUrl === 'function') {
@@ -298,6 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
     return encodedUrl;
   }
+
   window.decodeUrl = decodeUrl;
   window.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'uv-url-change' && event.data.url) {

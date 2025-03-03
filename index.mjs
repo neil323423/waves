@@ -22,9 +22,16 @@ app.use("/uv/", express.static(uvPath));
 app.get("/", (req, res) => {
   res.sendFile(path.join(publicPath, "index.html"));
 });
+app.get("/gs", (req, res) => {
+  res.sendFile(path.join(publicPath, "gs.html"));
+});
+app.get("/as", (req, res) => {
+  res.sendFile(path.join(publicPath, "as.html"));
+});
 app.use((req, res) => {
   res.status(404).sendFile(path.join(publicPath, "404.html"));
 });
+
 app.use(compression({ level: 1, threshold: 0, filter: () => true, memLevel: 1, strategy: 1, windowBits: 9 }));
 
 const port = parseInt(process.env.PORT || "3000");
@@ -38,6 +45,7 @@ pingWSS.on("connection", (ws, req) => {
     const timestamp = Date.now();
     ws.send(JSON.stringify({ type: "ping", timestamp }));
   }, 5000);
+
   ws.on("message", (message) => {
     try {
       const data = JSON.parse(message);
@@ -48,6 +56,7 @@ pingWSS.on("connection", (ws, req) => {
       }
     } catch (error) {}
   });
+
   ws.on("close", () => {
     clearInterval(pingInterval);
     const avgLatency = latencies.length ? latencies.reduce((a, b) => a + b, 0) / latencies.length : 0;

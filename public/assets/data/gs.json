@@ -1,0 +1,149 @@
+{
+  "games": [
+    {
+      "icon": "assets/images/gs/polytrack.jpg",
+      "title": "Poly Track",
+      "link": "https://selenite.cc/semag/polytrack/index.html/"
+    },
+    {
+      "icon": "assets/images/gs/10mtd.jpg",
+      "title": "10 Minutes Till Dawn",
+      "link": "https://selenite.cc/semag/10minutestilldawn/index.html/"
+    },
+    {
+      "icon": "assets/images/gs/geometrydash.jpg",
+      "title": "Geometry Dash",
+      "link": "https://geometrydashonline.io/geometry-dash-online/"
+    },
+    {
+      "icon": "assets/images/gs/slope.jpg",
+      "title": "Slope",
+      "link": "https://selenite.cc/semag/slope/index.html/"
+    },
+    {
+      "icon": "assets/images/gs/drivemad.jpg",
+      "title": "Drive Mad",
+      "link": "https://selenite.cc/semag/drivemad/index.html/"
+    },
+    {
+      "icon": "assets/images/gs/1v1lol.jpg",
+      "title": "1v1.LOL",
+      "link": "https://selenite.cc/semag/1v1lol/index.html/"
+    },
+    {
+      "icon": "assets/images/gs/papascooperia.jpg",
+      "title": "Papa Scooperia",
+      "link": "https://papas-games.io/papas-scooperia/"
+    },
+    {
+      "icon": "assets/images/gs/chess.jpg",
+      "title": "Chess",
+      "link": "https://selenite.cc/semag/chess/index.html/"
+    },
+    {
+      "icon": "assets/images/gs/bonkio.jpg",
+      "title": "Bonkio",
+      "link": "https://bonk.io/"
+    },
+    {
+      "icon": "assets/images/gs/basketbros.jpg",
+      "title": "Basket Bros",
+      "link": "https://games.crazygames.com/en_US/basketbros/index.html"
+    },
+    {
+      "icon": "assets/images/gs/bloxdio.jpg",
+      "title": "Bloxdio",
+      "link": "https://games.crazygames.com/en_US/bloxdhop-io/index.html"
+    },
+    {
+      "icon": "assets/images/gs/bulletforce.jpg",
+      "title": "Bullet Force",
+      "link": "https://games.crazygames.com/en_US/bullet-force-multiplayer/index.html"
+    },
+    {
+      "icon": "assets/images/gs/smashkarts.jpg",
+      "title": "Smash Karts",
+      "link": "https://games.crazygames.com/en_US/smash-karts/index.html"
+    },
+    {
+      "icon": "assets/images/gs/shellshockers.jpg",
+      "title": "Shell Shockers",
+      "link": "https://games.crazygames.com/en_US/shellshockersio/index.html"
+    },
+    {
+      "icon": "assets/images/gs/evowarsio.jpg",
+      "title": "EvoWarsio",
+      "link": "https://games.crazygames.com/en_US/evowarsio/index.html"
+    },
+    {
+      "icon": "assets/images/gs/krunkerio.jpg",
+      "title": "Krunkerio",
+      "link": "https://games.crazygames.com/en_US/krunker-io/index.html"
+    },
+    {
+      "icon": "assets/images/gs/warbrokersio.jpg",
+      "title": "War Brokers",
+      "link": "https://games.crazygames.com/en_US/war-brokers-io/index.html"
+    },
+    {
+      "icon": "assets/images/gs/rocketbotroyale.jpg",
+      "title": "Rocket Bot Royale",
+      "link": "https://games.crazygames.com/en_US/rocket-bot-royale/index.html"
+    },
+    {
+      "icon": "assets/images/gs/ships3d.jpg",
+      "title": "Ships 3D",
+      "link": "https://games.crazygames.com/en_US/ships-3d/index.html"
+    },
+    {
+      "icon": "assets/images/gs/crazystuntcarsmultiplayer.jpg",
+      "title": "Crazy Stunt Cars Multiplayer",
+      "link": "https://games.crazygames.com/en_US/crazy-stunt-cars-multiplayer/index.html"
+    },
+    {
+      "icon": "assets/images/gs/skillwarz.jpg",
+      "title": "SkillWarz",
+      "link": "https://games.crazygames.com/en_US/skillwarz/index.html"
+    },
+    {
+      "icon": "assets/images/gs/kirkaio.jpg",
+      "title": "Kirkaio",
+      "link": "https://games.crazygames.com/en_US/kirka-io/index.html"
+    },
+    {
+      "icon": "assets/images/gs/voxiomio.jpg",
+      "title": "Voxiomio",
+      "link": "https://games.crazygames.com/en_US/voxiom-io/index.html"
+    },
+    {
+      "icon": "assets/images/gs/minigiantsio.jpg",
+      "title": "MiniGiantsio",
+      "link": "https://games.crazygames.com/en_US/minigiants-io/index.html"
+    },
+    {
+      "icon": "assets/images/gs/warnationsio.jpg",
+      "title": "WarNationsio",
+      "link": "https://games.crazygames.com/en_US/war-nations-io/index.html"
+    },
+    {
+      "icon": "assets/images/gs/scavengerhuntmultiplayer.jpg",
+      "title": "Scavenger Hunt Multiplayer",
+      "link": "https://games.crazygames.com/en_US/scavenger-hunt---multiplayer/index.html"
+    },
+    {
+      "icon": "assets/images/gs/strikerdummies.jpg",
+      "title": "Striker Dummies",
+      "link": "https://games.crazygames.com/en_US/striker-dummies/index.html"
+    },
+    {
+      "icon": "assets/images/gs/rooftopsnipers.jpg",
+      "title": "Rooftop Snipers",
+      "link": "https://games.crazygames.com/en_US/rooftop-snipers/index.html"
+    },
+    {
+      "icon": "assets/images/gs/minicarball.jpg",
+      "title": "Mini Car Ball",
+      "link": "https://games.crazygames.com/en_US/mini-car-ball/index.html"
+    }
+  ]
+}
