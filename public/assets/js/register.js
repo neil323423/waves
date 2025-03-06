@@ -1,91 +1,98 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const SW = "/uv/sw.js";
-  const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
-  let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
-  const wispUrl = currentWispUrl;
-  const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+document.addEventListener('DOMContentLoaded', function() {
+	const SW = "/s/sw.js";
+	const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
+	let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
+	const wispUrl = currentWispUrl;
+	const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
-  async function registerSW() {
-    try {
-      if (!navigator.serviceWorker) {
-        console.log("%c[⚠️]%c Service Workers are not supported by this browser.", "color: orange; font-weight: bold;", "color: black;");
-        return;
-      }
+	async function registerSW() {
+		try {
+			if (!navigator.serviceWorker) {
+				console.log("%c[⚠️]%c Service Workers are not supported by this browser.", "color: orange; font-weight: bold;", "color: black;");
+				return;
+			}
 
-      await ensureWebSocketConnection(wispUrl);
+			await ensureWebSocketConnection(wispUrl);
 
-      console.log("%c[⚙️]%c Registering Service Worker...", "color: #007bff; font-weight: bold;", "color: #007bff;");
-      await navigator.serviceWorker.register("/sw.js", { scope: '/$/$/$/' });
-      console.log("%c[✅]%c Service Worker registered successfully.", "color: green; font-weight: bold;", "color: green;");
-      
-      const savedTransport = localStorage.getItem('transport') || "epoxy";
-      switchTransport(savedTransport);
-      updateTransportUI(savedTransport);
+			console.log("%c[⚙️]%c Registering Service Worker...", "color: #007bff; font-weight: bold;", "color: #007bff;");
+			await navigator.serviceWorker.register("/s/sw.js", {
+				scope: '/s/t/'
+			});
+			console.log("%c[✅]%c Service Worker registered successfully.", "color: green; font-weight: bold;", "color: green;");
 
-      console.log(`%c[🚀]%c Using ${savedTransport} transport.`, "color: #6f42c1; font-weight: bold;", "color: #6f42c1;");
+			const savedTransport = localStorage.getItem('transport') || "epoxy";
+			switchTransport(savedTransport);
+			updateTransportUI(savedTransport);
 
-    } catch (error) {
-      console.error("%c[❌]%c An error occurred during Service Worker registration or WebSocket connection: " + error, "color: red; font-weight: bold;", "color: red;");
-    }
-  }
+			console.log(`%c[🚀]%c Using ${savedTransport} transport.`, "color: #6f42c1; font-weight: bold;", "color: #6f42c1;");
 
-  async function ensureWebSocketConnection(url) {
-    return new Promise((resolve, reject) => {
-      console.log("%c[🌐]%c Establishing WebSocket connection...", "color: #007bff; font-weight: bold;", "color: #007bff;");
+		} catch (error) {
+			logError(error, 'An error occurred during Service Worker registration or WebSocket connection');
+		}
+	}
 
-      const ws = new WebSocket(url);
+	async function ensureWebSocketConnection(url) {
+		return new Promise((resolve, reject) => {
+			console.log("%c[🌐]%c Establishing WebSocket connection...", "color: #007bff; font-weight: bold;", "color: #007bff;");
+			const ws = new WebSocket(url);
 
-      ws.onopen = function () {
-        console.log("%c[✅]%c WebSocket connection established.", "color: green; font-weight: bold;", "color: green;");
-        resolve(ws);
-      };
+			ws.onopen = () => {
+				console.log("%c[✅]%c WebSocket connection established.", "color: green; font-weight: bold;", "color: green;");
+				resolve(ws);
+			};
 
-      ws.onerror = function (error) {
-        const errorMessage = error.message || "Unknown error";
-        console.error(`%c[❌]%c WebSocket error: ${errorMessage}`, "color: red; font-weight: bold;", "color: red;");
-        reject(new Error(`Failed to establish WebSocket connection: ${errorMessage}`));
-      };
+			ws.onerror = (error) => {
+				logError(error, 'Failed to establish WebSocket connection');
+				reject(error);
+			};
 
-      ws.onclose = function (event) {
-        if (event.code !== 1000) { 
-          const reason = event.reason || "No reason provided";
-          console.warn(`%c[⚠️]%c WebSocket connection closed. Reason: ${reason}`, "color: orange; font-weight: bold;", "color: orange;");
-        } else {
-          console.warn("%c[⚠️]%c WebSocket connection closed normally.", "color: orange; font-weight: bold;", "color: orange;");
-        }
-      };
-    });
-  }
+			ws.onclose = (event) => {
+				if (event.code !== 1000) {
+					console.warn(`%c[⚠️]%c WebSocket connection closed. Reason: ${event.reason || "No reason provided"}`, "color: orange; font-weight: bold;", "color: orange;");
+				} else {
+					console.warn("%c[⚠️]%c WebSocket connection closed normally.", "color: orange; font-weight: bold;", "color: orange;");
+				}
+			};
+		});
+	}
 
-  function switchTransport(transport) {
-    if (transport === "epoxy") {
-      connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-    } else if (transport === "libcurl") {
-      connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
-    }
-  }
+	function logError(error, message) {
+		console.error(`%c[❌]%c ${message}: ${error.message || error}`, "color: red; font-weight: bold;", "color: red;");
+	}
 
-  async function changeTransport(newTransport) {
-    try {
-      await new Promise((resolve) => {
-        localStorage.setItem('transport', newTransport, resolve);
-      });
-      switchTransport(newTransport);
-      updateTransportUI(newTransport);
-    } catch (error) {
-      console.error(`%c[❌]%c An error occurred while storing transport preference: ${error}`, "color: red; font-weight: bold;", "color: red;");
-    }
-  }
+	function switchTransport(transport) {
+		const transportMap = {
+			"epoxy": "/epoxy/index.mjs",
+			"libcurl": "/libcurl/index.mjs"
+		};
 
-  function updateTransportUI(transport) {
-    const transportSelected = document.querySelector(".transport-selected");
-    transportSelected.textContent = transport.charAt(0).toUpperCase() + transport.slice(1);
-  }
+		const transportFile = transportMap[transport];
+		if (transportFile) {
+			connection.setTransport(transportFile, [{
+				wisp: wispUrl
+			}]);
+		}
+	}
 
-  document.addEventListener('wispUrlChanged', function (e) {
-    currentWispUrl = e.detail;
-    switchTransport(localStorage.getItem('transport') || "epoxy");
-  });
+	async function changeTransport(newTransport) {
+		try {
+			localStorage.setItem('transport', newTransport);
+			switchTransport(newTransport);
+			updateTransportUI(newTransport);
+		} catch (error) {
+			logError(error, 'An error occurred while storing transport preference');
+		}
+	}
 
-  registerSW();
+	function updateTransportUI(transport) {
+		const transportSelected = document.querySelector(".transport-selected");
+		transportSelected.textContent = transport.charAt(0).toUpperCase() + transport.slice(1);
+	}
+
+	document.addEventListener('wispUrlChanged', function(e) {
+		currentWispUrl = e.detail;
+		switchTransport(localStorage.getItem('transport') || "epoxy");
+	});
+
+	registerSW();
 });

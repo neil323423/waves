@@ -1,3 +1,16 @@
+:root {
+  --bg-color-primary: #08080894;
+  --bg-color-secondary: #131313;
+  --text-color-light: #fff;
+  --text-color-dark: #ccc;
+  --text-color-muted: #a8a8a8;
+  --border-color: #ffffff21;
+  --border-color-hover: #ffffff48;
+  --bg-color-search: #08080894;
+  --placeholder-color: #a8a8a8;
+  --hover-color: #333333;
+}
+
 .apps-page {
   padding: 100px 20px 40px;
   text-align: center;
@@ -8,38 +21,38 @@
   animation: fadeIn 2s ease;
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #fff;
+  color: var(--text-color-light);
 }
 
 .apps-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; 
-  align-items: flex-start; 
-  gap: 20px; 
-  max-width: 80%; 
-  margin: 0 auto; 
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 80%;
+  margin: 0 auto;
 }
 
 .content.apps-page {
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   text-align: center;
 }
 
 .app-card {
-  background-color: #08080894;
+  background-color: var(--bg-color-primary);
   border-radius: 25px;
   padding: 15px 20px;
   cursor: pointer;
   user-select: none;
   text-align: center;
-  border: 1px solid #ffffff21;
+  border: 1px solid var(--border-color);
   backdrop-filter: blur(10px);
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
   width: 180px;
-  height: 250px; 
+  height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -57,53 +70,54 @@
 
 .app-card:hover {
   transform: translateY(-5px);
+  background-color: var(--hover-color);
 }
 
 .app-card h2 {
   font-size: 1rem;
   margin: 10px 0;
-  color: #fff;
+  color: var(--text-color-light);
 }
 
 .app-card p {
   font-size: 1rem;
-  color: #ccc;
+  color: var(--text-color-dark);
 }
 
 .apps-search-bar {
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
-  color: #a8a8a8;
+  color: var(--text-color-muted);
   animation: fadeIn 2s ease;
 }
 
 #appSearchInput {
-  padding: 12px 30px;
-  border: 1px solid #ffffff1a;
+  padding: 14px 30px;
+  border: 1px solid var(--border-color);
   background-image: url('/assets/images/icons/search.png');
   background-size: 35px 35px;
   background-position: 10px center;
   background-repeat: no-repeat;
   padding-left: 45px;
   border-radius: 20px;
-  background-color: #08080894;
+  background-color: var(--bg-color-search);
   outline: none;
-  color: #a8a8a8;
+  color: var(--text-color-muted);
   font-size: 14px;
-  width: 300px;
-  max-width: 80%;
+  width: 400px;
+  max-width: 100%;
   transition: all 0.3s ease;
 }
 
 #appSearchInput::placeholder {
-  color: #a8a8a8;
+  color: var(--placeholder-color);
 }
 
 #appSearchInput:focus {
-  border: 1px solid rgba(255, 255, 255, 0.281);
+  border: 1px solid var(--border-color-hover);
 }
 
 #appSearchInput:hover {
-  border: 1px solid rgba(255, 255, 255, 0.281);
+  border: 1px solid var(--border-color-hover);
 }

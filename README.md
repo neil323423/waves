@@ -7,9 +7,6 @@ A sleek and minimalist Web Proxy.
 
 [![Join our Discord](https://invidget.switchblade.xyz/dJvdkPRheV)](https://discord.gg/dJvdkPRheV)
 
-> [!NOTE] 
-> Waves is still in its early stages, so you might encounter a few occasional bugs. I am actively working on new features and improvements—stay tuned!
-
 ## Supported Sites:
 
 - [Google](https://google.com)
@@ -26,6 +23,7 @@ A sleek and minimalist Web Proxy.
 - DevTools
 - Sleek & Clean UI
 - Search Bar
+- Themes
 - And a lot more features coming soon...
 
 ## Usage:
@@ -33,13 +31,15 @@ A sleek and minimalist Web Proxy.
 You **cannot** deploy Waves on any static hosting services.
 
 ## Connecting Waves to Your Domain or Subdomain:
+> [!IMPORTANT]
+> This is temporarily unavailable due to issues with our VPS provider. We’re working on resolving the problem as soon as possible.
 
 1. Log in to your domain or subdomain provider’s control panel.
 2. Select the domain or subdomain you'd like to configure.
 3. Add a new A record with the following IP address as the destination:
 
 ```bash
-93.127.130.22
+83.229.35.239
 ```
 
 4. Save your changes and allow time for DNS propagation, which may take a long time.

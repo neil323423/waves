@@ -12,7 +12,10 @@
         "dev": "nodemon index.mjs",
         "lint": "eslint ."
     },
-    "author": "xojw",
+    "author": {
+        "name": "sent",
+        "email": "sentttt@proton.me"
+    },
     "dependencies": {
         "@mercuryworkshop/bare-mux": "latest",
         "@mercuryworkshop/epoxy-transport": "latest",
@@ -20,17 +23,22 @@
         "@titaniumnetwork-dev/ultraviolet": "latest",
         "@tomphttp/bare-server-node": "latest",
         "compression": "latest",
+        "cors": "^2.8.5",
         "express": "latest",
+        "express-rate-limit": "^7.5.0",
+        "fs": "^0.0.1-security",
+        "http2": "^3.3.6",
+        "lru-cache": "latest",
+        "node-cache": "^5.1.2",
         "node-fetch": "latest",
         "wisp-server-node": "latest",
-        "ws": "latest",
-        "lru-cache": "latest"
+        "ws": "latest"
     },
     "devDependencies": {
         "eslint": "latest",
         "glob": "latest",
+        "nodemon": "latest",
         "prettier": "latest",
-        "rimraf": "latest",
-        "nodemon": "latest"
+        "rimraf": "latest"
     }
 }

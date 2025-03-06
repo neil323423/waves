@@ -1,22 +1,17 @@
 # Security Policy
 
-## Supported Versions
+## Supported and Unsupported Versions  
 
-The following versions of this project that are currently supported:
+The following versions of this project that are currently supported and unsupported:  
 
-| Version  | Supported          |
-|----------|--------------------|
-| 2.0.0    | :white_check_mark: |
+- **Version 2.2.0** – Supported ✅
+- **Version 2.0.0** - Supported ✅
+- **Version 1.0.0** - Unsupported ❌
 
 ## Best Practices
 
-- Always ensure you’re using the latest supported version of Waves for optimal performance.
-
-## Why?
-
-Hosting multiple versions of Waves can cost a lot and i do **NOT** have the money for that.
-If you want a old version of Waves you can self host.
+- Always ensure you're using the latest supported version of Waves for optimal performance.
 
 ## Support
 
-If you are having a problem with Waves feel free to send me a message to my [Email](sefiicc@gmail.com), i'll try to answer you as soon as possile.
+If you are experiencing an issue with Waves unrelated to security, feel free to join our [Discord](https://discord.gg/dJvdkPRheV) server and open a ticket.  
