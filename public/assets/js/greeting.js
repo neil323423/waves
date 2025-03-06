@@ -7,6 +7,7 @@ window.onload = function() {
 		document.getElementById('namePrompt').style.display = 'block';
 	} else if (greetingElement) {
 		updateGreeting(storedName);
+		showToast(`Hey, ${storedName} welcome back to Waves!`);
 	}
 
 	var nameInput = document.getElementById('userName');
@@ -64,6 +65,10 @@ function showToast(message, type = "success", iconType = "check") {
 
 	const icon = icons[iconType] || icons['smile'];
 	toast.innerHTML = `${icon}${message} `;
+
+	const progressBar = document.createElement("div");
+	progressBar.className = "progress-bar";
+	toast.appendChild(progressBar);
 
 	const closeBtn = document.createElement("button");
 	closeBtn.className = "toast-close";
