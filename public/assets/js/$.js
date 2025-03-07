@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	if (ai) {
 		ai.addEventListener("click", (e) => {
 			e.preventDefault();
-			handleSearch("https://chat.vercel.ai/");
+			handleSearch("https://duck.ai/");
 		});
 	}
 
