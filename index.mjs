@@ -1,25 +1,14 @@
 import express from "express";
-import {
-	createServer
-} from "http";
+import { createServer } from "http";
 import path from "path";
 import compression from "compression";
 import WebSocket from "ws";
-import {
-	baremuxPath
-} from "@mercuryworkshop/bare-mux/node";
-import {
-	epoxyPath
-} from "@mercuryworkshop/epoxy-transport";
-import {
-	libcurlPath
-} from "@mercuryworkshop/libcurl-transport";
-import {
-	uvPath
-} from "@titaniumnetwork-dev/ultraviolet";
+import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
+import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
+import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
+import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import wisp from "wisp-server-node";
 import rateLimit from "express-rate-limit";
-import NodeCache from "node-cache";
 import os from "os";
 import cluster from "cluster";
 
@@ -27,13 +16,20 @@ const __dirname = process.cwd();
 const publicPath = path.join(__dirname, "public");
 const app = express();
 
+app.use(
+	compression({
+		level: 9,
+		threshold: 1024,
+		memLevel: 9,
+		strategy: 0
+	})
+);
+
 app.use("/baremux/", express.static(baremuxPath));
 app.use("/epoxy/", express.static(epoxyPath));
 app.use("/libcurl/", express.static(libcurlPath));
-app.use(express.static(publicPath, {
-	maxAge: '30d'
-}));
 app.use("/s/", express.static(uvPath));
+app.use(express.static(publicPath, { maxAge: "30d" }));
 
 const limiter = rateLimit({
 	windowMs: 5 * 60 * 1000,
@@ -42,35 +38,10 @@ const limiter = rateLimit({
 });
 app.use("/api/", limiter);
 
-const myCache = new NodeCache({
-	stdTTL: 600,
-	checkperiod: 120,
-	useClones: false
-});
-
-app.get("/data", (req, res) => {
-	const cachedData = myCache.get("someKey");
-	if (cachedData) {
-		return res.json(cachedData);
-	}
-
-	fetchDataFromDatabase().then(data => {
-		myCache.set("someKey", data);
-		res.json(data);
-	});
-});
-
 app.get("/", (req, res) => res.sendFile(path.join(publicPath, "$.html")));
 app.get("/g", (req, res) => res.sendFile(path.join(publicPath, "!.html")));
 app.get("/a", (req, res) => res.sendFile(path.join(publicPath, "!!.html")));
 app.use((req, res) => res.status(404).sendFile(path.join(publicPath, "404.html")));
-
-app.use(compression({
-	level: 9,
-	threshold: 1024,
-	memLevel: 9,
-	strategy: 0
-}));
 
 const port = parseInt(process.env.PORT || "3000");
 const numCPUs = os.cpus().length;
@@ -88,20 +59,15 @@ if (cluster.isMaster) {
 } else {
 	const server = createServer(app);
 
-	const pingWSS = new WebSocket.Server({
-		noServer: true
-	});
-	pingWSS.on("connection", async (ws, req) => {
+	const pingWSS = new WebSocket.Server({ noServer: true });
+	pingWSS.on("connection", (ws, req) => {
 		const remoteAddress = req.socket.remoteAddress || "unknown";
 		let latencies = [];
 
 		const pingInterval = setInterval(() => {
 			if (ws.readyState === WebSocket.OPEN) {
 				const timestamp = Date.now();
-				ws.send(JSON.stringify({
-					type: "ping",
-					timestamp
-				}));
+				ws.send(JSON.stringify({ type: "ping", timestamp }));
 			}
 		}, 5000);
 
@@ -111,18 +77,19 @@ if (cluster.isMaster) {
 				if (data.type === "pong" && data.timestamp) {
 					const latency = Date.now() - data.timestamp;
 					latencies.push(latency);
-					ws.send(JSON.stringify({
-						type: "latency",
-						latency
-					}));
+					ws.send(JSON.stringify({ type: "latency", latency }));
 				}
 			} catch (error) {}
 		});
 
 		ws.on("close", () => {
 			clearInterval(pingInterval);
-			const avgLatency = latencies.length ? latencies.reduce((a, b) => a + b) / latencies.length : 0;
-			console.log(`[WS] ${new Date().toISOString()} - ${remoteAddress} disconnected. Avg latency: ${avgLatency.toFixed(2)}ms.`);
+			const avgLatency = latencies.length
+				? latencies.reduce((a, b) => a + b) / latencies.length
+				: 0;
+			console.log(
+				`[WS] ${new Date().toISOString()} - ${remoteAddress} disconnected. Avg latency: ${avgLatency.toFixed(2)}ms.`
+			);
 		});
 	});
 
