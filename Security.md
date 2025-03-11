@@ -4,6 +4,7 @@
 
 The following versions of this project that are currently supported and unsupported:  
 
+- **Version 2.3.0** – Supported ✅
 - **Version 2.2.0** – Supported ✅
 - **Version 2.0.0** - Supported ✅
 - **Version 1.0.0** - Unsupported ❌
