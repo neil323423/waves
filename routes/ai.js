@@ -4,7 +4,21 @@ import http from 'http';
 
 const router = express.Router();
 const httpAgent = new http.Agent({ keepAlive: true });
-const axiosInstance = axios.create({
+
+const authAxios = axios.create({
+  baseURL: 'https://puter.com',
+  timeout: 60000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Origin': 'https://puter.com',
+    'Referer': 'https://puter.com/app/editor',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36'
+  },
+  httpAgent
+});
+
+const apiAxios = axios.create({
   baseURL: 'https://api.puter.com',
   timeout: 60000,
   headers: {
@@ -13,26 +27,30 @@ const axiosInstance = axios.create({
   },
   httpAgent
 });
+
 let puterJwtToken = null;
 const TOKEN_REFRESH_INTERVAL = 12 * 60 * 60 * 1000;
+
 async function generateJwtToken() {
   try {
-    const response = await axiosInstance.post('/v1/auth/token', {
-      referrer: 'https://puter.com/app/editor',
+    const response = await authAxios.post('/signup', {
+      referrer: '/app/editor',
       is_temp: true
     });
     if (response.data && response.data.token) {
       puterJwtToken = response.data.token;
       console.log('JWT token generated successfully.');
     } else {
-      console.error('No token received from auth response:', response.data);
+      console.error('No token received', response.data);
     }
   } catch (error) {
     console.error('JWT generation error:', error.response ? error.response.data : error.message);
   }
 }
+
 generateJwtToken();
 setInterval(generateJwtToken, TOKEN_REFRESH_INTERVAL);
+
 async function usePuterAPI(userMessages, model) {
   const requestData = {
     interface: 'puter-chat-completion',
@@ -45,7 +63,7 @@ async function usePuterAPI(userMessages, model) {
     }
   };
   try {
-    const response = await axiosInstance.post('/drivers/call', requestData, {
+    const response = await apiAxios.post('/drivers/call', requestData, {
       headers: {
         'Authorization': `Bearer ${puterJwtToken}`,
         'Origin': 'https://docs.puter.com',
@@ -58,6 +76,7 @@ async function usePuterAPI(userMessages, model) {
     throw new Error(error.response ? JSON.stringify(error.response.data) : error.message);
   }
 }
+
 async function processPuterStream(stream) {
   return new Promise((resolve, reject) => {
     let fullResponse = '';
@@ -81,6 +100,7 @@ async function processPuterStream(stream) {
     });
   });
 }
+
 router.post('/v1/ai/completions', async (req, res) => {
   try {
     if (!puterJwtToken) {
@@ -147,4 +167,5 @@ router.post('/v1/ai/completions', async (req, res) => {
     res.status(500).json({ error: err.toString() });
   }
 });
+
 export default router;
