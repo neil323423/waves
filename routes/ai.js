@@ -1,34 +1,38 @@
 import express from 'express';
 import axios from 'axios';
+import http from 'http';
+
 const router = express.Router();
-
+const httpAgent = new http.Agent({ keepAlive: true });
+const axiosInstance = axios.create({
+  baseURL: 'https://api.puter.com',
+  timeout: 60000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  },
+  httpAgent
+});
 let puterJwtToken = null;
-
+const TOKEN_REFRESH_INTERVAL = 12 * 60 * 60 * 1000;
 async function generateJwtToken() {
   try {
-    const response = await axios({
-      method: 'post',
-      url: 'https://puter.com/signup',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': '/',
-        'Origin': 'https://puter.com',
-        'Referer': 'https://puter.com/app/editor',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36'
-      },
-      data: { referrer: '/app/editor', is_temp: true }
+    const response = await axiosInstance.post('/v1/auth/token', {
+      referrer: 'https://puter.com/app/editor',
+      is_temp: true
     });
     if (response.data && response.data.token) {
       puterJwtToken = response.data.token;
+      console.log('JWT token generated successfully.');
+    } else {
+      console.error('No token received from auth response:', response.data);
     }
   } catch (error) {
-    console.error('JWT generation error:', error.message);
+    console.error('JWT generation error:', error.response ? error.response.data : error.message);
   }
 }
-
 generateJwtToken();
-setInterval(generateJwtToken, 12 * 60 * 60 * 1000);
-
+setInterval(generateJwtToken, TOKEN_REFRESH_INTERVAL);
 async function usePuterAPI(userMessages, model) {
   const requestData = {
     interface: 'puter-chat-completion',
@@ -37,30 +41,23 @@ async function usePuterAPI(userMessages, model) {
     method: 'complete',
     args: {
       messages: userMessages.length === 0 ? [{ content: 'Hello' }] : userMessages,
-      model: model
+      model
     }
   };
-  const requestDataString = JSON.stringify(requestData);
-  const headers = {
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Content-Length': Buffer.byteLength(requestDataString),
-    'Authorization': `Bearer ${puterJwtToken}`,
-    'Origin': 'https://docs.puter.com',
-    'Referer': 'https://docs.puter.com/',
-    'Accept': '/',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36'
-  };
-  return await axios({
-    method: 'post',
-    url: 'https://api.puter.com/drivers/call',
-    data: requestDataString,
-    responseType: 'stream',
-    headers: headers,
-    timeout: 60000,
-    maxContentLength: Infinity
-  });
+  try {
+    const response = await axiosInstance.post('/drivers/call', requestData, {
+      headers: {
+        'Authorization': `Bearer ${puterJwtToken}`,
+        'Origin': 'https://docs.puter.com',
+        'Referer': 'https://docs.puter.com/'
+      },
+      responseType: 'stream'
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response ? JSON.stringify(error.response.data) : error.message);
+  }
 }
-
 async function processPuterStream(stream) {
   return new Promise((resolve, reject) => {
     let fullResponse = '';
@@ -84,7 +81,6 @@ async function processPuterStream(stream) {
     });
   });
 }
-
 router.post('/v1/ai/completions', async (req, res) => {
   try {
     if (!puterJwtToken) {
@@ -93,45 +89,42 @@ router.post('/v1/ai/completions', async (req, res) => {
         return res.status(500).json({ error: 'Failed to authenticate with Puter API' });
       }
     }
+    const systemPrompt = {
+      role: 'system',
+      content: 'You are an assistant, you need to make sure you provide the smartest, fast, and brief answers. Think before responding.'
+    };
     let userMessages = [];
     let model = 'claude-3-5-sonnet-20241022';
     const streamMode = req.body && req.body.stream === true;
-    const systemPrompt = {
-      role: 'system',
-      content: 'You are a assistant, you need to make sure you provide the smartest, fast, and brief answers. Think before responding.'
-    };
-
-    if (req.body && req.body.messages && Array.isArray(req.body.messages)) {
-      userMessages = req.body.messages.map(msg => ({
+    if (req.body && Array.isArray(req.body.messages)) {
+      userMessages = req.body.messages.map((msg) => ({
         role: msg.role,
         content: msg.content
       }));
-      if (!userMessages.some(msg => msg.role === 'system')) {
+      if (!userMessages.some((msg) => msg.role === 'system')) {
         userMessages.unshift(systemPrompt);
       }
     } else {
       userMessages = [systemPrompt];
     }
-
     if (req.body && req.body.model) {
-      if (req.body.model === "claude3.7") {
-        model = "claude-3-7-sonnet-latest";
-      } else if (req.body.model === "claude3.5") {
-        model = "claude-3-5-sonnet-20241022";
+      if (req.body.model === 'claude3.7') {
+        model = 'claude-3-7-sonnet-latest';
+      } else if (req.body.model === 'claude3.5') {
+        model = 'claude-3-5-sonnet-20241022';
       }
     }
-
     try {
-      const response = await usePuterAPI(userMessages, model);
+      const stream = await usePuterAPI(userMessages, model);
       if (streamMode) {
-        const result = await processPuterStream(response.data);
+        const result = await processPuterStream(stream);
         return res.json(result);
       }
       let fullResponse = '';
-      response.data.on('data', chunk => {
+      stream.on('data', (chunk) => {
         fullResponse += chunk.toString();
       });
-      response.data.on('end', () => {
+      stream.on('end', () => {
         try {
           const rawData = JSON.parse(fullResponse);
           const simplifiedResponse = {
@@ -144,7 +137,7 @@ router.post('/v1/ai/completions', async (req, res) => {
           res.status(500).json({ error: 'Failed to parse response', message: err.message });
         }
       });
-      response.data.on('error', (err) => {
+      stream.on('error', (err) => {
         res.status(500).json({ error: 'Stream error: ' + err.message });
       });
     } catch (apiErr) {
@@ -154,5 +147,4 @@ router.post('/v1/ai/completions', async (req, res) => {
     res.status(500).json({ error: err.toString() });
   }
 });
-
 export default router;
