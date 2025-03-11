@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta property="og:title" content="Waves" />
+      <meta property="og:description" content="Waves. A sleek and minimalist web proxy." />
+      <meta property="og:image" content="/assets/images/icons/favicon.ico" />
+      <meta name="theme-color" content="#b6b6b6" />
+      <meta name="msapplication-TileColor" content="#b6b6b6" />
+      <title>Waves</title>
+      <link rel="icon" type="image/x-icon" href="/assets/images/icons/favicon.ico">
+      <link rel="stylesheet" href="/assets/css/$.css">
+      <link rel="stylesheet" href="/assets/css/settings.css">
+      <link rel="stylesheet" href="/assets/css/toast.css">
+      <link rel="stylesheet" href="/assets/css/ai.css">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-jsx.min.js"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-WGJ2192JZY"></script><script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-WGJ2192JZY');</script>
+   </head>
+   <body>
+      <script src="/baremux/index.js"></script>
+      <script src="/s/uv.bundle.js" defer></script>
+      <script src="/s/uv.config.js" defer></script>
+      <script src="/assets/js/load.js" defer></script>
+      <script src="/assets/js/eruda.js" defer></script>
+      <script src="/assets/js/register.js" defer></script>
+      <script src="/assets/js/settings.js" defer></script>
+      <script src="/assets/js/greeting.js" defer></script>
+      <script src="/assets/js/ai.js" defer></script>
+      <div class="relative flex flex-col h-[100vh] items-center justify-center bg-white transition-bg">
+         <div class="absolute inset-0 overflow-hidden">
+            <div class="god-rays absolute -inset-[10px] opacity-50"></div>
+         </div>
+      </div>
+      <div class="topbar">
+         <img src="/assets/images/icons/favicon.ico" class="favicon">
+         <span id="waves">Waves</span>
+         <a href="/" id="home">Home</a>
+         <a href="/g" id="games">Games</a>
+         <a href="/a" id="apps">Apps</a>
+         <a href="#" id="movies">Movies</a>
+         <a href="/ai" id="ai">AI</a>
+         <a href="#" id="settings-icon">
+         <i class="settings-icon fas fa-gear"></i>
+         </a>
+      </div>
+      <div id="settings-menu" class="settings-menu"></div>
+      <div class="navbar">
+         <ul class="nav-buttons">
+            <li><a id="backIcon" href="#"><i class="fas fa-arrow-left"></i></a></li>
+            <li><a id="refreshIcon" href="#"><i class="fas fa-redo-alt"></i></a></li>
+            <li><a id="forwardIcon" href="#"><i class="fas fa-arrow-right"></i></a></li>
+            <li>
+               <div class="small-searchbar" style="position: relative;">
+                  <i id="lockIcon" class="fa-solid fa-lock"></i>
+                  <input class="waves" type="text" id="searchInputt" 
+                     placeholder="Search for a query or enter a URL..." autocomplete="off" 
+                     style="padding-left: 40px;">
+               </div>
+            </li>
+            <li><a id="erudaIcon" href="#"><i class="fas fa-code"></i></a></li>
+            <li><a id="fullscreenIcon" href="#"><i class="fas fa-expand"></i></a></li>
+            <li><a href="/"><i class="fas fa-times"></i></a></li>
+         </ul>
+      </div>
+      <div class="chat-container">
+         <div class="chat-header">AI</div>
+         <div class="chat-options">
+            <div class="option">
+               <label for="modelSelector"></label>
+               <div class="selector" id="modelSelector">
+                  <div class="selector-selected">Claude 3.5</div>
+                  <div class="selector-options">
+                     <div data-value="claude3.5">Claude 3.5</div>
+                     <div data-value="claude3.7">Claude 3.7</div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="chat-body" id="chatBody"></div>
+         <div class="chat-input">
+            <input type="text" id="aiInput" placeholder="What would you like to talk about?" autocomplete="off">
+            <button id="sendMsg"><i class="fas fa-arrow-up"></i></button>
+         </div>
+      </div>
+      <div id="overlay" class="overlay"></div>
+      <div id="namePrompt" class="popup">
+         <div class="input-container">
+            <label for="userName">Please enter a name so we know what to call you:</label>
+            <div class="input-wrapper">
+               <input type="text" id="userName" placeholder="Your name" oninput="checkInput()" autocomplete="off" />
+            </div>
+            <button id="doneButton" onclick="submitName()" disabled>
+            <i class="fas fa-check"></i> Done
+            </button>
+         </div>
+      </div>
+   </body>
+</html>

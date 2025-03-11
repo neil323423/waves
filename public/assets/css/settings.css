@@ -1,25 +1,25 @@
 :root {
     --menu-bg: #0a0a0ae7;
     --base-fg: #e0e0e0;
-    --white: #ffffff;
+    --white: #fff;
     --border-light: #ffffff1a;
     --select-bg: #1b1b1b;
-    --select-hover: #333333;
+    --select-hover: #333;
     --close-color: #868686;
     --close-hover: #f44336;
     --transport-bg: #202020;
-    --transport-hover: #333333;
+    --transport-hover: #333;
     --border-focus: #ffffff48;
     --placeholder-dim: #525252;
-    --button-bg: #ffffff;
-    --black: #000000;
+    --button-bg: #fff;
+    --black: #000;
     --button-hover: #cfcfcf;
     --toggle-bg: #131313;
     --toggle-checked: #7a7a7a;
-    --toggle-knob: #cccccc;
-    --text-dim: #666666;
+    --toggle-knob: #ccc;
+    --text-dim: #666;
     --tab-bg: #1b1b1b;
-    --tab-hover: #333333;
+    --tab-hover: #333;
 }
 
 .settings-menu {
@@ -35,7 +35,6 @@
     z-index: 999999;
     backdrop-filter: blur(10px);
     color: var(--base-fg);
-    font-family: 'Poppins', sans-serif;
     text-align: center;
     display: none;
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
@@ -123,9 +122,9 @@
     border-radius: 15px;
     cursor: pointer;
     display: flex;
-    transition: 0.3s ease;
     justify-content: space-between;
     align-items: center;
+    transition: 0.3s ease;
 }
 
 .transport-selected:hover {
@@ -219,8 +218,7 @@
     transform: scale(0.95);
 }
 
-#aboutblank-toggle,
-#navbar-toggle {
+#aboutblank-toggle, #navbar-toggle {
     appearance: none;
     width: 60px;
     height: 30px;
@@ -235,18 +233,15 @@
     box-shadow: inset -2px -2px 5px #ffffff33, inset 2px 2px 5px #00000033, 2px 2px 5px #0000001a;
 }
 
-#aboutblank-toggle:hover,
-#navbar-toggle:hover {
-    box-shadow: inset -3px -3px 6px rgba(255, 255, 255, 0.3), inset 3px 3px 6px rgba(0, 0, 0, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+#aboutblank-toggle:hover, #navbar-toggle:hover {
+    box-shadow: inset -3px -3px 6px #ffffff4d inset 3px 3px 6px #0000004d 3px 3px 6px #0003;
 }
 
-#aboutblank-toggle:checked,
-#navbar-toggle:checked {
+#aboutblank-toggle:checked, #navbar-toggle:checked {
     background-color: var(--toggle-checked);
 }
 
-#aboutblank-toggle::before,
-#navbar-toggle::before {
+#aboutblank-toggle::before, #navbar-toggle::before {
     content: '';
     width: 26px;
     height: 26px;
@@ -259,8 +254,7 @@
     transition: transform 0.5s, box-shadow 0.3s;
 }
 
-#aboutblank-toggle:checked::before,
-#navbar-toggle:checked::before {
+#aboutblank-toggle:checked::before, #navbar-toggle:checked::before {
     transform: translateX(30px);
 }
 
@@ -294,7 +288,7 @@
     background-color: var(--tab-bg);
     color: var(--base-fg);
     padding: 12px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #ffffff1a;
     border-radius: 15px;
     font-size: 16px;
     cursor: pointer;
@@ -334,7 +328,6 @@
         opacity: 0;
         transform: translate(-50%, -50%) scale(0);
     }
-
     100% {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
@@ -346,7 +339,6 @@
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
     }
-
     100% {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0);

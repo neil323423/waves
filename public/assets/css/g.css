@@ -115,10 +115,7 @@
   color: var(--placeholder-color);
 }
 
-#gameSearchInput:focus {
-  border: 1px solid var(--border-color-hover);
-}
-
+#gameSearchInput:focus,
 #gameSearchInput:hover {
   border: 1px solid var(--border-color-hover);
 }

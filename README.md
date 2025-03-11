@@ -91,6 +91,11 @@ npm start
 
 5. When done, click **"Public"** on the pop-up and access your given URL.
 
+## Credits:
+
+- [NobodycaresJR](https://github.com/Nobodycaresjr-lo) - For the Waves icon
+- [AndresDev](https://github.com/AndresDevvv) - For the AI backend
+
 ## License
 
 This project is licensed under the [GPL-3.0 License](LICENSE).

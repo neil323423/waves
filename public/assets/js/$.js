@@ -163,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	const searchInput2 = document.getElementById("searchInputt");
 	const loadingScreen = document.querySelector(".loading-screen");
 	const movies = document.getElementById("movies");
-	const ai = document.getElementById("ai");
 	const navbarToggle = document.getElementById("navbar-toggle");
 
 	if (navbarToggle && navBar) {
@@ -193,13 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		movies.addEventListener("click", (e) => {
 			e.preventDefault();
 			handleSearch("https://xojw.github.io/waves-movies/");
-		});
-	}
-
-	if (ai) {
-		ai.addEventListener("click", (e) => {
-			e.preventDefault();
-			handleSearch("https://duck.ai/");
 		});
 	}
 

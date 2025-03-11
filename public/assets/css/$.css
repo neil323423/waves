@@ -443,7 +443,7 @@ svg path {
     top: 0;
     left: 0;
     width: 100%;
-    height: 550px;
+    height: 750px;
     --stripes: repeating-linear-gradient(100deg, var(--rays-stripe) 0%, var(--rays-stripe) 7%, transparent 10%, transparent 12%, var(--rays-stripe) 16%);
     --rays: repeating-linear-gradient(100deg, var(--rays-start) 10%, var(--rays-mid) 15%, var(--rays-start) 20%, var(--rays-mid) 25%, var(--rays-start) 30%);
     background-image: var(--stripes), var(--rays);
