@@ -62,21 +62,17 @@ sendMsg.addEventListener("click", () => {
   sendMsg.disabled = true;
   aiInput.disabled = true;
   messageHistory.push({ role: "user", content: message });
-
   const respondingIndicator = document.createElement("div");
   respondingIndicator.classList.add("message", "ai-message");
-  respondingIndicator.innerHTML =
-    '<i class="fas fa-robot"></i><span class="message-text">Responding <span class="responding-dots"><span>.</span><span>.</span><span>.</span></span></span>';
+  respondingIndicator.innerHTML = '<i class="fas fa-robot"></i><span class="message-text">Responding <span class="responding-dots"><span>.</span><span>.</span><span>.</span></span></span>';
   chatBody.appendChild(respondingIndicator);
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-
   const payload = {
     model: modelSourceValue,
     messages: [
       {
         role: "system",
-        content:
-          "You are a friendly assistant who provides smart, fast, and brief answers. Think critically before responding and always be helpful."
+        content: "You are a friendly assistant who provides smart, fast, and brief answers. Think critically before responding and always be helpful."
       },
       ...messageHistory
     ],
@@ -86,7 +82,6 @@ sendMsg.addEventListener("click", () => {
     stop: null,
     stream: false
   };
-
   fetch("/openai/v1/chat/completions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -95,10 +90,7 @@ sendMsg.addEventListener("click", () => {
     .then(response => response.json())
     .then(data => {
       chatBody.removeChild(respondingIndicator);
-      const aiResponse =
-        data.choices && data.choices[0]
-          ? data.choices[0].message.content
-          : "No response from AI.";
+      const aiResponse = data.choices && data.choices[0] ? data.choices[0].message.content : "No response from AI.";
       const formattedResponse = formatAIResponse(aiResponse);
       typeWriterEffect(formattedResponse, "ai");
       messageHistory.push({ role: "assistant", content: aiResponse });
@@ -119,10 +111,7 @@ aiInput.addEventListener("keypress", function (e) {
 function appendMessage(message, type) {
   const msgDiv = document.createElement("div");
   msgDiv.classList.add("message", type === "user" ? "user-message" : "ai-message");
-  const iconHtml =
-    type === "user"
-      ? '<i class="fas fa-user"></i>'
-      : '<i class="fas fa-robot"></i>';
+  const iconHtml = type === "user" ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
   if (type === "user") {
     msgDiv.innerHTML = iconHtml + '<span class="message-text">' + message + "</span>";
     chatBody.appendChild(msgDiv);
@@ -143,20 +132,15 @@ function typeWriterEffect(message, msgType, callback) {
     classes.push("deep-reasoning");
   }
   msgDiv.className = classes.join(" ");
-  const iconHtml =
-    msgType === "user"
-      ? '<i class="fas fa-user"></i>'
-      : '<i class="fas fa-robot"></i>';
+  const iconHtml = msgType === "user" ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
   msgDiv.innerHTML = iconHtml + '<span class="message-text"></span>';
   chatBody.appendChild(msgDiv);
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-
   let i = 0;
   const speed = 5;
   const messageText = msgDiv.querySelector(".message-text");
   let timeoutId;
   let completed = false;
-
   function finishTyping() {
     if (!completed) {
       completed = true;
@@ -170,12 +154,9 @@ function typeWriterEffect(message, msgType, callback) {
       }
     }
   }
-
   msgDiv.addEventListener("click", finishTyping);
-
   const maxTime = message.length * speed + 500;
   const forceTimeout = setTimeout(finishTyping, maxTime);
-
   function typeCharacter() {
     if (i < message.length) {
       messageText.textContent += message.charAt(i);
