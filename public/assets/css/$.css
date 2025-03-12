@@ -62,29 +62,56 @@ body {
     transition: all 0.3s ease;
 }
 
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+  align-items: center;
+}
+
 .topbar {
-    transform: translateX(-50%);
-    width: 670px;
-    top: 1%;
-    margin-bottom: -10px;
-    margin-left: 50%;
-    background-color: var(--overlay-dark);
-    border: 1px solid var(--topbar-border);
-    height: 35px;
-    color: var(--placeholder);
-    padding: 10px;
-    animation: fadeIn 2s ease;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    z-index: 1001;
-    backdrop-filter: blur(5px);
-    border-radius: 25px;
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.3s ease;
+  transform: translateX(-50%);
+  width: 670px;
+  top: 1%;
+  margin-bottom: -10px;
+  margin-left: 50%;
+  background-color: var(--overlay-dark);
+  border: 1px solid var(--topbar-border);
+  height: 35px;
+  color: var(--placeholder);
+  padding: 10px;
+  animation: fadeIn 2s ease;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 1001;
+  backdrop-filter: blur(5px);
+  border-radius: 25px;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+@media only screen and (max-width: 600px) {
+  .topbar {
+    width: 100%;
+    padding: 8px 15px;
+    justify-content: space-between;
+  }
+  
+  .desktop-only {
+    display: none;
+  }
+  
+  .mobile-only {
+    display: inline-block;
+    font-size: 24px;
+    color: var(--accent);
+  }
 }
 
 .topbar .favicon {
