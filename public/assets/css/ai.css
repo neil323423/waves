@@ -65,16 +65,18 @@
 }
 
 .message {
-	padding: 10px 15px;
-	border-radius: 12px;
-	font-size: 16px;
-	max-width: 80%;
-	white-space: pre-wrap;
-	line-height: 1.5;
-	display: flex;
-	align-items: center;
-	animation: slideIn 0.5s ease forwards;
-	margin-bottom: 5px;
+ padding: 10px 15px;
+ border-radius: 12px;
+ font-size: 16px;
+ max-width: 80%;
+ white-space: pre-wrap;
+ line-height: 1.5;
+ display: flex;
+ align-items: center;
+ animation: slideIn 0.5s ease forwards;
+ margin-bottom: 5px;
+ word-wrap: break-word; 
+ overflow-wrap: break-word;
 }
 
 @keyframes slideIn {
