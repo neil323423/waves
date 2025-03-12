@@ -9,7 +9,7 @@ import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import wisp from "wisp-server-node";
 import rateLimit from "express-rate-limit";
-import aiRoute from './routes/ai.js';
+import chatRoute from './routes/chat.js';
 
 const __dirname = process.cwd();
 const publicPath = path.join(__dirname, "public");
@@ -30,12 +30,12 @@ const limiter = rateLimit({
 app.use("/api/", limiter);
 
 app.use(express.json());
-app.use(aiRoute);
 
 app.get("/", (req, res) => res.sendFile(path.join(publicPath, "$.html")));
 app.get("/g", (req, res) => res.sendFile(path.join(publicPath, "!.html")));
 app.get("/a", (req, res) => res.sendFile(path.join(publicPath, "!!.html")));
 app.get("/ai", (req, res) => res.sendFile(path.join(publicPath, "!!!.html")));
+app.use(chatRoute);
 app.use((req, res) => res.status(404).sendFile(path.join(publicPath, "404.html")));
 
 app.use(compression({
