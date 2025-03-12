@@ -20,6 +20,23 @@ function sanitizeHTML(message) {
   return message.replace(/</g, "<").replace(/>/g, ">");
 }
 
+function cleanupMessage(message) {
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = message;
+
+  const childElements = tempDiv.querySelectorAll("*");
+
+  childElements.forEach(el => {
+    el.style.margin = "0";
+    el.style.padding = "0";
+    el.style.lineHeight = "normal"; 
+  });
+
+  const cleanedMessage = tempDiv.innerHTML.trim();
+
+  return cleanedMessage;
+}
+
 const chatBody = document.getElementById("chatBody");
 const aiInput = document.getElementById("aiInput");
 const sendMsg = document.getElementById("sendMsg");
@@ -96,7 +113,8 @@ sendMsg.addEventListener("click", () => {
       chatBody.removeChild(respondingIndicator);
       const aiResponse = data.choices && data.choices[0] ? data.choices[0].message.content : "No response from AI.";
       const formattedResponse = formatAIResponse(aiResponse);
-      typeWriterEffect(formattedResponse, "ai");
+      const cleanedResponse = cleanupMessage(formattedResponse);
+      typeWriterEffect(cleanedResponse, "ai");
       messageHistory.push({ role: "assistant", content: aiResponse });
     })
     .catch(err => {
