@@ -75,13 +75,10 @@ sendMsg.addEventListener("click", () => {
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
   const payload = {
     model: modelSourceValue,
-    messages: [
-      {
-        role: "system",
-        content: "You are a friendly assistant who provides smart, fast, and brief answers. Think critically before responding and always be helpful."
-      },
-      ...messageHistory
-    ],
+    messages: [{
+      role: "system",
+      content: "You are a friendly assistant who provides smart, fast, and brief answers. Think critically before responding and always be helpful."
+    }, ...messageHistory],
     temperature: 1,
     max_completion_tokens: 1024,
     top_p: 1,
@@ -143,14 +140,13 @@ function typeWriterEffect(message, msgType, callback) {
   chatBody.appendChild(msgDiv);
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
   const messageText = msgDiv.querySelector(".message-text");
-  if (message.includes("<code") || message.includes("<pre")) {
-    messageText.innerHTML = message;
-    if (callback) callback();
-    if (msgType === "ai") {
-      sendMsg.disabled = false;
-      aiInput.disabled = false;
-    }
-    return;
+  let plainText = message;
+  let isHTML = false;
+  if (/<[a-z][\s\S]*>/i.test(message)) {
+    isHTML = true;
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = message;
+    plainText = tempDiv.innerText || tempDiv.textContent;
   }
   let i = 0;
   const speed = 5;
@@ -160,7 +156,11 @@ function typeWriterEffect(message, msgType, callback) {
     if (!completed) {
       completed = true;
       if (timeoutId) clearTimeout(timeoutId);
-      messageText.textContent = message;
+      if (isHTML) {
+        messageText.innerHTML = message;
+      } else {
+        messageText.textContent = message;
+      }
       chatBody.scrollTop = chatBody.scrollHeight;
       if (callback) callback();
       if (msgType === "ai") {
@@ -170,11 +170,11 @@ function typeWriterEffect(message, msgType, callback) {
     }
   }
   msgDiv.addEventListener("click", finishTyping);
-  const maxTime = message.length * speed + 500;
+  const maxTime = plainText.length * speed + 500;
   const forceTimeout = setTimeout(finishTyping, maxTime);
   function typeCharacter() {
-    if (i < message.length) {
-      messageText.textContent += message.charAt(i);
+    if (i < plainText.length) {
+      messageText.textContent = plainText.substring(0, i + 1);
       i++;
       chatBody.scrollTop = chatBody.scrollHeight;
       timeoutId = setTimeout(typeCharacter, speed);
