@@ -1,12 +1,18 @@
 function formatAIResponse(response) {
+  marked.setOptions({
+    highlight: function(code, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        return hljs.highlight(code, { language: lang }).value;
+      }
+      return hljs.highlightAuto(code).value;
+    }
+  });
   const renderer = new marked.Renderer();
-  renderer.blockquote = function (quote) {
+  renderer.blockquote = function(quote) {
     return quote;
   };
   const html = marked.parse(response, { renderer });
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = html;
-  return tempDiv.innerText;
+  return html;
 }
 
 function sanitizeHTML(message) {
@@ -29,7 +35,7 @@ const modelDisplayNames = {
 };
 modelSelected.textContent = modelDisplayNames[modelSourceValue];
 
-modelSelected.addEventListener("click", function (e) {
+modelSelected.addEventListener("click", function(e) {
   e.stopPropagation();
   modelOptions.classList.toggle("show");
   modelSelected.classList.toggle("active");
@@ -37,7 +43,7 @@ modelSelected.addEventListener("click", function (e) {
 
 const modelOptionDivs = modelOptions.getElementsByTagName("div");
 for (let i = 0; i < modelOptionDivs.length; i++) {
-  modelOptionDivs[i].addEventListener("click", function (e) {
+  modelOptionDivs[i].addEventListener("click", function(e) {
     e.stopPropagation();
     modelSourceValue = this.getAttribute("data-value");
     modelSelected.textContent = modelDisplayNames[modelSourceValue];
@@ -47,7 +53,7 @@ for (let i = 0; i < modelOptionDivs.length; i++) {
   });
 }
 
-document.addEventListener("click", function () {
+document.addEventListener("click", function() {
   modelOptions.classList.remove("show");
   modelSelected.classList.remove("active");
 });
@@ -104,7 +110,7 @@ sendMsg.addEventListener("click", () => {
     });
 });
 
-aiInput.addEventListener("keypress", function (e) {
+aiInput.addEventListener("keypress", function(e) {
   if (e.key === "Enter") sendMsg.click();
 });
 
@@ -136,9 +142,18 @@ function typeWriterEffect(message, msgType, callback) {
   msgDiv.innerHTML = iconHtml + '<span class="message-text"></span>';
   chatBody.appendChild(msgDiv);
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+  const messageText = msgDiv.querySelector(".message-text");
+  if (message.includes("<code") || message.includes("<pre")) {
+    messageText.innerHTML = message;
+    if (callback) callback();
+    if (msgType === "ai") {
+      sendMsg.disabled = false;
+      aiInput.disabled = false;
+    }
+    return;
+  }
   let i = 0;
   const speed = 5;
-  const messageText = msgDiv.querySelector(".message-text");
   let timeoutId;
   let completed = false;
   function finishTyping() {
