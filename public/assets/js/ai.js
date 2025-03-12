@@ -162,6 +162,7 @@ function typeWriterEffect(message, msgType, callback) {
         msgDiv.querySelectorAll("p, pre, code").forEach(el => {
           el.style.margin = "0";
           el.style.padding = "0";
+          el.style.lineHeight = "normal"; // Prevent extra line height
         });
         msgDiv.querySelectorAll("pre code").forEach(block => hljs.highlightElement(block));
       } else {
