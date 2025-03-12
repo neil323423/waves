@@ -81,13 +81,14 @@ sendMsg.addEventListener("click", () => {
       stop: null,
       stream: false
    };
-   fetch("/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload)
-  })
+   fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer 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"
+        },
+        body: JSON.stringify(payload)
+   })
       .then((response) => response.json())
       .then((data) => {
          chatBody.removeChild(respondingIndicator);
