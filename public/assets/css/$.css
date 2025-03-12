@@ -494,7 +494,6 @@ svg path {
     width: 350px;
     z-index: 999999;
     backdrop-filter: blur(10px);
-    color: var(--base-fg);
     font-family: 'Poppins', sans-serif;
     text-align: left;
     display: none;
