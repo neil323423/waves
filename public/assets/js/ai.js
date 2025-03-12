@@ -4,20 +4,23 @@ function formatAIResponse(response) {
       if (lang && hljs.getLanguage(lang)) {
         return `<pre class="hljs"><code class="language-${lang}">${hljs.highlight(code, { language: lang }).value}</code></pre>`;
       }
-      return `<pre class="hljs"><code class="language-${hljs.highlightAuto(code).language}">${hljs.highlightAuto(code).value}</code></pre>`;
+      const autoDetected = hljs.highlightAuto(code);
+      return `<pre class="hljs"><code class="language-${autoDetected.language}">${autoDetected.value}</code></pre>`;
     }
   });
+
   const renderer = new marked.Renderer();
   renderer.blockquote = function(quote) {
     return quote;
   };
+
   let formattedResponse = marked.parse(response, { renderer });
   formattedResponse = formattedResponse.replace(/<p>\s*<\/p>/g, "").replace(/<br\s*\/?>$/, "");
   return formattedResponse;
 }
 
 function sanitizeHTML(message) {
-  return message.replace(/</g, "<").replace(/>/g, ">");
+  return message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 function cleanupMessage(message) {
