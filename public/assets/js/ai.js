@@ -11,8 +11,7 @@ function formatAIResponse(response) {
   renderer.blockquote = function(quote) {
     return quote;
   };
-  const html = marked.parse(response, { renderer });
-  return html;
+  return marked.parse(response, { renderer });
 }
 
 function sanitizeHTML(message) {
@@ -158,6 +157,11 @@ function typeWriterEffect(message, msgType, callback) {
       if (timeoutId) clearTimeout(timeoutId);
       if (isHTML) {
         messageText.innerHTML = message;
+        msgDiv.querySelectorAll("p").forEach(p => {
+          p.style.margin = "0";
+          p.style.padding = "0";
+        });
+        msgDiv.querySelectorAll("pre code").forEach(block => hljs.highlightElement(block));
       } else {
         messageText.textContent = message;
       }
