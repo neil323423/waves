@@ -1,3 +1,4 @@
+// index.js
 document.addEventListener('DOMContentLoaded', () => {
 	const historyStack = [];
 	let currentIndex = -1;
@@ -6,12 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	const backIcon = document.getElementById('backIcon');
 	const forwardIcon = document.getElementById('forwardIcon');
 	const iframe = document.getElementById('cool-iframe');
-
 	if (!refreshIcon || !fullscreenIcon || !backIcon || !forwardIcon || !iframe) {
 		console.error("One or more essential elements are missing from the DOM.");
 		return;
 	}
-
 	refreshIcon.addEventListener('click', function() {
 		refreshIcon.classList.add('spin');
 		if (iframe.tagName === 'IFRAME') {
@@ -25,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			refreshIcon.classList.remove('spin');
 		}, 300);
 	});
-
 	fullscreenIcon.addEventListener('click', function() {
 		if (iframe.tagName === 'IFRAME') {
 			if (iframe.requestFullscreen) {
@@ -39,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 	});
-
 	backIcon.addEventListener('click', function() {
 		if (currentIndex > 0) {
 			currentIndex--;
@@ -48,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			updateDecodedSearchInput();
 		}
 	});
-
 	forwardIcon.addEventListener('click', function() {
 		if (currentIndex < historyStack.length - 1) {
 			currentIndex++;
@@ -57,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			updateDecodedSearchInput();
 		}
 	});
-
 	function normalizeUrl(urlStr) {
 		try {
 			const url = new URL(urlStr);
@@ -67,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			return urlStr;
 		}
 	}
-
 	function addToHistory(url) {
 		const normalized = normalizeUrl(url);
 		if (currentIndex >= 0 && normalizeUrl(historyStack[currentIndex]) === normalized) return;
@@ -79,14 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		updateNavButtons();
 		updateDecodedSearchInput();
 	}
-
 	function updateNavButtons() {
 		backIcon.disabled = (currentIndex <= 0);
 		forwardIcon.disabled = (currentIndex >= historyStack.length - 1);
 		backIcon.classList.toggle('disabled', currentIndex <= 0);
 		forwardIcon.classList.toggle('disabled', currentIndex >= historyStack.length - 1);
 	}
-
 	function updateDecodedSearchInput() {
 		const searchInput2 = document.getElementById('searchInputt');
 		if (searchInput2) {
@@ -111,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 	}
-
 	function detectIframeNavigation() {
 		try {
 			const iframeWindow = iframe.contentWindow;
@@ -135,13 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.error("Error detecting iframe navigation:", error);
 		}
 	}
-
 	function handleIframeNavigation(url) {
 		if (url && normalizeUrl(url) !== normalizeUrl(historyStack[currentIndex] || '')) {
 			addToHistory(url);
 		}
 	}
-
 	iframe.addEventListener('load', () => {
 		try {
 			detectIframeNavigation();
@@ -155,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.error("Error detecting iframe navigation:", error);
 		}
 	});
-
 	const searchContainer = document.querySelector(".searchContainer");
 	const navBar = document.querySelector(".navbar");
 	const topBar = document.querySelector(".topbar");
@@ -164,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	const loadingScreen = document.querySelector(".loading-screen");
 	const movies = document.getElementById("movies");
 	const navbarToggle = document.getElementById("navbar-toggle");
-
 	if (navbarToggle && navBar) {
 		const savedNavbarState = localStorage.getItem('navbarToggled');
 		navbarToggle.checked = savedNavbarState === null ? true : savedNavbarState === 'true';
@@ -174,12 +161,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			navBar.style.display = (iframe.style.display === "block" && navbarToggle.checked) ? "block" : "none";
 		});
 	}
-
 	iframe.style.display = "none";
 	window.addEventListener('load', () => {
 		hideLoadingScreen();
 	});
-
 	[searchInput1, searchInput2].forEach(input => {
 		if (input) {
 			input.addEventListener("keyup", (e) => {
@@ -187,14 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 		}
 	});
-
 	if (movies) {
 		movies.addEventListener("click", (e) => {
 			e.preventDefault();
 			handleSearch("https://xojw.github.io/waves-movies/");
 		});
 	}
-
 	async function handleSearch(query) {
 		const searchURL = generateSearchUrl(query);
 		if (searchInput2) {
@@ -247,7 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		};
 	}
 	window.handleSearch = handleSearch;
-
 	function generateSearchUrl(query) {
 		try {
 			const url = new URL(query);
@@ -260,7 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
 	}
-
 	function showToast(message, type = "success", iconType = "check") {
 		const toast = document.createElement("div");
 		toast.className = `toast show ${type}`;
@@ -290,7 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			setTimeout(() => toast.remove(), 500);
 		}, 3000);
 	}
-
 	function showLoadingScreen(withToast = true) {
 		if (!loadingScreen) {
 			console.error("Loading screen element not found.");
@@ -309,7 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			showToast('Consider joining our <a href="https://discord.gg/dJvdkPRheV" target="_blank" class="hover-link">Discord</a>&nbsp;<3');
 		}
 	}
-
 	function hideLoadingScreen() {
 		if (!loadingScreen) {
 			console.error("Loading screen element not found.");
@@ -321,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			loadingScreen.style.display = 'none';
 		}, 500);
 	}
-
 	function preloadResources(url) {
 		const link = document.createElement("link");
 		link.rel = "preload";
@@ -329,17 +307,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		link.as = "fetch";
 		document.head.appendChild(link);
 	}
-
 	function getUrl(url) {
 		return Promise.resolve(__uv$config.prefix + __uv$config.encodeUrl(url));
 	}
-
 	function generateSubject() {
 		const subjects = ['math', 'science', 'history', 'art', 'programming', 'philosophy'];
 		const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
 		history.replaceState({}, '', '/learning?subject=' + randomSubject);
 	}
-
 	function decodeUrl(encodedUrl) {
 		try {
 			const urlObj = new URL(encodedUrl, window.location.origin);
@@ -354,7 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		} catch (e) {}
 		return encodedUrl;
 	}
-
 	window.decodeUrl = decodeUrl;
 	window.addEventListener('message', (event) => {
 		if (event.data && event.data.type === 'uv-url-change' && event.data.url) {

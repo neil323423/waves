@@ -30,7 +30,7 @@
 .chat-options {
 	position: absolute;
 	top: 12px;
-	right: 15px;
+	right: 30px;
 	display: flex;
 	gap: 30px;
 	align-items: center;
@@ -60,7 +60,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-	/* Increased space between messages */
 	background-color: transparent;
 	scroll-behavior: smooth;
 }
@@ -70,12 +69,12 @@
 	border-radius: 12px;
 	font-size: 16px;
 	max-width: 80%;
+	white-space: pre-wrap;
 	line-height: 1.5;
 	display: flex;
 	align-items: center;
 	animation: slideIn 0.5s ease forwards;
 	margin-bottom: 15px;
-	/* Adds space between each message */
 }
 
 @keyframes slideIn {
@@ -83,7 +82,6 @@
 		opacity: 0;
 		transform: translateY(20px);
 	}
-
 	100% {
 		opacity: 1;
 		transform: translateY(0);
@@ -114,9 +112,7 @@
 
 .message i {
 	margin-right: 12px;
-	/* Increase the space between the icon and the text */
 	font-size: 20px;
-	/* Slightly larger icons for better visibility */
 }
 
 .chat-input {
@@ -132,7 +128,7 @@
 	background-color: var(--overlay-dark);
 	color: var(--base-fg);
 	border: 1px solid var(--border-light);
-	border-radius: 25px;
+	border-radius: 15px;
 	transition: all 0.3s ease;
 	outline: none;
 	margin-right: 15px;
@@ -154,7 +150,7 @@
 	background-color: var(--accent);
 	color: var(--base-bg);
 	border: none;
-	border-radius: 25px;
+	border-radius: 20px;
 	cursor: pointer;
 	font-size: 16px;
 	transition: background-color 0.3s ease;
@@ -183,13 +179,9 @@
 }
 
 @keyframes blink {
-
-	0%,
-	20%,
-	100% {
+	0%, 20%, 100% {
 		opacity: 0;
 	}
-
 	40% {
 		opacity: 1;
 	}
@@ -207,7 +199,7 @@
 	color: var(--base-fg);
 	padding: 10px;
 	border: 1px solid var(--border-light);
-	width: 85px;
+	width: 195px;
 	border-radius: 15px;
 	cursor: pointer;
 	display: flex;
@@ -227,7 +219,7 @@
 	font-size: 0.8em;
 	transition: transform 0.3s ease;
 	position: absolute;
-	left: 85px;
+	left: 198px;
 }
 
 .selector-selected.active::after {
@@ -244,6 +236,7 @@
 	border: 1px solid var(--border-light);
 	border-top: none;
 	border-radius: 15px;
+	width: 215px;
 	max-height: 0;
 	z-index: 99999;
 	opacity: 0;
@@ -284,7 +277,7 @@ pre code {
 	background-color: transparent;
 	color: inherit;
 	font-size: inherit;
-	white-space: pre-wrap;
+	white-space: pre-wrap; 
 }
 
 .inline-code {
@@ -292,4 +285,69 @@ pre code {
 	padding: 2px 4px;
 	border-radius: 4px;
 	font-size: 0.9em;
+}
+
+.deep-reasoning {
+	border: 1px dashed var(--accent);
+	color: var(--focus);
+	font-style: italic;
+}
+
+.code-block-container {
+	position: relative;
+	background-color: var(--transport-bg);
+	border: 1px solid var(--border-light);
+	border-radius: 8px;
+	margin: 20px 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.code-block-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: var(--searchbar-bg);
+	color: var(--accent);
+	padding: 8px 12px;
+	border-bottom: 1px solid var(--border-light);
+}
+
+.code-lang {
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+.copy-btn {
+	background-color: transparent;
+	color: var(--accent);
+	border: 1px solid var(--accent);
+	border-radius: 4px;
+	padding: 3px 8px;
+	cursor: pointer;
+	font-size: 0.8em;
+	transition: background-color 0.3s ease;
+}
+
+.copy-btn:hover {
+	background-color: var(--accent);
+	color: var(--base-bg);
+}
+
+.code-block-container pre {
+	margin: 0;
+	padding: 10px 12px;
+	background-color: transparent;
+	color: inherit;
+	font-size: 0.95em;
+	line-height: 1.4;
+	overflow: auto;
+}
+
+.code-block-container code {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	background-color: transparent;
+	color: inherit;
+	font-size: inherit;
 }

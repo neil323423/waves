@@ -94,7 +94,6 @@ npm start
 ## Credits:
 
 - [NobodycaresJR](https://github.com/Nobodycaresjr-lo) - For the Waves icon
-- [AndresDev](https://github.com/AndresDevvv) - For the AI backend
 
 ## License
 

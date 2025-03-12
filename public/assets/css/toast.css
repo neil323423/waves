@@ -8,9 +8,9 @@
 }
 
 .toast {
-  position: fixed;
+  position: fixed !important; 
   top: 20px;
-  right: -300px;
+  right: 20px;
   padding: 10px 20px;
   margin: 5px;
   border-radius: 15px;
