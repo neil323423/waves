@@ -7,11 +7,19 @@ function formatAIResponse(response) {
       return hljs.highlightAuto(code).value;
     }
   });
+
   const renderer = new marked.Renderer();
   renderer.blockquote = function (quote) {
     return quote;
   };
-  return marked.parse(response, { renderer }).trim().replace(/\n{2,}/g, "\n");
+
+  let parsedResponse = marked.parse(response, { renderer }).trim();
+
+  if (parsedResponse.startsWith("<p>") && parsedResponse.endsWith("</p>")) {
+    parsedResponse = parsedResponse.slice(3, -4);
+  }
+
+  return parsedResponse.replace(/\n{2,}/g, "\n");
 }
 
 function sanitizeHTML(message) {
@@ -50,7 +58,7 @@ for (let i = 0; i < modelOptionDivs.length; i++) {
     modelOptions.classList.remove("show");
     modelSelected.classList.remove("active");
   });
-}
+});
 
 document.addEventListener("click", function () {
   modelOptions.classList.remove("show");
