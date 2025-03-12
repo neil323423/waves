@@ -163,6 +163,7 @@ function typeWriterEffect(message, msgType, callback) {
           el.style.margin = "0";
           el.style.padding = "0";
         });
+        msgDiv.querySelectorAll("pre code").forEach(block => hljs.highlightElement(block));
       } else {
         messageText.textContent = message;
       }
