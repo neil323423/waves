@@ -1,6 +1,6 @@
 function formatAIResponse(response) {
   marked.setOptions({
-    highlight: function(code, lang) {
+    highlight: function (code, lang) {
       if (lang && hljs.getLanguage(lang)) {
         return hljs.highlight(code, { language: lang }).value;
       }
@@ -8,10 +8,10 @@ function formatAIResponse(response) {
     }
   });
   const renderer = new marked.Renderer();
-  renderer.blockquote = function(quote) {
+  renderer.blockquote = function (quote) {
     return quote;
   };
-  return marked.parse(response, { renderer });
+  return marked.parse(response, { renderer }).trim().replace(/\n{2,}/g, "\n");
 }
 
 function sanitizeHTML(message) {
@@ -34,7 +34,7 @@ const modelDisplayNames = {
 };
 modelSelected.textContent = modelDisplayNames[modelSourceValue];
 
-modelSelected.addEventListener("click", function(e) {
+modelSelected.addEventListener("click", function (e) {
   e.stopPropagation();
   modelOptions.classList.toggle("show");
   modelSelected.classList.toggle("active");
@@ -42,7 +42,7 @@ modelSelected.addEventListener("click", function(e) {
 
 const modelOptionDivs = modelOptions.getElementsByTagName("div");
 for (let i = 0; i < modelOptionDivs.length; i++) {
-  modelOptionDivs[i].addEventListener("click", function(e) {
+  modelOptionDivs[i].addEventListener("click", function (e) {
     e.stopPropagation();
     modelSourceValue = this.getAttribute("data-value");
     modelSelected.textContent = modelDisplayNames[modelSourceValue];
@@ -52,7 +52,7 @@ for (let i = 0; i < modelOptionDivs.length; i++) {
   });
 }
 
-document.addEventListener("click", function() {
+document.addEventListener("click", function () {
   modelOptions.classList.remove("show");
   modelSelected.classList.remove("active");
 });
@@ -69,15 +69,20 @@ sendMsg.addEventListener("click", () => {
   messageHistory.push({ role: "user", content: message });
   const respondingIndicator = document.createElement("div");
   respondingIndicator.classList.add("message", "ai-message");
-  respondingIndicator.innerHTML = '<i class="fas fa-robot"></i><span class="message-text">Responding <span class="responding-dots"><span>.</span><span>.</span><span>.</span></span></span>';
+  respondingIndicator.innerHTML =
+    '<i class="fas fa-robot"></i><span class="message-text">Responding <span class="responding-dots"><span>.</span><span>.</span><span>.</span></span></span>';
   chatBody.appendChild(respondingIndicator);
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
   const payload = {
     model: modelSourceValue,
-    messages: [{
-      role: "system",
-      content: "You are a friendly assistant who provides smart, fast, and brief answers. Think critically before responding and always be helpful."
-    }, ...messageHistory],
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a friendly assistant who provides smart, fast, and brief answers. Think critically before responding and always be helpful."
+      },
+      ...messageHistory
+    ],
     temperature: 1,
     max_completion_tokens: 1024,
     top_p: 1,
@@ -92,13 +97,13 @@ sendMsg.addEventListener("click", () => {
     .then(response => response.json())
     .then(data => {
       chatBody.removeChild(respondingIndicator);
-      const aiResponse = data.choices && data.choices[0] ? data.choices[0].message.content : "No response from AI.";
+      const aiResponse =
+        data.choices && data.choices[0] ? data.choices[0].message.content : "No response from AI.";
       const formattedResponse = formatAIResponse(aiResponse);
       typeWriterEffect(formattedResponse, "ai");
       messageHistory.push({ role: "assistant", content: aiResponse });
     })
     .catch(err => {
-      console.error("Error communicating with AI:", err);
       chatBody.removeChild(respondingIndicator);
       appendMessage("Error communicating with AI.", "ai");
       sendMsg.disabled = false;
@@ -106,7 +111,7 @@ sendMsg.addEventListener("click", () => {
     });
 });
 
-aiInput.addEventListener("keypress", function(e) {
+aiInput.addEventListener("keypress", function (e) {
   if (e.key === "Enter") sendMsg.click();
 });
 
@@ -158,8 +163,7 @@ function typeWriterEffect(message, msgType, callback) {
       if (isHTML) {
         messageText.innerHTML = message;
         msgDiv.querySelectorAll("p").forEach(p => {
-          p.style.margin = "0";
-          p.style.padding = "0";
+          if (!p.textContent.trim()) p.remove();
         });
         msgDiv.querySelectorAll("pre code").forEach(block => hljs.highlightElement(block));
       } else {
