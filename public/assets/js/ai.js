@@ -2,9 +2,9 @@ function formatAIResponse(response) {
   marked.setOptions({
     highlight: function(code, lang) {
       if (lang && hljs.getLanguage(lang)) {
-        return hljs.highlight(code, { language: lang }).value;
+        return `<pre class="hljs"><code class="language-${lang}">${hljs.highlight(code, { language: lang }).value}</code></pre>`;
       }
-      return hljs.highlightAuto(code).value;
+      return `<pre class="hljs"><code class="language-${hljs.highlightAuto(code).language}">${hljs.highlightAuto(code).value}</code></pre>`;
     }
   });
   const renderer = new marked.Renderer();
@@ -37,97 +37,46 @@ function cleanupMessage(message) {
   return cleanedMessage;
 }
 
-function appendMessage(message, type) {
-  const msgDiv = document.createElement("div");
-  msgDiv.classList.add("message", type === "user" ? "user-message" : "ai-message");
-  const iconHtml = type === "user" ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
-  if (type === "user") {
-    msgDiv.innerHTML = iconHtml + '<span class="message-text">' + message + "</span>";
-    chatBody.appendChild(msgDiv);
-    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-  } else {
-    typeWriterEffect(message, type);
-  }
-}
+const chatBody = document.getElementById("chatBody");
+const aiInput = document.getElementById("aiInput");
+const sendMsg = document.getElementById("sendMsg");
+const modelSelector = document.getElementById("modelSelector");
+const modelSelected = modelSelector.querySelector(".selector-selected");
+const modelOptions = modelSelector.querySelector(".selector-options");
+let modelSourceValue = localStorage.getItem("selectedModel") || "llama-3.1-8b-instant";
+const modelDisplayNames = {
+  "llama-3.1-8b-instant": "Llama 3.1 8B Instant",
+  "llama3-8b-8192": "Llama3 8B 8192",
+  "deepseek-r1-distill-llama-70b": "Deepseek R1 Distill Llama 70B",
+  "gemma2-9b-it": "Gemma2 9B IT",
+  "mixtral-8x7b-32768": "Mixtral 8x7B 32768"
+};
+modelSelected.textContent = modelDisplayNames[modelSourceValue];
 
-function typeWriterEffect(message, msgType, callback) {
-  const msgDiv = document.createElement("div");
-  let classes = ["message", msgType === "user" ? "user-message" : "ai-message"];
-  if (modelSourceValue === "deepseek-r1-distill-llama-70b" && msgType === "ai") {
-    classes.push("deep-reasoning");
-  }
-  msgDiv.className = classes.join(" ");
-  const iconHtml = msgType === "user" ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
-  msgDiv.innerHTML = iconHtml + '<span class="message-text"></span>';
-  chatBody.appendChild(msgDiv);
-  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-  const messageText = msgDiv.querySelector(".message-text");
-  let plainText = message;
-  let isHTML = false;
-  if (/<[a-z][\s\S]*>/i.test(message)) {
-    isHTML = true;
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = message;
-    plainText = tempDiv.innerText || tempDiv.textContent;
-  }
-  let i = 0;
-  const speed = 5;
-  let timeoutId;
-  let completed = false;
-  function finishTyping() {
-    if (!completed) {
-      completed = true;
-      if (timeoutId) clearTimeout(timeoutId);
-      if (isHTML) {
-        messageText.innerHTML = message;
-        msgDiv.querySelectorAll("p, pre, code").forEach(el => {
-          el.style.margin = "0";
-          el.style.padding = "0";
-          el.style.lineHeight = "normal";
-        });
-        msgDiv.querySelectorAll("pre code").forEach(block => hljs.highlightElement(block));
-      } else {
-        messageText.textContent = message;
-      }
-      setTimeout(() => {
-        chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-      }, 100);
-
-      if (callback) callback();
-      if (msgType === "ai") {
-        sendMsg.disabled = false;
-        aiInput.disabled = false;
-      }
-    }
-  }
-  msgDiv.addEventListener("click", finishTyping);
-  const maxTime = plainText.length * speed + 500;
-  const forceTimeout = setTimeout(finishTyping, maxTime);
-  function typeCharacter() {
-    if (i < plainText.length) {
-      messageText.textContent = plainText.substring(0, i + 1);
-      i++;
-      chatBody.scrollTop = chatBody.scrollHeight;
-      timeoutId = setTimeout(typeCharacter, speed);
-    } else {
-      finishTyping();
-      clearTimeout(forceTimeout);
-    }
-  }
-  typeCharacter();
-}
-
-function addLanguageToCodeBlock(code, lang) {
-  if (lang) {
-    return `<div class="code-lang">${lang}</div><pre><code class="hljs ${lang}">${code}</code></pre>`;
-  } else {
-    return `<pre><code class="hljs">${code}</code></pre>`;
-  }
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  typeWriterEffect("Welcome! I'm here to assist you. Feel free to ask me anything.", "ai");
+modelSelected.addEventListener("click", function(e) {
+  e.stopPropagation();
+  modelOptions.classList.toggle("show");
+  modelSelected.classList.toggle("active");
 });
+
+const modelOptionDivs = modelOptions.getElementsByTagName("div");
+for (let i = 0; i < modelOptionDivs.length; i++) {
+  modelOptionDivs[i].addEventListener("click", function(e) {
+    e.stopPropagation();
+    modelSourceValue = this.getAttribute("data-value");
+    modelSelected.textContent = modelDisplayNames[modelSourceValue];
+    localStorage.setItem("selectedModel", modelSourceValue);
+    modelOptions.classList.remove("show");
+    modelSelected.classList.remove("active");
+  });
+}
+
+document.addEventListener("click", function() {
+  modelOptions.classList.remove("show");
+  modelSelected.classList.remove("active");
+});
+
+let messageHistory = [];
 
 sendMsg.addEventListener("click", () => {
   const message = aiInput.value.trim();
@@ -176,3 +125,91 @@ sendMsg.addEventListener("click", () => {
       aiInput.disabled = false;
     });
 });
+
+aiInput.addEventListener("keypress", function(e) {
+  if (e.key === "Enter") sendMsg.click();
+});
+
+function appendMessage(message, type) {
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("message", type === "user" ? "user-message" : "ai-message");
+  const iconHtml = type === "user" ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+  if (type === "user") {
+    msgDiv.innerHTML = iconHtml + '<span class="message-text">' + message + "</span>";
+    chatBody.appendChild(msgDiv);
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+  } else {
+    typeWriterEffect(message, type);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  typeWriterEffect("Welcome! I'm here to assist you. Feel free to ask me anything.", "ai");
+});
+
+function typeWriterEffect(message, msgType, callback) {
+  const msgDiv = document.createElement("div");
+  let classes = ["message", msgType === "user" ? "user-message" : "ai-message"];
+  if (modelSourceValue === "deepseek-r1-distill-llama-70b" && msgType === "ai") {
+    classes.push("deep-reasoning");
+  }
+  msgDiv.className = classes.join(" ");
+  const iconHtml = msgType === "user" ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+  msgDiv.innerHTML = iconHtml + '<span class="message-text"></span>';
+  chatBody.appendChild(msgDiv);
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+  const messageText = msgDiv.querySelector(".message-text");
+  let plainText = message;
+  let isHTML = false;
+  if (/<[a-z][\s\S]*>/i.test(message)) {
+    isHTML = true;
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = message;
+    plainText = tempDiv.innerText || tempDiv.textContent;
+  }
+  let i = 0;
+  const speed = 5;
+  let timeoutId;
+  let completed = false;
+  function finishTyping() {
+    if (!completed) {
+      completed = true;
+      if (timeoutId) clearTimeout(timeoutId);
+      if (isHTML) {
+        messageText.innerHTML = message;
+        msgDiv.querySelectorAll("p, pre, code").forEach(el => {
+          el.style.margin = "0";
+          el.style.padding = "0";
+          el.style.lineHeight = "normal";
+        });
+        msgDiv.querySelectorAll("pre code").forEach(block => hljs.highlightElement(block));
+      } else {
+        messageText.textContent = message;
+      }
+      setTimeout(() => {
+        chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+      }, 100);
+      
+      if (callback) callback();
+      if (msgType === "ai") {
+        sendMsg.disabled = false;
+        aiInput.disabled = false;
+      }
+    }
+  }
+  msgDiv.addEventListener("click", finishTyping);
+  const maxTime = plainText.length * speed + 500;
+  const forceTimeout = setTimeout(finishTyping, maxTime);
+  function typeCharacter() {
+    if (i < plainText.length) {
+      messageText.textContent = plainText.substring(0, i + 1);
+      i++;
+      chatBody.scrollTop = chatBody.scrollHeight;
+      timeoutId = setTimeout(typeCharacter, speed);
+    } else {
+      finishTyping();
+      clearTimeout(forceTimeout);
+    }
+  }
+  typeCharacter();
+}
