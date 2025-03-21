@@ -15,8 +15,9 @@ import rateLimit from "express-rate-limit";
 import chatRoute from "./routes/chat.js";
 
 const port = parseInt(process.env.PORT || "3000");
+const isMaster = !process.env.NODE_UNIQUE_ID;
 
-if (cluster.isPrimary) {
+if (isMaster) {
   const numCPUs = os.cpus().length;
   const workers = [];
   for (let i = 0; i < numCPUs; i++) {
@@ -26,6 +27,9 @@ if (cluster.isPrimary) {
   const server = net.createServer({ pauseOnConnect: true }, (connection) => {
     const worker = workers[Math.abs(hash(connection.remoteAddress)) % workers.length];
     worker.send("sticky-session:connection", connection);
+  });
+  server.on("error", (err) => {
+    console.error(err);
   });
   server.listen(port, () => {
     console.log(`[SERVER] Running at http://localhost:${port}`);
@@ -100,7 +104,11 @@ if (cluster.isPrimary) {
     }
   });
 
+  server.on("error", (err) => {
+    console.error(err);
+  });
   server.listen(0, () => {});
+
   process.on("message", (message, connection) => {
     if (message === "sticky-session:connection") {
       server.emit("connection", connection);
