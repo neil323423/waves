@@ -1,4 +1,4 @@
-import cluster from "cluster";
+import * as cluster from "cluster";
 import os from "os";
 import net from "net";
 import express from "express";
@@ -15,9 +15,8 @@ import rateLimit from "express-rate-limit";
 import chatRoute from "./routes/chat.js";
 
 const port = parseInt(process.env.PORT || "3000");
-const isMaster = !process.env.NODE_UNIQUE_ID;
 
-if (isMaster) {
+if (cluster.isPrimary) {
   const numCPUs = os.cpus().length;
   const workers = [];
   for (let i = 0; i < numCPUs; i++) {
@@ -38,6 +37,7 @@ if (isMaster) {
   const __dirname = process.cwd();
   const publicPath = path.join(__dirname, "public");
   const app = express();
+  
   app.use("/baremux/", express.static(baremuxPath));
   app.use("/epoxy/", express.static(epoxyPath));
   app.use("/libcurl/", express.static(libcurlPath));
