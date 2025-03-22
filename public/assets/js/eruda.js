@@ -1,48 +1,58 @@
-var erudaLoaded = false;
-var loadingTimeout;
-var errorMessageDisplayed = false;
+const erudaIcon = document.getElementById('erudaIcon');
+const iframe = document.querySelector('.iframe');
+const erudaLoadingScreen = document.getElementById('erudaLoadingScreen');
 
-document.getElementById('erudaIcon').addEventListener('click', function() {
-	var iframe = document.querySelector('.iframe');
-	var erudaLoadingScreen = document.getElementById('erudaLoadingScreen');
+let erudaLoaded = false;
+let loadingTimeout;
+let errorMessageDisplayed = false;
 
-	erudaLoadingScreen.style.display = 'block';
+erudaIcon.addEventListener('click', () => {
+  if (!iframe || !iframe.contentDocument || !iframe.contentWindow) {
+    console.error('Iframe is not available.');
+    return;
+  }
 
-	clearTimeout(loadingTimeout);
+  erudaLoadingScreen.textContent = 'Eruda is loading...';
+  erudaLoadingScreen.style.display = 'block';
+  clearTimeout(loadingTimeout);
 
-	loadingTimeout = setTimeout(function() {
-		if (!errorMessageDisplayed) {
-			erudaLoadingScreen.textContent = 'Error: Eruda is taking too long to load.';
-			errorMessageDisplayed = true;
-		}
-		erudaLoadingScreen.style.display = 'none';
-	}, 10000);
+  loadingTimeout = setTimeout(() => {
+    if (!errorMessageDisplayed) {
+      erudaLoadingScreen.textContent = 'Error: Eruda is taking too long to load.';
+      errorMessageDisplayed = true;
+    }
+    erudaLoadingScreen.style.display = 'none';
+  }, 10000);
 
-	if (iframe.contentWindow.eruda && erudaLoaded) {
-		iframe.contentWindow.eruda.destroy();
-		erudaLoaded = false;
-		erudaLoadingScreen.style.display = 'none';
-	} else if (!erudaLoaded) {
-		var script = iframe.contentDocument.createElement('script');
-		script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+  if (erudaLoaded && iframe.contentWindow.eruda) {
+    iframe.contentWindow.eruda.destroy();
+    erudaLoaded = false;
+    clearTimeout(loadingTimeout);
+    erudaLoadingScreen.style.display = 'none';
+  } else if (!erudaLoaded) {
+    const script = iframe.contentDocument.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+    script.async = true;
 
-		script.onload = function() {
-			clearTimeout(loadingTimeout);
-			iframe.contentWindow.eruda.init();
-			iframe.contentWindow.eruda.show();
-			erudaLoaded = true;
-			erudaLoadingScreen.style.display = 'none';
-		};
+    script.onload = () => {
+      clearTimeout(loadingTimeout);
+      if (iframe.contentWindow.eruda) {
+        iframe.contentWindow.eruda.init();
+        iframe.contentWindow.eruda.show();
+        erudaLoaded = true;
+      }
+      erudaLoadingScreen.style.display = 'none';
+    };
 
-		script.onerror = function() {
-			clearTimeout(loadingTimeout);
-			if (!errorMessageDisplayed) {
-				erudaLoadingScreen.textContent = 'Error loading Eruda. Please try again later.';
-				errorMessageDisplayed = true;
-			}
-			erudaLoadingScreen.style.display = 'none';
-		};
+    script.onerror = () => {
+      clearTimeout(loadingTimeout);
+      if (!errorMessageDisplayed) {
+        erudaLoadingScreen.textContent = 'Error loading Eruda. Please try again later.';
+        errorMessageDisplayed = true;
+      }
+      erudaLoadingScreen.style.display = 'none';
+    };
 
-		iframe.contentDocument.head.appendChild(script);
-	}
+    iframe.contentDocument.head.appendChild(script);
+  }
 });

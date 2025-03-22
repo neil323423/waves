@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-	const SW = "/s/sw.js";
+	const SW = "/wa/sw.js";
 	const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
 	let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
 	const wispUrl = currentWispUrl;
@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			await ensureWebSocketConnection(wispUrl);
 
 			console.log("%c[⚙️]%c Registering Service Worker...", "color: #007bff; font-weight: bold;", "color: #007bff;");
-			await navigator.serviceWorker.register("/s/sw.js", {
-				scope: '/s/t/'
+			await navigator.serviceWorker.register("/wa/sky.js", {
+				scope: '/wa/a/'
 			});
 			console.log("%c[✅]%c Service Worker registered successfully.", "color: green; font-weight: bold;", "color: green;");
 
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			switchTransport(savedTransport);
 			updateTransportUI(savedTransport);
 
-			console.log(`%c[🚀]%c Using ${savedTransport} transport.`, "color: #6f42c1; font-weight: bold;", "color: #6f42c1;");
+			console.log(`%c[🚀]%c Using ${savedTransport} transport.`, "color: #ffffff 255, 255); font-weight: bold;", "color: #ffffff;");
 
 		} catch (error) {
 			logError(error, 'An error occurred during Service Worker registration or WebSocket connection');

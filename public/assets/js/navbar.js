@@ -19,10 +19,49 @@ const elements = {
 	iframe: document.getElementById('cool-iframe')
 };
 
+let loadingFallbackTimeout;
+
 elements.refreshIcon.addEventListener('click', () => handleRefresh());
 elements.fullscreenIcon.addEventListener('click', () => handleFullscreen());
 elements.backIcon.addEventListener('click', () => handleBack());
 elements.forwardIcon.addEventListener('click', () => handleForward());
+
+function showLoadingScreen() {
+	const loadingScreen = document.querySelector(".loading-screen");
+	if (!loadingScreen) {
+		console.error("Loading screen element not found.");
+		return;
+	}
+	if (typeof NProgress !== 'undefined') {
+		NProgress.start();
+	}
+	loadingScreen.style.display = 'flex';
+	setTimeout(() => {
+		loadingScreen.style.transition = 'opacity 0.5s ease';
+		loadingScreen.style.opacity = 1;
+	}, 10);
+	clearTimeout(loadingFallbackTimeout);
+	loadingFallbackTimeout = setTimeout(() => {
+		hideLoadingScreen();
+	}, 10000);
+}
+
+function hideLoadingScreen() {
+	const loadingScreen = document.querySelector(".loading-screen");
+	if (!loadingScreen) {
+		console.error("Loading screen element not found.");
+		return;
+	}
+	loadingScreen.style.transition = 'opacity 0.5s ease';
+	loadingScreen.style.opacity = 0;
+	setTimeout(() => {
+		loadingScreen.style.display = 'none';
+		if (typeof NProgress !== 'undefined') {
+			NProgress.done();
+		}
+	}, 500);
+	clearTimeout(loadingFallbackTimeout);
+}
 
 function handleRefresh() {
 	elements.refreshIcon.classList.add('spin');
@@ -86,6 +125,7 @@ function addToHistory(url) {
 }
 
 function updateIframeSrc() {
+	showLoadingScreen();
 	elements.iframe.src = historyStack[currentIndex];
 	updateNavButtons();
 	updateDecodedSearchInput();
@@ -135,6 +175,7 @@ function detectIframeNavigation() {
 
 function handleIframeNavigation(url) {
 	if (url && normalizeUrl(url) !== normalizeUrl(historyStack[currentIndex] || '')) {
+		showLoadingScreen();
 		addToHistory(url);
 	}
 }
@@ -149,5 +190,7 @@ elements.iframe.addEventListener('load', () => {
 		}
 	} catch (error) {
 		console.error("Error detecting iframe navigation:", error);
+	} finally {
+		hideLoadingScreen();
 	}
 });

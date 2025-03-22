@@ -1,3 +1,12 @@
+document.addEventListener('DOMContentLoaded', function () {
+	NProgress.configure({ showSpinner: false });
+	NProgress.start();
+});
+  
+  window.addEventListener('load', function () {
+	NProgress.done();
+});
+  
 const titleElement = document.querySelector('.search-title');
 if (titleElement) {
 	const text = titleElement.textContent;

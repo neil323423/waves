@@ -1,4 +1,4 @@
-importScripts('/s/uv.bundle.js', '/s/uv.config.js', '/s/uv.sw.js');
+importScripts('/wa/uv.bundle.js', '/wa/uv.config.js', '/wa/uv.sw.js');
 
 const uv = new UVServiceWorker();
 

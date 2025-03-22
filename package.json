@@ -1,6 +1,6 @@
 {
     "name": "waves",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "description": "A sleek and minimalist Web Proxy.",
     "type": "module",
     "engines": {

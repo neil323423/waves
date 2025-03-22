@@ -14,8 +14,7 @@
     --searchbar-hover: #33333380;
     --link: #e6e6e6;
     --focus: #ffffff48;
-    --eruda-bg: #1b1b1b9d;
-    --loader-bg: #00000062;
+    --loader-bg: #000000d5;
     --svg-stroke: #bdbdbd;
     --hover: #949494;
     --hover-active: #dadada;
@@ -49,6 +48,21 @@ body {
 ::selection {
     background-color: var(--sel-bg);
     color: var(--sel-fg);
+}
+
+#nprogress .bar {
+	background: #ffffff !important;
+    z-index: 99999 !important;
+	box-shadow: 0 0 60px #ffffffcc, 0 0 90px #ffffff99, 0 0 150px #ffffff66 !important;
+}
+
+#nprogress .peg {
+	box-shadow: 0 0 100px #ffffffcc, 0 0 150px #ffffff99, 0 0 200px #ffffff66 !important;
+}
+
+#nprogress .spinner-icon {
+	border-top-color: #ffffff !important;
+	border-left-color: #ffffff !important;
 }
 
 #waves {
@@ -297,7 +311,7 @@ body {
     border-radius: 20px;
     color: var(--base-fg);
     font-size: 16px;
-    border: 1px solid var(--border-light);
+    border: 2px solid var(--border-light);
     background-color: var(--overlay-dark);
     backdrop-filter: blur(20px);
     text-indent: 0.5em;
@@ -307,7 +321,7 @@ body {
 
 .search-bar input[type=text]:focus,
 .search-bar input[type=text]:hover {
-    border: 1px solid var(--focus);
+    border: 2px solid var(--focus);
 }
 
 .search-bar input[type=text]::placeholder {
@@ -319,7 +333,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--eruda-bg);
+    background-color: var(--loader-bg);
     backdrop-filter: blur(6px);
     color: var(--accent);
     font-size: 3em;
@@ -538,7 +552,7 @@ svg path {
     background-size: 25px 25px;
     background-position: 10px center;
     background-repeat: no-repeat;
-    border: 1px solid var(--border-light);
+    border: 2px solid var(--border-light);
     color: var(--accent);
     margin-top: 15px;
     margin-bottom: 15px;
@@ -559,7 +573,7 @@ svg path {
 .input-container button {
     padding: 10px;
     background-color: var(--accent);
-    border: 1px solid var(--border-light);
+    border: 2px solid var(--border-light);
     color: var(--base-bg);
     font-size: 18px;
     border-radius: 15px;

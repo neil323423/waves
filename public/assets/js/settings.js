@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <input type="checkbox" id="navbar-toggle">
   </div>
   <div id="info-content" class="tab-content">
-    <label>Version 2.3.0</label>
+    <label>Version 2.3.1</label>
     <label onmouseover="this.querySelector('span').style.color='lime'" onmouseout="this.querySelector('span').style.color='green'">
       Server Status: <span style="color: green; transition: color 0.3s ease;">Running</span>
     </label>
