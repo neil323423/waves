@@ -172,7 +172,8 @@
     transition: background-color 0.3s, transform 0.2s ease, border-color 0.3s ease;
 }
 
-#wisp-server:hover {
+#wisp-server:hover
+#wisp-server:focus {
     border: 1px solid var(--border-focus);
 }
 
