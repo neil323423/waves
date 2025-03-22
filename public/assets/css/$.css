@@ -311,7 +311,7 @@ body {
     border-radius: 20px;
     color: var(--base-fg);
     font-size: 16px;
-    border: 2px solid var(--border-light);
+    border: 1px solid var(--border-light);
     background-color: var(--overlay-dark);
     backdrop-filter: blur(20px);
     text-indent: 0.5em;
@@ -321,7 +321,7 @@ body {
 
 .search-bar input[type=text]:focus,
 .search-bar input[type=text]:hover {
-    border: 2px solid var(--focus);
+    border: 1px solid var(--focus);
 }
 
 .search-bar input[type=text]::placeholder {
@@ -552,7 +552,7 @@ svg path {
     background-size: 25px 25px;
     background-position: 10px center;
     background-repeat: no-repeat;
-    border: 2px solid var(--border-light);
+    border: 1px solid var(--border-light);
     color: var(--accent);
     margin-top: 15px;
     margin-bottom: 15px;
@@ -573,7 +573,7 @@ svg path {
 .input-container button {
     padding: 10px;
     background-color: var(--accent);
-    border: 2px solid var(--border-light);
+    border: 1px solid var(--border-light);
     color: var(--base-bg);
     font-size: 18px;
     border-radius: 15px;

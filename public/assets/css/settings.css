@@ -52,23 +52,6 @@
     letter-spacing: 2px;
 }
 
-#settings-menu select {
-    width: 100%;
-    padding: 7px;
-    margin-bottom: 15px;
-    background-color: var(--select-bg);
-    color: var(--base-fg);
-    border: 2px dashed var(--border);
-    border-radius: 15px;
-    font-size: 18px;
-    outline: none;
-    transition: background-color 0.3s, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-#settings-menu select:focus {
-    transform: scale(1.02);
-}
-
 #close-settings {
     position: absolute;
     top: 20px;
@@ -119,7 +102,7 @@
     background-color: var(--transport-bg);
     color: var(--base-fg);
     padding: 10px;
-    border: 2px solid var(--border);
+    border: 1px solid var(--border);
     border-radius: 15px;
     cursor: pointer;
     display: flex;
@@ -151,7 +134,7 @@
     left: 0;
     right: 0;
     background-color: var(--transport-bg);
-    border: 2px solid var(--border-light);
+    border: 1px solid var(--border-light);
     border-radius: 15px;
     max-height: 0;
     text-align: left;
@@ -182,7 +165,7 @@
     margin-left: -80px;
     background-color: var(--transport-bg);
     color: var(--base-fg);
-    border: 2px solid var(--border-light);
+    border: 1px solid var(--border-light);
     border-radius: 15px;
     font-size: 15px;
     outline: none;
@@ -190,7 +173,7 @@
 }
 
 #wisp-server:hover {
-    border: 2px solid var(--border-focus);
+    border: 1px solid var(--border-focus);
 }
 
 #wisp-server::placeholder {
@@ -201,7 +184,7 @@
 #save-wisp-url {
     padding: 8px 10px;
     background-color: var(--button-bg);
-    border: 2px solid var(--border-light);
+    border: 1px solid var(--border-light);
     color: var(--black);
     font-size: 16px;
     margin-left: 0;
