@@ -10,7 +10,6 @@
     --close-hover: #f44336;
     --transport-bg: #141414;
     --transport-hover: #333;
-    --border-focus: #ffffff48;
     --placeholder-dim: #525252;
     --button-bg: #fff;
     --black: #000;
@@ -174,7 +173,7 @@
 
 #wisp-server:focus,
 #wisp-server:hover {
-    border: 1px solid var(--border-focus);
+    border: 1px solid var(--focus);
 }
 
 #wisp-server::placeholder {
