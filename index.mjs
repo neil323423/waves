@@ -9,7 +9,6 @@ import { libcurlPath } from "@mercuryworkshop/libcurl-transport";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import wisp from "wisp-server-node";
 import rateLimit from "express-rate-limit";
-import chatRoute from './routes/chat.js';
 
 const __dirname = process.cwd();
 const publicPath = path.join(__dirname, "public");
@@ -20,7 +19,7 @@ app.use("/baremux/", express.static(baremuxPath));
 app.use("/epoxy/", express.static(epoxyPath));
 app.use("/libcurl/", express.static(libcurlPath));
 app.use(express.static(publicPath, { maxAge: "30d" }));
-app.use("/s/", express.static(uvPath));
+app.use("/wa/", express.static(uvPath));
 
 const limiter = rateLimit({
     windowMs: 5 * 60 * 1000,
@@ -35,7 +34,6 @@ app.get("/", (req, res) => res.sendFile(path.join(publicPath, "$.html")));
 app.get("/g", (req, res) => res.sendFile(path.join(publicPath, "!.html")));
 app.get("/a", (req, res) => res.sendFile(path.join(publicPath, "!!.html")));
 app.get("/ai", (req, res) => res.sendFile(path.join(publicPath, "!!!.html")));
-app.use(chatRoute);
 app.use((req, res) => res.status(404).sendFile(path.join(publicPath, "404.html")));
 
 app.use(compression({
