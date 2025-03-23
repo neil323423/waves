@@ -7,6 +7,9 @@ A sleek and minimalist Web Proxy.
 
 [![Join our Discord](https://invidget.switchblade.xyz/dJvdkPRheV)](https://discord.gg/dJvdkPRheV)
 
+> [!IMPORTANT]
+> We have moved our main repository too https://gitea.sentt.lol/sent/waves
+
 ## Supported Sites:
 
 - [Google](https://google.com)
