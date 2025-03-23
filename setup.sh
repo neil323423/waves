@@ -65,23 +65,41 @@ info "Creating Caddyfile..."
 cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 {
     email sefiicc@gmail.com
+    servers {
+        max_header_size 64KB
+        read_buffer 512KB
+        write_buffer 512KB
+        protocols h2 h3
+    }
 }
 
 :443 {
     tls {
-        on_demand  
+        on_demand
     }
 
-    reverse_proxy http://localhost:3000  
-    encode gzip zstd
+    reverse_proxy http://localhost:3000 {
+        transport http {
+            keepalive_idle_conns 1000
+            keepalive_max_lifetime 300s
+            keepalive_timeout 15s
+            read_buffer 512KB
+            write_buffer 512KB
+        }
+    }
+
+    encode gzip zstd brotli
 
     header {
-        Strict-Transport-Security "max-age=31536000; includeSubDomains"
-        X-Frame-Options "ALLOWALL" 
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Frame-Options "ALLOWALL"
         X-Content-Type-Options "nosniff"
         X-XSS-Protection "1; mode=block"
         Referrer-Policy "no-referrer"
+        Content-Security-Policy "frame-ancestors 'self'; upgrade-insecure-requests"
     }
+
+    resolver 8.8.8.8 8.8.4.4
 }
 EOF
 separator
