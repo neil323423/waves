@@ -67,8 +67,8 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
     email sefiicc@gmail.com
     servers {
         max_header_size 64KB
-        read_buffer 512KB
-        write_buffer 512KB
+        read_buffer 256KB
+        write_buffer 256KB
         protocols h2 h3
     }
 }
@@ -80,11 +80,11 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 
     reverse_proxy http://localhost:3000 {
         transport http {
-            keepalive_idle_conns 1000
-            keepalive_max_lifetime 300s
-            keepalive_timeout 15s
-            read_buffer 512KB
-            write_buffer 512KB
+            keepalive 1000
+            max_idle_conns 1000
+            idle_timeout 300s
+            read_buffer 256KB
+            write_buffer 256KB
         }
     }
 
@@ -96,7 +96,7 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
         X-Content-Type-Options "nosniff"
         X-XSS-Protection "1; mode=block"
         Referrer-Policy "no-referrer"
-        Content-Security-Policy "frame-ancestors 'self'; upgrade-insecure-requests"
+        Content-Security-Policy "frame-ancestors *;"
     }
 
     resolver 8.8.8.8 8.8.4.4
