@@ -69,23 +69,15 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 
 :443 {
     tls {
-        on_demand
-    }
-    
-    http3
-
-    reverse_proxy http://localhost:3000 {
-        transport http {
-            read_timeout 10s
-            write_timeout 10s
-        }
+        on_demand  
     }
 
+    reverse_proxy http://localhost:3000  
     encode gzip zstd
 
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
-        X-Frame-Options "ALLOWALL"
+        X-Frame-Options "ALLOWALL" 
         X-Content-Type-Options "nosniff"
         X-XSS-Protection "1; mode=block"
         Referrer-Policy "no-referrer"
