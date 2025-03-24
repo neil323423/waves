@@ -8,8 +8,7 @@ A sleek and minimalist Web Proxy.
 [![Join our Discord](https://invidget.switchblade.xyz/dJvdkPRheV)](https://discord.gg/dJvdkPRheV)
 
 > [!IMPORTANT]
-> We have now moved our main repository too https://gitea.sentt.lol/sent/waves
-> You can still use this repository but there will be a lot less games than the one on Gitea.
+> Our main repository has now moved to https://gitea.sentt.lol/sent/waves. This repository will remain available, but it only contains around 20 games, whereas the Gitea version has over 350+ games. For the full collection, we recommend using the Gitea version.
 
 ## Supported Sites:
 
