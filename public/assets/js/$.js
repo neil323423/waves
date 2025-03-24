@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					script.textContent = `(function(){const origPush=history.pushState;const origReplace=history.replaceState;function notify(){window.parent.postMessage({type:'uv-url-change',url:location.href},'*');}history.pushState=function(){origPush.apply(history,arguments);notify();};history.replaceState=function(){origReplace.apply(history,arguments);notify();};window.addEventListener('popstate',notify);window.addEventListener('hashchange',notify);notify();})();`;
 					iframe.contentDocument.head.appendChild(script);
 				}
-			} catch (e) { /* Suppress error */ }
+			} catch (e) { /* hi */ }
 		};
 		iframe.onerror = () => { hideLoadingScreen(); alert('Failed to load content.'); };
 	}
