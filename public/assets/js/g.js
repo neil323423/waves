@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		.then(response => response.json())
 		.then(data => {
 			gamesData = data.games;
+			
+			searchInput.placeholder = `Search through ${gamesData.length} Games…`;
 
 			displayGames(gamesData);
 
