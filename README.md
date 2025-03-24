@@ -8,7 +8,8 @@ A sleek and minimalist Web Proxy.
 [![Join our Discord](https://invidget.switchblade.xyz/dJvdkPRheV)](https://discord.gg/dJvdkPRheV)
 
 > [!IMPORTANT]
-> We have moved our main repository too https://gitea.sentt.lol/sent/waves
+> We have now moved our main repository too https://gitea.sentt.lol/sent/waves
+> You can still use this repository but there will be a lot less games than the one on Gitea.
 
 ## Supported Sites:
 
@@ -96,7 +97,8 @@ npm start
 
 ## Credits:
 
-- [NobodycaresJR](https://github.com/Nobodycaresjr-lo) - For the Waves icon
+- [SleepyHeadDev](https://github.com/sleepyheadXD) - For the Waves icon.
+- [Selenite](https://gitlab.com/skysthelimit.dev/selenite) - For all the games assets.
 
 ## License
 
