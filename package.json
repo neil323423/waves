@@ -29,6 +29,7 @@
         "express-rate-limit": "^7.5.0",
         "fs": "^0.0.1-security",
         "node": "^23.9.0",
+        "node-cache": "^5.1.2",
         "node-fetch": "latest",
         "wisp-server-node": "latest",
         "ws": "latest"
