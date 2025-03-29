@@ -9,28 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	const erudaLoadingScreen = document.getElementById('erudaLoadingScreen');
 	if (!refreshIcon || !fullscreenIcon || !backIcon || !forwardIcon || !iframe) return;
 	let loadingFallbackTimeout;
-	
-	function showLoadingScreen(withToast = true, withAd = true, showEruda = false) {
+
+	function showLoadingScreen(withToast = true, showEruda = false) {
 		const loadingScreen = document.querySelector(".loading-screen");
 		if (!loadingScreen) return;
 	
 		if (erudaLoadingScreen) {
-			erudaLoadingScreen.style.display = 'none';
-		}
-	
-		if (showEruda && erudaLoadingScreen) {
-			erudaLoadingScreen.style.display = 'block';
-		} else if (erudaLoadingScreen) {
-			erudaLoadingScreen.style.display = 'none';
-		}
-	
-		if (withAd && !loadingScreen.querySelector('.adsterra-container')) {
-			const adContainer = document.createElement('div');
-			adContainer.className = 'adsterra-container';
-			adContainer.innerHTML = `<p>Sponsored Ad:</p>
-				<script type="text/javascript">atOptions = { 'key' : '26bce7e7832b24b139944832990cf69d', 'format' : 'iframe', 'height' : 300, 'width' : 160, 'params' : {} };</script>
-				<script type="text/javascript" src="//www.highperformanceformat.com/26bce7e7832b24b139944832990cf69d/invoke.js"></script>`;
-			loadingScreen.appendChild(adContainer);
+			erudaLoadingScreen.style.display = showEruda ? 'block' : 'none';
 		}
 	
 		typeof NProgress !== 'undefined' && NProgress.start();
@@ -41,20 +26,25 @@ document.addEventListener('DOMContentLoaded', () => {
 		}, 10);
 	
 		const loadingText = loadingScreen.querySelector(".loading-text");
-		loadingText && (loadingText.innerHTML = "We're getting your content ready, please wait...");
+		if (loadingText) {
+			loadingText.innerHTML = "We're getting your content ready, please wait...";
+		}
 	
-		withToast && showToast('Consider joining our <a href="https://discord.gg/dJvdkPRheV" target="_blank" class="hover-link">Discord</a>&nbsp;<3');
-	
-		clearTimeout(loadingFallbackTimeout);
-		loadingFallbackTimeout = setTimeout(hideLoadingScreen, 10000);
+		if (withToast) {
+			showToast('Consider joining our <a href="https://discord.gg/dJvdkPRheV" target="_blank" class="hover-link">Discord</a>&nbsp;<3');
+		}
 	}	
 	
 	function hideLoadingScreen() {
 		const loadingScreen = document.querySelector(".loading-screen");
 		if (!loadingScreen) return;
+		typeof NProgress !== 'undefined' && NProgress.done();
+		
 		loadingScreen.style.transition = 'opacity 0.5s ease';
 		loadingScreen.style.opacity = 0;
-		setTimeout(() => { loadingScreen.style.display = 'none'; }, 500);
+		setTimeout(() => { 
+			loadingScreen.style.display = 'none'; 
+		}, 500);
 		clearTimeout(loadingFallbackTimeout);
 	}
 	
@@ -62,7 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		refreshIcon.classList.add('spin');
 		if (iframe.tagName === 'IFRAME') {
 			const currentUrl = iframe.contentWindow.location.href;
-			if (normalizeUrl(currentUrl) !== normalizeUrl(historyStack[currentIndex] || '')) addToHistory(currentUrl);
+			if (normalizeUrl(currentUrl) !== normalizeUrl(historyStack[currentIndex] || '')) {
+				addToHistory(currentUrl);
+			}
 			iframe.contentWindow.location.reload(true);
 		}
 		setTimeout(() => { refreshIcon.classList.remove('spin'); }, 300);
@@ -142,8 +134,14 @@ document.addEventListener('DOMContentLoaded', () => {
 			const iframeWindow = iframe.contentWindow;
 			const origPushState = iframeWindow.history.pushState;
 			const origReplaceState = iframeWindow.history.replaceState;
-			iframeWindow.history.pushState = function() { origPushState.apply(this, arguments); handleIframeNavigation(iframeWindow.location.href); };
-			iframeWindow.history.replaceState = function() { origReplaceState.apply(this, arguments); handleIframeNavigation(iframeWindow.location.href); };
+			iframeWindow.history.pushState = function() { 
+				origPushState.apply(this, arguments); 
+				handleIframeNavigation(iframeWindow.location.href); 
+			};
+			iframeWindow.history.replaceState = function() { 
+				origReplaceState.apply(this, arguments); 
+				handleIframeNavigation(iframeWindow.location.href); 
+			};
 			iframeWindow.addEventListener('popstate', () => handleIframeNavigation(iframeWindow.location.href));
 			iframeWindow.addEventListener('hashchange', () => handleIframeNavigation(iframeWindow.location.href));
 		} catch (error) { }
@@ -168,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			hideLoadingScreen();
 			if (erudaLoadingScreen) erudaLoadingScreen.style.display = 'none';  
 		}
-	});	
+	});
 	
 	const searchContainer = document.querySelector(".searchContainer");
 	const navBar = document.querySelector(".navbar");
@@ -192,7 +190,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	iframe.style.display = "none";
 	window.addEventListener('load', hideLoadingScreen);
 	[searchInput1, searchInput2].forEach(input => {
-		input && input.addEventListener("keyup", (e) => { if (e.key === "Enter") handleSearch(input.value); });
+		if (input) {
+			input.addEventListener("keyup", (e) => { 
+				if (e.key === "Enter") handleSearch(input.value); 
+			});
+		}
 	});
 	movies && movies.addEventListener("click", (e) => { e.preventDefault(); handleSearch("https://xojw.github.io/waves-movies/"); });
 	ai && ai.addEventListener("click", (e) => { e.preventDefault(); handleSearch("https://ai.usewaves.site/"); });
@@ -204,17 +206,23 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.querySelector(".loading-screen"),
 			erudaLoadingScreen
 		];
-		Array.from(document.body.children).forEach(child => { if (!preserved.includes(child)) child.remove(); });
+		Array.from(document.body.children).forEach(child => {
+			if (!preserved.includes(child)) child.remove();
+		});
 	}
 	
 	async function handleSearch(query) {
 		clearBackground();
 		const searchURL = generateSearchUrl(query);
-		searchInput2 && (searchInput2.value = searchURL);
+		if (searchInput2) {
+			searchInput2.value = searchURL;
+		}
 		preloadResources(searchURL);
 		showLoadingScreen(true, false, false);
 		iframe.style.display = "block";
-		topBar && (topBar.style.display = "none");
+		if (topBar) {
+			topBar.style.display = "none";
+		}
 		backIcon.disabled = true;
 		forwardIcon.disabled = true;
 		try {
@@ -224,19 +232,35 @@ document.addEventListener('DOMContentLoaded', () => {
 		currentIndex = -1;
 		iframe.onload = () => {
 			hideLoadingScreen();
-			if (navbarToggle && navbarToggle.checked && navBar) navBar.style.display = "block";
+			if (navbarToggle && navbarToggle.checked && navBar) {
+				navBar.style.display = "block";
+			}
 			generateSubject();
 			updateDecodedSearchInput();
 			try {
 				if (iframe.contentDocument && !iframe.contentDocument.getElementById('uv-postmessage-hook')) {
 					const script = iframe.contentDocument.createElement('script');
 					script.id = 'uv-postmessage-hook';
-					script.textContent = `(function(){const origPush=history.pushState;const origReplace=history.replaceState;function notify(){window.parent.postMessage({type:'uv-url-change',url:location.href},'*');}history.pushState=function(){origPush.apply(history,arguments);notify();};history.replaceState=function(){origReplace.apply(history,arguments);notify();};window.addEventListener('popstate',notify);window.addEventListener('hashchange',notify);notify();})();`;
+					script.textContent = `(function(){
+    const origPush=history.pushState;
+    const origReplace=history.replaceState;
+    function notify(){
+        window.parent.postMessage({type:'uv-url-change',url:location.href},'*');
+    }
+    history.pushState=function(){origPush.apply(history,arguments);notify();};
+    history.replaceState=function(){origReplace.apply(history,arguments);notify();};
+    window.addEventListener('popstate',notify);
+    window.addEventListener('hashchange',notify);
+    notify();
+})();`;
 					iframe.contentDocument.head.appendChild(script);
 				}
 			} catch (e) { }
 		};
-		iframe.onerror = () => { hideLoadingScreen(); alert('Failed to load content.'); };
+		iframe.onerror = () => { 
+			hideLoadingScreen(); 
+			alert('Failed to load content.');
+		};
 	}
 	
 	window.handleSearch = handleSearch;
@@ -272,10 +296,16 @@ document.addEventListener('DOMContentLoaded', () => {
 		const closeBtn = document.createElement("button");
 		closeBtn.className = "toast-close";
 		closeBtn.innerHTML = '<i class="fa-solid fa-xmark" style="margin-left: 8px; font-size: 0.8em;"></i>';
-		closeBtn.addEventListener("click", () => { toast.classList.add("hide"); setTimeout(() => toast.remove(), 500); });
+		closeBtn.addEventListener("click", () => { 
+			toast.classList.add("hide"); 
+			setTimeout(() => toast.remove(), 500); 
+		});
 		toast.appendChild(closeBtn);
 		document.body.appendChild(toast);
-		setTimeout(() => { toast.classList.add("hide"); setTimeout(() => toast.remove(), 500); }, 3000);
+		setTimeout(() => { 
+			toast.classList.add("hide"); 
+			setTimeout(() => toast.remove(), 500); 
+		}, 3000);
 	}
 	
 	function preloadResources(url) {
@@ -312,7 +342,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	window.decodeUrl = decodeUrl;
 	window.addEventListener('message', (event) => {
 		if (event.data && event.data.type === 'uv-url-change' && event.data.url) {
-			if (normalizeUrl(event.data.url) !== normalizeUrl(historyStack[currentIndex] || '')) addToHistory(event.data.url);
+			if (normalizeUrl(event.data.url) !== normalizeUrl(historyStack[currentIndex] || '')) {
+				addToHistory(event.data.url);
+			}
 		}
 	});
 	

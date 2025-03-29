@@ -1,40 +1,16 @@
-:root {
-    --menu-bg: #0a0a0ae7;
-    --base-fg: #e0e0e0;
-    --white: #fff;
-    --border: #4141411a;
-    --border-hover: #b1b1b1fb;
-    --select-bg: #1b1b1b;
-    --select-hover: #333;
-    --close-color: #868686;
-    --close-hover: #f44336;
-    --transport-bg: #141414;
-    --transport-hover: #333;
-    --placeholder-dim: #525252;
-    --button-bg: #fff;
-    --black: #000;
-    --button-hover: #cfcfcf;
-    --toggle-bg: #131313;
-    --toggle-checked: #7a7a7a;
-    --toggle-knob: #ccc;
-    --text-dim: #666;
-    --tab-bg: #1b1b1b;
-    --tab-hover: #333;
-}
-
 .settings-menu {
     position: fixed;
     font-family: 'Inter', sans-serif;
     top: 47%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--menu-bg);
+    background-color: #0a0a0ae7;
     padding: 25px 30px;
     border-radius: 20px;
     width: 450px;
     z-index: 999999;
     backdrop-filter: blur(10px);
-    color: var(--base-fg);
+    color: #e0e0e0;
     text-align: center;
     display: none;
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
@@ -47,8 +23,25 @@
     text-align: left;
     font-size: 35px;
     font-weight: 600;
-    color: var(--white);
+    color: #ffffff;
     letter-spacing: 2px;
+}
+
+#settings-menu select {
+    width: 100%;
+    padding: 7px;
+    margin-bottom: 15px;
+    background-color: #1b1b1b;
+    color: #e0e0e0;
+    border: 2px dashed #4141411a;
+    border-radius: 15px;
+    font-size: 18px;
+    outline: none;
+    transition: background-color 0.3s, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#settings-menu select:focus {
+    transform: scale(1.02);
 }
 
 #close-settings {
@@ -59,7 +52,7 @@
     border: none;
     padding: 0;
     font-size: 10px;
-    color: var(--close-color);
+    color: #868686;
     cursor: pointer;
     z-index: 1000;
     outline: none;
@@ -68,7 +61,7 @@
 }
 
 #close-settings:hover {
-    color: var(--close-hover);
+    color: #f44336;
 }
 
 #close-settings i {
@@ -77,7 +70,7 @@
 }
 
 #settings-menu select:hover {
-    background-color: var(--select-hover);
+    background-color: #333;
 }
 
 .settings-menu.open {
@@ -98,10 +91,10 @@
 }
 
 .transport-selected {
-    background-color: var(--transport-bg);
-    color: var(--base-fg);
+    background-color: #141414;
+    color: #e0e0e0;
     padding: 10px;
-    border: 1px solid var(--border-light);
+    border: 2px solid #4141411a;
     border-radius: 15px;
     cursor: pointer;
     display: flex;
@@ -111,7 +104,7 @@
 }
 
 .transport-selected:hover {
-    background-color: var(--transport-hover);
+    background-color: #333;
 }
 
 .transport-selected::after {
@@ -132,8 +125,8 @@
     margin-top: 5px;
     left: 0;
     right: 0;
-    background-color: var(--transport-bg);
-    border: 1px solid var(--border-light);
+    background-color: #141414;
+    border: 2px solid #4141411a;
     border-radius: 15px;
     max-height: 0;
     text-align: left;
@@ -154,7 +147,7 @@
 }
 
 .transport-options div:hover {
-    background-color: var(--transport-hover);
+    background-color: #333;
 }
 
 #wisp-server {
@@ -162,30 +155,29 @@
     max-width: 270px;
     padding: 10px 15px;
     margin-left: -80px;
-    background-color: var(--transport-bg);
-    color: var(--base-fg);
-    border: 1px solid var(--border-light);
+    background-color: #141414;
+    color: #e0e0e0;
+    border: 2px solid #4141411a;
     border-radius: 15px;
     font-size: 15px;
     outline: none;
     transition: background-color 0.3s, transform 0.2s ease, border-color 0.3s ease;
 }
 
-#wisp-server:focus,
 #wisp-server:hover {
-    border: 1px solid var(--focus);
+    border: 2px solid #ffffff48;
 }
 
 #wisp-server::placeholder {
     font-size: 0.8em;
-    color: var(--placeholder-dim);
+    color: #525252;
 }
 
 #save-wisp-url {
     padding: 8px 10px;
-    background-color: var(--button-bg);
-    border: 1px solid var(--border-light);
-    color: var(--black);
+    background-color: #ffffff;
+    border: 2px solid #4141411a;
+    color: #000000;
     font-size: 16px;
     margin-left: 0;
     border-radius: 15px;
@@ -194,7 +186,7 @@
 }
 
 #save-wisp-url:hover {
-    background-color: var(--button-hover);
+    background-color: #cfcfcf;
 }
 
 #save-wisp-url:active {
@@ -206,7 +198,7 @@
     width: 60px;
     height: 30px;
     margin-left: -390px;
-    background-color: var(--toggle-bg);
+    background-color: #131313;
     margin-bottom: 10px;
     border-radius: 30px;
     position: relative;
@@ -217,18 +209,18 @@
 }
 
 #aboutblank-toggle:hover, #navbar-toggle:hover {
-    box-shadow: inset -3px -3px 6px #ffffff4d inset 3px 3px 6px #0000004d 3px 3px 6px #0003;
+    box-shadow: inset -3px -3px 6px #ffffff4d, inset 3px 3px 6px #0000004d, 3px 3px 6px #0003;
 }
 
 #aboutblank-toggle:checked, #navbar-toggle:checked {
-    background-color: var(--toggle-checked);
+    background-color: #7a7a7a;
 }
 
 #aboutblank-toggle::before, #navbar-toggle::before {
     content: '';
     width: 26px;
     height: 26px;
-    background-color: var(--toggle-knob);
+    background-color: #cccccc;
     backdrop-filter: blur(10px);
     border-radius: 50%;
     position: absolute;
@@ -247,12 +239,12 @@
     text-align: left;
     font-size: 20px;
     font-weight: 500;
-    color: var(--base-fg);
+    color: #e0e0e0;
 }
 
 #settings-menu p {
     font-size: 14px;
-    color: var(--text-dim);
+    color: #666666;
     margin-top: -5px;
     text-align: left;
     font-weight: 500;
@@ -268,10 +260,10 @@
 }
 
 .tab-button {
-    background-color: var(--tab-bg);
-    color: var(--base-fg);
+    background-color: #1b1b1b;
+    color: #e0e0e0;
     padding: 12px 14px;
-    border: 1px solid #ffffff1a;
+    border: 1px solid #4141411a;
     border-radius: 15px;
     font-size: 16px;
     cursor: pointer;
@@ -281,12 +273,12 @@
 }
 
 .tab-button:hover {
-    background-color: var(--tab-hover);
+    background-color: #333;
 }
 
 .tab-button.active {
-    background-color: var(--tab-hover);
-    color: var(--white);
+    background-color: #333;
+    color: #ffffff;
     transform: translateY(-4px);
 }
 

@@ -1,43 +1,10 @@
-:root {
-    --base-bg: #000000;
-    --base-fg: #e0e0e0;
-    --sel-bg: #4d4d4d;
-    --sel-fg: #a3a3a3;
-    --accent: #ffffff;
-    --light: #b6b6b6;
-    --medium: #888888;
-    --placeholder: #818181;
-    --input-color: #6d6d6d;
-    --overlay-dark: #08080894;
-    --nav-bg: #1111118a;
-    --searchbar-bg: #2929296b;
-    --searchbar-hover: #33333380;
-    --link: #e6e6e6;
-    --focus: #ffffff48;
-    --loader-bg: #000000d5;
-    --svg-stroke: #bdbdbd;
-    --hover: #949494;
-    --hover-active: #dadada;
-    --rays-stripe: #ffffffcc;
-    --rays-start: #ffffffe6;
-    --rays-mid: #e6e6e6e6;
-    --overlay-bg: #0000001f;
-    --prompt-bg: #131313a4;
-    --button-hover: #cfcfcf;
-    --border-light: #ffffff1a;
-    --topbar-border: #ffffff21;
-    --scrollbar: #303030;
-    --scrollbar-hover: #3b3b3b;
-    --small-searchbar-text: #b9b9b9;
-}
-
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--base-bg);
+    background-color: #000000;
     height: 100%;
     margin: 0;
     padding: 0;
-    color: var(--base-fg);
+    color: #e0e0e0;
     overflow-x: hidden;
     transition: background-color 0.3s ease;
     scroll-behavior: smooth;
@@ -46,8 +13,8 @@ body {
 }
 
 ::selection {
-    background-color: var(--sel-bg);
-    color: var(--sel-fg);
+    background-color: #ffffff;
+    color: #000000;
 }
 
 #nprogress .bar {
@@ -67,7 +34,7 @@ body {
 
 #waves {
     font-size: 19px;
-    color: var(--accent);
+    color: #ffffff;
     display: inline-block;
     text-align: left;
     margin: 1px 80px 0 10px;
@@ -76,16 +43,16 @@ body {
     transition: all 0.3s ease;
 }
 
-.topbar {
+.home-navbar {
     transform: translateX(-50%);
     width: 670px;
     top: 1%;
     margin-bottom: -10px;
     margin-left: 50%;
-    background-color: var(--overlay-dark);
-    border: 1px solid var(--topbar-border);
+    background-color: #08080894;
+    border: 1px solid #ffffff21;
     height: 35px;
-    color: var(--placeholder);
+    color: #818181;
     padding: 10px;
     animation: fadeIn 2s ease;
     text-align: center;
@@ -101,30 +68,34 @@ body {
     transition: transform 0.3s ease;
 }
 
-.topbar .favicon {
+.home-navbar .favicon {
     width: 24px;
     height: 24px;
     margin-right: -10px;
     vertical-align: middle;
 }
 
-.topbar a {
-    color: var(--link);
+.home-navbar a {
+    color: #e6e6e6;
     text-decoration: none;
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 300;
     border-radius: 5px;
     position: relative;
-    transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
-.topbar a:hover {
-    transform: translateY(-2px);
+.home-navbar a:hover {
+    font-size: 16px;
 }
 
-.topbar i {
-    color: var(--accent);
+.home-navbar a:active {
+    font-size: 12px;
+}
+
+.home-navbar i {
+    color: #ffffff;
     margin-right: -15px;
     margin-left: 115px;
 }
@@ -134,23 +105,23 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--base-bg);
+    background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--scrollbar);
+    background: #303030;
     border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-hover);
+    background: #3b3b3b;
 }
 
 .navbar {
     top: 1%;
-    background-color: var(--nav-bg);
+    background-color: #1111119c;
     backdrop-filter: blur(10px);
-    border: 1px solid var(--border-light);
+    border: 1px solid #ffffff1a;
     left: 50%;
     width: 1080px;
     max-width: 100%;
@@ -190,7 +161,7 @@ body {
 
 .navbar a {
     display: block;
-    color: var(--accent);
+    color: #ffffff;
     text-align: center;
     padding: 16px;
     transform-origin: center;
@@ -230,11 +201,11 @@ body {
 .small-searchbar input[type=text] {
     padding: 14px;
     width: 90%;
-    border: 1px solid var(--border-light);
+    border: 1px solid #ffffff1a;
+    background-color: #25252580;
     border-radius: 20px;
-    color: var(--small-searchbar-text);
+    color: #b9b9b9;
     font-size: 15px;
-    background-color: var(--searchbar-bg);
     text-align: left;
     text-indent: 0.5em;
     outline: none;
@@ -243,11 +214,11 @@ body {
 
 .small-searchbar input[type=text]:focus,
 .small-searchbar input[type=text]:hover {
-    background-color: var(--searchbar-hover);
+    border: 1px solid #ffffff69;
 }
 
 .small-searchbar input[type=text]::placeholder {
-    color: var(--placeholder);
+    color: #818181;
 }
 
 #lockIcon {
@@ -256,7 +227,7 @@ body {
     top: 50%;
     font-size: 20px;
     transform: translateY(-50%);
-    color: var(--accent);
+    color: #ffffff;
 }
 
 .search-container {
@@ -274,7 +245,7 @@ body {
     font-weight: bolder;
     text-align: center;
     display: inline-block;
-    color: var(--light);
+    color: #a5a5a5;
     cursor: default;
     transition: all 0.3s ease;
 }
@@ -288,7 +259,7 @@ body {
 }
 
 .search-title:hover {
-    color: var(--accent);
+    color: #ffffff;
 }
 
 .search-bar {
@@ -309,10 +280,10 @@ body {
     background-position: 10px center;
     background-repeat: no-repeat;
     border-radius: 20px;
-    color: var(--base-fg);
+    color: #e0e0e0;
     font-size: 16px;
-    border: 1px solid var(--border-light);
-    background-color: var(--overlay-dark);
+    border: 1px solid #ffffff1a;
+    background-color: #08080894;
     backdrop-filter: blur(20px);
     text-indent: 0.5em;
     outline: none;
@@ -321,11 +292,11 @@ body {
 
 .search-bar input[type=text]:focus,
 .search-bar input[type=text]:hover {
-    border: 1px solid var(--focus);
+    border: 1px solid #ffffff69;
 }
 
 .search-bar input[type=text]::placeholder {
-    color: var(--focus);
+    color: #ffffff69;
 }
 
 #erudaLoadingScreen {
@@ -333,9 +304,9 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--loader-bg);
+    background-color: #000000d5;
     backdrop-filter: blur(6px);
-    color: var(--accent);
+    color: #ffffff;
     font-size: 3em;
     z-index: 10000;
     border-radius: 20px;
@@ -359,7 +330,7 @@ body {
 }
 
 ::placeholder {
-    color: var(--base-fg);
+    color: #e0e0e0;
 }
 
 .iframe {
@@ -368,7 +339,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: var(--base-bg);
+    background-color: #000000;
     border: none;
 }
 
@@ -378,7 +349,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: var(--loader-bg);
+    background-color: #000000d5;
     backdrop-filter: blur(10px);
     display: flex;
     justify-content: center;
@@ -392,21 +363,21 @@ body {
 .loading-text {
     font-size: 15px;
     font-weight: 600;
-    color: var(--accent);
+    color: #ffffff;
     letter-spacing: 1px;
     margin-top: 25px;
 }
 
 svg path {
     fill: none;
-    stroke: var(--svg-stroke);
+    stroke: #bdbdbd;
     stroke-width: 2;
 }
 
 #teabag {
     transform-origin: top center;
     transform: rotate(3deg);
-    stroke: var(--svg-stroke);
+    stroke: #bdbdbd;
     stroke-width: 2;
     animation: swing 2s ease-in-out infinite;
 }
@@ -424,13 +395,13 @@ svg path {
 }
 
 .hover-link {
-    color: var(--hover);
+    color: #949494;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .hover-link:hover {
-    color: var(--hover-active);
+    color: #dadada;
 }
 
 #pingDisplay {
@@ -439,7 +410,7 @@ svg path {
     left: 50%;
     transform: translate(-50%, -50%);
     font-weight: bold;
-    color: var(--medium);
+    color: #888888;
     cursor: default;
     animation: fadeIn 2s ease;
     padding: 5px 10px;
@@ -449,7 +420,7 @@ svg path {
 }
 
 #pingDisplay:hover {
-    color: var(--light);
+    color: #b6b6b6;
 }
 
 .god-rays {
@@ -458,8 +429,8 @@ svg path {
     left: 0;
     width: 100%;
     height: 750px;
-    --stripes: repeating-linear-gradient(100deg, var(--rays-stripe) 0%, var(--rays-stripe) 7%, transparent 10%, transparent 12%, var(--rays-stripe) 16%);
-    --rays: repeating-linear-gradient(100deg, var(--rays-start) 10%, var(--rays-mid) 15%, var(--rays-start) 20%, var(--rays-mid) 25%, var(--rays-start) 30%);
+    --stripes: repeating-linear-gradient(100deg, #ffffffcc 0%, #ffffffcc 7%, transparent 10%, transparent 12%, #ffffffcc 16%);
+    --rays: repeating-linear-gradient(100deg, #ffffffe6 10%, #e6e6e6e6 15%, #ffffffe6 20%, #e6e6e6e6 25%, #ffffffe6 30%);
     background-image: var(--stripes), var(--rays);
     background-size: 300%, 200%;
     background-position: 50% 50%, 50% 50%;
@@ -487,7 +458,7 @@ svg path {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--overlay-bg);
+    background-color: #0000001f;
     backdrop-filter: blur(10px);
     z-index: 999998;
     display: none;
@@ -502,8 +473,8 @@ svg path {
     top: 46%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--prompt-bg);
-    color: var(--base-fg);
+    background-color: #131313a4;
+    color: #e0e0e0;
     padding: 25px 30px;
     border-radius: 20px;
     width: 350px;
@@ -520,7 +491,7 @@ svg path {
 #namePrompt .input-container label {
     display: block;
     font-size: 20px;
-    color: var(--base-fg);
+    color: #e0e0e0;
     font-weight: 500;
     text-align: left;
 }
@@ -539,7 +510,7 @@ svg path {
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--input-color);
+    color: #6d6d6d;
     pointer-events: none;
 }
 
@@ -548,33 +519,33 @@ svg path {
     max-width: 280px;
     padding: 14px;
     padding-left: 30px;
-    background-color: var(--overlay-dark);
+    background-color: #08080894;
     background-size: 25px 25px;
     background-position: 10px center;
     background-repeat: no-repeat;
-    border: 1px solid var(--border-light);
-    color: var(--accent);
+    border: 2px solid #ffffff1a;
+    color: #ffffff;
     margin-top: 15px;
     margin-bottom: 15px;
-    border-radius: 15px;
+    border-radius: 15px;  
     font-size: 15px;
     outline: none;
     transition: border-color 0.3s ease;
 }
 
 .input-container input::placeholder {
-    color: var(--input-color);
+    color: #6d6d6d;
 }
 
 .input-container input:focus {
-    border-color: var(--focus);
+    border-color: #ffffff69;
 }
 
 .input-container button {
     padding: 10px;
-    background-color: var(--accent);
-    border: 1px solid var(--border-light);
-    color: var(--base-bg);
+    background-color: #ffffff;
+    border: 2px solid #ffffff1a;
+    color: #000000;
     font-size: 18px;
     border-radius: 15px;
     width: 120px;
@@ -583,7 +554,7 @@ svg path {
 }
 
 .input-container button:hover {
-    background-color: var(--button-hover);
+    background-color: #cfcfcf;
 }
 
 .input-container button:disabled {
@@ -593,10 +564,10 @@ svg path {
 
 #greeting {
     font-size: 19px;
-    color: var(--medium);
+    color: #888888;
     font-weight: bold;
     text-align: center;
-    margin-top: 30px;
+    margin-top: 20px;
     position: fixed;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -634,7 +605,7 @@ svg path {
 }
 
 #greeting:hover {
-    color: var(--light);
+    color: #b6b6b6;
 }
 
 @keyframes fadeInOverlay {
@@ -728,4 +699,4 @@ svg path {
     100% {
         transform: rotate(360deg);
     }
-} 
+}

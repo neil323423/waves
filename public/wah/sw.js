@@ -1,4 +1,4 @@
-importScripts('/wa/uv.bundle.js', '/wa/uv.config.js', '/wa/uv.sw.js');
+importScripts('/wah/uv.bundle.js', '/wah/cute1.js', '/wah/cute2.js');
 
 const uv = new UVServiceWorker();
 

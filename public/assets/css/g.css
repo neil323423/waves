@@ -1,16 +1,3 @@
-:root {
-  --bg-color-primary: #08080894;
-  --bg-color-secondary: #131313;
-  --text-color-light: #fff;
-  --text-color-dark: #ccc;
-  --text-color-muted: #a8a8a8;
-  --border-color: #ffffff21;
-  --border-color-hover: #ffffff48;
-  --bg-color-search: #08080894;
-  --placeholder-color: #a8a8a8;
-  --hover-color: #333333;
-}
-
 .games-page {
   padding: 100px 20px 40px;
   text-align: center;
@@ -21,7 +8,7 @@
   animation: fadeIn 2s ease;
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: var(--text-color-light);
+  color: #fff;
 }
 
 .games-grid {
@@ -43,13 +30,13 @@
 }
 
 .game-card {
-  background-color: var(--bg-color-primary);
+  background-color: #08080894;
   border-radius: 25px;
   padding: 15px 20px;
   cursor: pointer;
   user-select: none;
   text-align: center;
-  border: 1px solid var(--border-color);
+  border: 1px solid #ffffff21;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   width: 180px;
@@ -67,44 +54,49 @@
   height: 200px;
   object-fit: cover;
   border-radius: 10px;
+  filter: brightness(0.7);
+  transition: all 0.3s ease; 
+}
+
+.game-card:hover img {
+  filter: brightness(1); 
 }
 
 .game-card:hover {
-  transform: translateY(-5px);
-  background-color: var(--hover-color);
+  background-color: #333333;
 }
 
 .game-card h2 {
   font-size: 1rem;
   margin: 10px 0;
-  color: var(--text-color-light);
+  color: #fff;
 }
 
 .game-card p {
   font-size: 1rem;
-  color: var(--text-color-dark);
+  color: #ccc;
 }
 
 .games-search-bar {
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
-  color: var(--text-color-muted);
+  color: #a8a8a8;
   animation: fadeIn 2s ease;
 }
 
 #gameSearchInput {
   padding: 14px 30px;
-  border: 1px solid var(--border-color);
+  border: 1px solid #ffffff1a;
   background-image: url('/assets/images/icons/search.png');
   background-size: 35px 35px;
   background-position: 10px center;
   background-repeat: no-repeat;
   padding-left: 45px;
   border-radius: 20px;
-  background-color: var(--bg-color-search);
+  background-color: #08080894;
   outline: none;
-  color: var(--text-color-muted);
+  color: #a8a8a8;
   font-size: 14px;
   width: 400px;
   max-width: 100%;
@@ -112,10 +104,10 @@
 }
 
 #gameSearchInput::placeholder {
-  color: var(--placeholder-color);
+  color: #a8a8a8;
 }
 
 #gameSearchInput:focus,
 #gameSearchInput:hover {
-  border: 1px solid var(--border-color-hover);
+  border: 1px solid #ffffff69;
 }

@@ -1,12 +1,3 @@
-:root {
-  --bg-color-toast: #000000bf;
-  --bg-color-toast-hover: #333333;
-  --text-color-light: white;
-  --border-color-toast: #ffffff1a;
-  --progress-bar-color: #ffffff;
-  --toast-close-hover: #f44336;
-}
-
 .toast {
   position: fixed !important; 
   top: 20px;
@@ -14,10 +5,10 @@
   padding: 10px 20px;
   margin: 5px;
   border-radius: 15px;
-  color: var(--text-color-light);
+  color: white;
   font-weight: bold;
   z-index: 9999;
-  border: 1px solid var(--border-color-toast);
+  border: 1px solid #ffffff1a;
   transition: right 0.3s ease-in-out;
   animation: fadeIn 2s ease;
   display: flex;
@@ -27,12 +18,12 @@
 }
 
 .toast.success {
-  background-color: var(--bg-color-toast);
+  background-color: #000000bf;
   backdrop-filter: blur(10px);
 }
 
 .toast.error {
-  background-color: var(--bg-color-toast);
+  background-color: #000000bf;
   backdrop-filter: blur(10px);
 }
 
@@ -54,7 +45,7 @@
   bottom: 0;
   left: 0;
   height: 4px;
-  background-color: var(--progress-bar-color);
+  background-color: #ffffff;
   width: 100%;
   border-radius: 20px;
   animation: progress 3s linear forwards;
@@ -93,7 +84,7 @@
 .toast .toast-close {
   background: none;
   border: none;
-  color: var(--text-color-light);
+  color: #868686;
   font-size: 18px;
   cursor: pointer;
   padding: 0;
@@ -102,5 +93,5 @@
 }
 
 .toast-close:hover {
-  color: var(--toast-close-hover);
+  color: #f44336;
 }
