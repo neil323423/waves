@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (url.hostname.includes(".")) return url.toString();
 			} catch {}
 		}
-		return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+		return `https://pornhub.com/search/?q=${encodeURIComponent(query)}`;
 	}
 	
 	function showToast(message, type = "success", iconType = "check") {
