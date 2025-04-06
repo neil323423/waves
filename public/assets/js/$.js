@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 		}
 	});
-	movies && movies.addEventListener("click", (e) => { e.preventDefault(); handleSearch("https://xojw.github.io/waves-movies/"); });
+	movies && movies.addEventListener("click", (e) => { e.preventDefault(); handleSearch("https://movies.usewaves.site/"); });
 	ai && ai.addEventListener("click", (e) => { e.preventDefault(); handleSearch("https://ai.usewaves.site/"); });
 
 	function clearBackground() {
