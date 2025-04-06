@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-	const SW = "/wa/sw.js";
 	const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
 	let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
 	const wispUrl = currentWispUrl;
@@ -15,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			await ensureWebSocketConnection(wispUrl);
 
 			console.log("%c[⚙️]%c Registering Service Worker...", "color: #007bff; font-weight: bold;", "color: #007bff;");
-			await navigator.serviceWorker.register("/wa/sky.js", {
-				scope: '/wa/a/'
+			await navigator.serviceWorker.register("/wah/sw.js", {
+				scope: '/wah/a/'
 			});
 			console.log("%c[✅]%c Service Worker registered successfully.", "color: green; font-weight: bold;", "color: green;");
 

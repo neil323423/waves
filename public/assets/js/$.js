@@ -13,41 +13,37 @@ document.addEventListener('DOMContentLoaded', () => {
 	function showLoadingScreen(withToast = true, showEruda = false) {
 		const loadingScreen = document.querySelector(".loading-screen");
 		if (!loadingScreen) return;
-	
 		if (erudaLoadingScreen) {
 			erudaLoadingScreen.style.display = showEruda ? 'block' : 'none';
 		}
-	
 		typeof NProgress !== 'undefined' && NProgress.start();
 		loadingScreen.style.display = 'flex';
 		setTimeout(() => {
 			loadingScreen.style.transition = 'opacity 0.5s ease';
 			loadingScreen.style.opacity = 1;
 		}, 10);
-	
 		const loadingText = loadingScreen.querySelector(".loading-text");
 		if (loadingText) {
 			loadingText.innerHTML = "We're getting your content ready, please wait...";
 		}
-	
 		if (withToast) {
 			showToast('Consider joining our <a href="https://discord.gg/dJvdkPRheV" target="_blank" class="hover-link">Discord</a>&nbsp;<3');
 		}
-	}	
-	
+		loadingFallbackTimeout = setTimeout(() => { hideLoadingScreen(); }, 10000);
+	}
+
 	function hideLoadingScreen() {
 		const loadingScreen = document.querySelector(".loading-screen");
 		if (!loadingScreen) return;
 		typeof NProgress !== 'undefined' && NProgress.done();
-		
 		loadingScreen.style.transition = 'opacity 0.5s ease';
 		loadingScreen.style.opacity = 0;
-		setTimeout(() => { 
-			loadingScreen.style.display = 'none'; 
+		setTimeout(() => {
+			loadingScreen.style.display = 'none';
 		}, 500);
 		clearTimeout(loadingFallbackTimeout);
 	}
-	
+
 	refreshIcon.addEventListener('click', () => {
 		refreshIcon.classList.add('spin');
 		if (iframe.tagName === 'IFRAME') {
@@ -59,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		setTimeout(() => { refreshIcon.classList.remove('spin'); }, 300);
 	});
-	
+
 	fullscreenIcon.addEventListener('click', () => {
 		if (iframe.tagName === 'IFRAME') {
 			if (iframe.requestFullscreen) iframe.requestFullscreen();
@@ -68,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
 		}
 	});
-	
+
 	backIcon.addEventListener('click', () => {
 		if (currentIndex > 0) {
 			currentIndex--;
@@ -78,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			updateDecodedSearchInput();
 		}
 	});
-	
+
 	forwardIcon.addEventListener('click', () => {
 		if (currentIndex < historyStack.length - 1) {
 			currentIndex++;
@@ -88,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			updateDecodedSearchInput();
 		}
 	});
-	
+
 	function normalizeUrl(urlStr) {
 		try {
 			const url = new URL(urlStr);
@@ -96,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			return url.toString();
 		} catch (e) { return urlStr; }
 	}
-	
+
 	function addToHistory(url) {
 		const normalized = normalizeUrl(url);
 		if (currentIndex >= 0 && normalizeUrl(historyStack[currentIndex]) === normalized) return;
@@ -106,14 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		updateNavButtons();
 		updateDecodedSearchInput();
 	}
-	
+
 	function updateNavButtons() {
 		backIcon.disabled = (currentIndex <= 0);
 		forwardIcon.disabled = (currentIndex >= historyStack.length - 1);
 		backIcon.classList.toggle('disabled', currentIndex <= 0);
 		forwardIcon.classList.toggle('disabled', currentIndex >= historyStack.length - 1);
 	}
-	
+
 	function updateDecodedSearchInput() {
 		const searchInput2 = document.getElementById('searchInputt');
 		let url = "";
@@ -128,47 +124,56 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 	}
-	
+
 	function detectIframeNavigation() {
 		try {
 			const iframeWindow = iframe.contentWindow;
 			const origPushState = iframeWindow.history.pushState;
 			const origReplaceState = iframeWindow.history.replaceState;
-			iframeWindow.history.pushState = function() { 
-				origPushState.apply(this, arguments); 
-				handleIframeNavigation(iframeWindow.location.href); 
+			iframeWindow.history.pushState = function() {
+				origPushState.apply(this, arguments);
+				handleIframeNavigation(iframeWindow.location.href);
 			};
-			iframeWindow.history.replaceState = function() { 
-				origReplaceState.apply(this, arguments); 
-				handleIframeNavigation(iframeWindow.location.href); 
+			iframeWindow.history.replaceState = function() {
+				origReplaceState.apply(this, arguments);
+				handleIframeNavigation(iframeWindow.location.href);
 			};
 			iframeWindow.addEventListener('popstate', () => handleIframeNavigation(iframeWindow.location.href));
 			iframeWindow.addEventListener('hashchange', () => handleIframeNavigation(iframeWindow.location.href));
-		} catch (error) { }
+		} catch (error) {}
 	}
-	
+
 	function handleIframeNavigation(url) {
 		if (url && normalizeUrl(url) !== normalizeUrl(historyStack[currentIndex] || '')) {
 			showLoadingScreen(false, false);
 			addToHistory(url);
 		}
 	}
-	
+
 	iframe.addEventListener('load', () => {
 		try {
-			detectIframeNavigation();
-			if (!historyStack.length) updateNavButtons();
-			else handleIframeNavigation(iframe.contentWindow.location.href);
-			updateDecodedSearchInput();
+			const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+			if (iframeDocument.readyState === 'interactive' || iframeDocument.readyState === 'complete') {
+				hideLoadingScreen();
+			} else {
+				iframe.contentWindow.addEventListener('DOMContentLoaded', () => {
+					hideLoadingScreen();
+				});
+				const checkUsableInterval = setInterval(() => {
+					if (iframeDocument.querySelector('body') && iframeDocument.querySelector('body').childElementCount > 0) {
+						hideLoadingScreen();
+						clearInterval(checkUsableInterval);
+					}
+				}, 100);
+			}
 		} catch (error) {
 			console.error("Error during iframe load:", error);
-		} finally {
 			hideLoadingScreen();
-			if (erudaLoadingScreen) erudaLoadingScreen.style.display = 'none';  
+		} finally {
+			if (erudaLoadingScreen) erudaLoadingScreen.style.display = 'none';
 		}
 	});
-	
-	const searchContainer = document.querySelector(".searchContainer");
+
 	const navBar = document.querySelector(".navbar");
 	const topBar = document.querySelector(".topbar");
 	const searchInput1 = document.getElementById("searchInput");
@@ -176,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const movies = document.getElementById("movies");
 	const ai = document.getElementById("ai");
 	const navbarToggle = document.getElementById("navbar-toggle");
-	
+
 	if (navbarToggle && navBar) {
 		const savedNavbarState = localStorage.getItem('navbarToggled');
 		navbarToggle.checked = savedNavbarState === null ? true : savedNavbarState === 'true';
@@ -186,19 +191,19 @@ document.addEventListener('DOMContentLoaded', () => {
 			navBar.style.display = (iframe.style.display === "block" && navbarToggle.checked) ? "block" : "none";
 		});
 	}
-	
+
 	iframe.style.display = "none";
 	window.addEventListener('load', hideLoadingScreen);
 	[searchInput1, searchInput2].forEach(input => {
 		if (input) {
-			input.addEventListener("keyup", (e) => { 
-				if (e.key === "Enter") handleSearch(input.value); 
+			input.addEventListener("keyup", (e) => {
+				if (e.key === "Enter") handleSearch(input.value);
 			});
 		}
 	});
 	movies && movies.addEventListener("click", (e) => { e.preventDefault(); handleSearch("https://xojw.github.io/waves-movies/"); });
 	ai && ai.addEventListener("click", (e) => { e.preventDefault(); handleSearch("https://ai.usewaves.site/"); });
-	
+
 	function clearBackground() {
 		const preserved = [
 			document.querySelector(".navbar"),
@@ -210,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (!preserved.includes(child)) child.remove();
 		});
 	}
-	
+
 	async function handleSearch(query) {
 		clearBackground();
 		const searchURL = generateSearchUrl(query);
@@ -218,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			searchInput2.value = searchURL;
 		}
 		preloadResources(searchURL);
-		showLoadingScreen(true, false, false);
+		showLoadingScreen(true, false);
 		iframe.style.display = "block";
 		if (topBar) {
 			topBar.style.display = "none";
@@ -227,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		forwardIcon.disabled = true;
 		try {
 			iframe.src = await getUrl(searchURL);
-		} catch (error) { }
+		} catch (error) {}
 		historyStack.length = 0;
 		currentIndex = -1;
 		iframe.onload = () => {
@@ -242,29 +247,29 @@ document.addEventListener('DOMContentLoaded', () => {
 					const script = iframe.contentDocument.createElement('script');
 					script.id = 'uv-postmessage-hook';
 					script.textContent = `(function(){
-    const origPush=history.pushState;
-    const origReplace=history.replaceState;
-    function notify(){
-        window.parent.postMessage({type:'uv-url-change',url:location.href},'*');
-    }
-    history.pushState=function(){origPush.apply(history,arguments);notify();};
-    history.replaceState=function(){origReplace.apply(history,arguments);notify();};
-    window.addEventListener('popstate',notify);
-    window.addEventListener('hashchange',notify);
-    notify();
-})();`;
+			  const origPush=history.pushState;
+			  const origReplace=history.replaceState;
+			  function notify(){
+				  window.parent.postMessage({type:'uv-url-change',url:location.href},'*');
+			  }
+			  history.pushState=function(){origPush.apply(history,arguments);notify();};
+			  history.replaceState=function(){origReplace.apply(history,arguments);notify();};
+			  window.addEventListener('popstate',notify);
+			  window.addEventListener('hashchange',notify);
+			  notify();
+			})();`;
 					iframe.contentDocument.head.appendChild(script);
 				}
-			} catch (e) { }
+			} catch (e) {}
 		};
-		iframe.onerror = () => { 
-			hideLoadingScreen(); 
+		iframe.onerror = () => {
+			hideLoadingScreen();
 			alert('Failed to load content.');
 		};
 	}
-	
+
 	window.handleSearch = handleSearch;
-	
+
 	function generateSearchUrl(query) {
 		try {
 			const url = new URL(query);
@@ -275,9 +280,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (url.hostname.includes(".")) return url.toString();
 			} catch {}
 		}
-	        return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-     	}
-	
+		return `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+	}
+
 	function showToast(message, type = "success", iconType = "check") {
 		const toast = document.createElement("div");
 		toast.className = `toast show ${type}`;
@@ -296,18 +301,18 @@ document.addEventListener('DOMContentLoaded', () => {
 		const closeBtn = document.createElement("button");
 		closeBtn.className = "toast-close";
 		closeBtn.innerHTML = '<i class="fa-solid fa-xmark" style="margin-left: 8px; font-size: 0.8em;"></i>';
-		closeBtn.addEventListener("click", () => { 
-			toast.classList.add("hide"); 
-			setTimeout(() => toast.remove(), 500); 
+		closeBtn.addEventListener("click", () => {
+			toast.classList.add("hide");
+			setTimeout(() => toast.remove(), 500);
 		});
 		toast.appendChild(closeBtn);
 		document.body.appendChild(toast);
-		setTimeout(() => { 
-			toast.classList.add("hide"); 
-			setTimeout(() => toast.remove(), 500); 
+		setTimeout(() => {
+			toast.classList.add("hide");
+			setTimeout(() => toast.remove(), 500);
 		}, 3000);
 	}
-	
+
 	function preloadResources(url) {
 		const link = document.createElement("link");
 		link.rel = "preload";
@@ -315,17 +320,17 @@ document.addEventListener('DOMContentLoaded', () => {
 		link.as = "fetch";
 		document.head.appendChild(link);
 	}
-	
+
 	function getUrl(url) {
 		return Promise.resolve(__uv$config.prefix + __uv$config.encodeUrl(url));
 	}
-	
+
 	function generateSubject() {
 		const subjects = ['math', 'science', 'history', 'art', 'programming', 'philosophy'];
 		const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
 		history.replaceState({}, '', '/learning?subject=' + randomSubject);
 	}
-	
+
 	function decodeUrl(encodedUrl) {
 		try {
 			const urlObj = new URL(encodedUrl, window.location.origin);
@@ -335,10 +340,10 @@ document.addEventListener('DOMContentLoaded', () => {
 				return (__uv$config && typeof __uv$config.decodeUrl === 'function') ?
 					__uv$config.decodeUrl(encodedPart) : decodeURIComponent(encodedPart);
 			}
-		} catch (e) { }
+		} catch (e) {}
 		return encodedUrl;
 	}
-	
+
 	window.decodeUrl = decodeUrl;
 	window.addEventListener('message', (event) => {
 		if (event.data && event.data.type === 'uv-url-change' && event.data.url) {
@@ -347,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 	});
-	
+
 	window.addToHistory = addToHistory;
 	window.updateDecodedSearchInput = updateDecodedSearchInput;
 	window.normalizeUrl = normalizeUrl;
