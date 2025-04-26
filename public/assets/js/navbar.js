@@ -9,7 +9,6 @@ document.head.appendChild(style);
 
 const historyStack = [];
 let currentIndex = -1;
-
 const elements = {
 	refreshIcon: document.getElementById('refreshIcon'),
 	fullscreenIcon: document.getElementById('fullscreenIcon'),
@@ -18,49 +17,27 @@ const elements = {
 	searchInput2: document.getElementById('searchInputt'),
 	iframe: document.getElementById('cool-iframe')
 };
-
+const originalTitle = document.title;
 let loadingFallbackTimeout;
 
-elements.refreshIcon.addEventListener('click', () => handleRefresh());
-elements.fullscreenIcon.addEventListener('click', () => handleFullscreen());
-elements.backIcon.addEventListener('click', () => handleBack());
-elements.forwardIcon.addEventListener('click', () => handleForward());
+elements.refreshIcon.addEventListener('click', handleRefresh);
+elements.fullscreenIcon.addEventListener('click', handleFullscreen);
+elements.backIcon.addEventListener('click', handleBack);
+elements.forwardIcon.addEventListener('click', handleForward);
 
 function showLoadingScreen() {
-	const loadingScreen = document.querySelector(".loading-screen");
-	if (!loadingScreen) {
-		console.error("Loading screen element not found.");
-		return;
-	}
 	if (typeof NProgress !== 'undefined') {
 		NProgress.start();
+		document.title = 'Loading... <3';
+		setTimeout(() => {
+			if (typeof NProgress !== 'undefined') NProgress.done();
+		}, 10000);
 	}
-	loadingScreen.style.display = 'flex';
-	setTimeout(() => {
-		loadingScreen.style.transition = 'opacity 0.5s ease';
-		loadingScreen.style.opacity = 1;
-	}, 10);
-	clearTimeout(loadingFallbackTimeout);
-	loadingFallbackTimeout = setTimeout(() => {
-		hideLoadingScreen();
-	}, 10000);
 }
 
 function hideLoadingScreen() {
-	const loadingScreen = document.querySelector(".loading-screen");
-	if (!loadingScreen) {
-		console.error("Loading screen element not found.");
-		return;
-	}
-	loadingScreen.style.transition = 'opacity 0.5s ease';
-	loadingScreen.style.opacity = 0;
-	setTimeout(() => {
-		loadingScreen.style.display = 'none';
-		if (typeof NProgress !== 'undefined') {
-			NProgress.done();
-		}
-	}, 500);
-	clearTimeout(loadingFallbackTimeout);
+	if (typeof NProgress !== 'undefined') NProgress.done();
+	document.title = originalTitle;
 }
 
 function handleRefresh() {
@@ -76,9 +53,7 @@ function handleRefresh() {
 
 function handleFullscreen() {
 	const iframe = elements.iframe;
-	if (iframe && iframe.tagName === 'IFRAME') {
-		iframe.requestFullscreen();
-	}
+	if (iframe && iframe.tagName === 'IFRAME') iframe.requestFullscreen();
 }
 
 function handleBack() {
@@ -105,7 +80,7 @@ function toggleButtonAnimation(button, animationClass) {
 function normalizeUrl(urlStr) {
 	try {
 		const url = new URL(urlStr);
-		url.searchParams.delete("ia");
+		url.searchParams.delete('ia');
 		return url.toString();
 	} catch (e) {
 		return urlStr;
@@ -115,9 +90,7 @@ function normalizeUrl(urlStr) {
 function addToHistory(url) {
 	const normalized = normalizeUrl(url);
 	if (currentIndex >= 0 && normalizeUrl(historyStack[currentIndex]) === normalized) return;
-	if (currentIndex < historyStack.length - 1) {
-		historyStack.splice(currentIndex + 1);
-	}
+	if (currentIndex < historyStack.length - 1) historyStack.splice(currentIndex + 1);
 	historyStack.push(url);
 	currentIndex++;
 	updateNavButtons();
@@ -132,20 +105,26 @@ function updateIframeSrc() {
 }
 
 function updateNavButtons() {
-	const backIcon = elements.backIcon;
-	const forwardIcon = elements.forwardIcon;
 	const isAtStart = currentIndex <= 0;
 	const isAtEnd = currentIndex >= historyStack.length - 1;
-	backIcon.disabled = isAtStart;
-	forwardIcon.disabled = isAtEnd;
-	backIcon.classList.toggle('disabled', isAtStart);
-	forwardIcon.classList.toggle('disabled', isAtEnd);
+	elements.backIcon.disabled = isAtStart;
+	elements.forwardIcon.disabled = isAtEnd;
+	elements.backIcon.classList.toggle('disabled', isAtStart);
+	elements.forwardIcon.classList.toggle('disabled', isAtEnd);
 }
 
 function updateDecodedSearchInput() {
 	if (elements.searchInput2) {
 		const url = historyStack[currentIndex] || elements.iframe.src;
 		elements.searchInput2.value = decodeUrl(url);
+	}
+}
+
+function decodeUrl(url) {
+	try {
+		return decodeURIComponent(url);
+	} catch (e) {
+		return url;
 	}
 }
 
@@ -168,15 +147,26 @@ function detectIframeNavigation() {
 		};
 		iframeWindow.addEventListener('popstate', () => handleIframeNavigation(iframeWindow.location.href));
 		iframeWindow.addEventListener('hashchange', () => handleIframeNavigation(iframeWindow.location.href));
-	} catch (error) {
-		console.error("Error detecting iframe navigation:", error);
-	}
+	} catch (error) {}
 }
 
-function handleIframeNavigation(url) {
-	if (url && normalizeUrl(url) !== normalizeUrl(historyStack[currentIndex] || '')) {
+function handleIframeNavigation(rawUrl) {
+	let urlStr = rawUrl;
+	try {
+		urlStr = decodeUrl(rawUrl);
+	} catch {}
+	try {
+		const u = new URL(urlStr);
+		if (u.hostname.endsWith('duckduckgo.com')) {
+			if (typeof NProgress !== 'undefined') NProgress.done();
+			return;
+		}
+	} catch (e) {}
+	if (normalizeUrl(urlStr) !== normalizeUrl(historyStack[currentIndex] || '')) {
 		showLoadingScreen();
-		addToHistory(url);
+		addToHistory(urlStr);
+	} else {
+		hideLoadingScreen();
 	}
 }
 
@@ -188,9 +178,6 @@ elements.iframe.addEventListener('load', () => {
 		} else {
 			handleIframeNavigation(elements.iframe.contentWindow.location.href);
 		}
-	} catch (error) {
-		console.error("Error detecting iframe navigation:", error);
-	} finally {
-		hideLoadingScreen();
-	}
+	} catch (error) {}
+	hideLoadingScreen();
 });

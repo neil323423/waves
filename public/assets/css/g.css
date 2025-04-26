@@ -83,6 +83,7 @@
   margin-bottom: 20px;
   color: #a8a8a8;
   animation: fadeIn 2s ease;
+  position: relative;
 }
 
 #gameSearchInput {
@@ -103,11 +104,30 @@
   transition: all 0.3s ease;
 }
 
+#gameSearchInput:focus,
+#gameSearchInput:hover {
+  border: 1px solid #ffffff69;
+}
+
 #gameSearchInput::placeholder {
   color: #a8a8a8;
 }
 
-#gameSearchInput:focus,
-#gameSearchInput:hover {
-  border: 1px solid #ffffff69;
+.shortcut-indicator-3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(calc(-50% + 195px), -50%);
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  background-color: #c4c4c4;
+  padding: 2px 6px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.shortcut-indicator-3:hover {
+  background-color: #ffffff;
 }

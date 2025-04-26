@@ -95,7 +95,7 @@ body {
 }
 
 .home-navbar i {
-    color: #ffffff;
+    color: #ffffff; 
     margin-right: -15px;
     margin-left: 115px;
 }
@@ -109,12 +109,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #303030;
+    background: #4e4e4e;
     border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #3b3b3b;
+    background: #6b6b6b;
 }
 
 .navbar {
@@ -123,7 +123,7 @@ body {
     backdrop-filter: blur(10px);
     border: 1px solid #ffffff1a;
     left: 50%;
-    width: 1080px;
+    width: 1180px;
     max-width: 100%;
     display: none;
     border-radius: 25px;
@@ -131,6 +131,7 @@ body {
     overflow: hidden;
     position: fixed;
     z-index: 999;
+    animation: fadeIn 0.3s ease;
     transform: translateX(-50%);
 }
 
@@ -202,7 +203,7 @@ body {
     padding: 14px;
     width: 90%;
     border: 1px solid #ffffff1a;
-    background-color: #25252580;
+    background-color: #30303071;
     border-radius: 20px;
     color: #b9b9b9;
     font-size: 15px;
@@ -219,6 +220,25 @@ body {
 
 .small-searchbar input[type=text]::placeholder {
     color: #818181;
+}
+
+.shortcut-indicator-2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% + 300px), -50%);
+    font-size: 12px;
+    font-weight: 500;
+    color: #000000;
+    background-color: #c4c4c4;
+    padding: 2px 6px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.shortcut-indicator-2:hover {
+    background-color: #ffffff;
 }
 
 #lockIcon {
@@ -245,21 +265,25 @@ body {
     font-weight: bolder;
     text-align: center;
     display: inline-block;
-    color: #a5a5a5;
+    background: linear-gradient(-45deg, #4e4e4e, #ffffff);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+            color: transparent;
     cursor: default;
     transition: all 0.3s ease;
-}
+}  
 
-.search-title span {
+  .search-title span {
     display: inline-block;
+    background: inherit;
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+            color: transparent;
     opacity: 0;
     transform: translateX(-50px);
     animation: fadeInFromLeft 0.5s ease-in-out forwards;
-    margin-right: -1px;
-}
-
-.search-title:hover {
-    color: #ffffff;
 }
 
 .search-bar {
@@ -279,7 +303,7 @@ body {
     background-size: 35px 35px;
     background-position: 10px center;
     background-repeat: no-repeat;
-    border-radius: 20px;
+    border-radius: 25px;
     color: #e0e0e0;
     font-size: 16px;
     border: 1px solid #ffffff1a;
@@ -297,6 +321,25 @@ body {
 
 .search-bar input[type=text]::placeholder {
     color: #ffffff69;
+}
+
+.shortcut-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% + 235px), -50%);
+    font-size: 12px;
+    font-weight: 500;
+    color: #000000;
+    background-color: #c4c4c4;
+    padding: 2px 6px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.shortcut-indicator:hover {
+    background-color: #ffffff;
 }
 
 #erudaLoadingScreen {
@@ -341,57 +384,6 @@ body {
     height: 100vh;
     background-color: #000000;
     border: none;
-}
-
-.loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #000000d5;
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    flex-direction: column;
-}
-
-.loading-text {
-    font-size: 15px;
-    font-weight: 600;
-    color: #ffffff;
-    letter-spacing: 1px;
-    margin-top: 25px;
-}
-
-svg path {
-    fill: none;
-    stroke: #bdbdbd;
-    stroke-width: 2;
-}
-
-#teabag {
-    transform-origin: top center;
-    transform: rotate(3deg);
-    stroke: #bdbdbd;
-    stroke-width: 2;
-    animation: swing 2s ease-in-out infinite;
-}
-
-#steamL {
-    stroke-dasharray: 13;
-    stroke-dashoffset: 13;
-    animation: steamLarge 2s infinite;
-}
-
-#steamR {
-    stroke-dasharray: 9;
-    stroke-dashoffset: 9;
-    animation: steamSmall 2s infinite;
 }
 
 .hover-link {
@@ -473,7 +465,8 @@ svg path {
     top: 46%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #131313a4;
+    background-color: #08080894;
+    border: 1px solid #ffffff21;
     color: #e0e0e0;
     padding: 25px 30px;
     border-radius: 20px;
@@ -503,8 +496,8 @@ svg path {
 
 .input-wrapper::before {
     content: "\f007";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
+    font-family: "Font Awesome 6 Pro";
+    font-weight: 400;
     position: absolute;
     right: -15px;
     left: 12px;
@@ -512,6 +505,13 @@ svg path {
     transform: translateY(-50%);
     color: #6d6d6d;
     pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper:hover::before,
+.input-wrapper:focus-within::before {
+    font-weight: 900;
+    color: #ffffff;
 }
 
 .input-container input {
@@ -523,7 +523,7 @@ svg path {
     background-size: 25px 25px;
     background-position: 10px center;
     background-repeat: no-repeat;
-    border: 2px solid #ffffff1a;
+    border: 1px solid #ffffff1a;
     color: #ffffff;
     margin-top: 15px;
     margin-bottom: 15px;
@@ -537,6 +537,7 @@ svg path {
     color: #6d6d6d;
 }
 
+.input-container input:hover,
 .input-container input:focus {
     border-color: #ffffff69;
 }
@@ -578,6 +579,10 @@ svg path {
     z-index: -1;
 }
 
+#greeting:hover {
+    color: #b6b6b6;
+}
+
 #namePrompt.fade-out {
     animation: fadeOutPrompt 0.3s ease-in-out forwards;
 }
@@ -602,10 +607,6 @@ svg path {
     to {
         opacity: 1;
     }
-}
-
-#greeting:hover {
-    color: #b6b6b6;
 }
 
 @keyframes fadeInOverlay {

@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	settingsMenu.innerHTML = `
   <h2>Settings</h2>
   <div class="settings-tabs">
-    <button class="tab-button active" id="proxy-tab"><i class="fas fa-network-wired"></i> Proxy</button>
-    <button class="tab-button" id="cloak-tab"><i class="fas fa-user-secret"></i> Cloak</button>
-    <button class="tab-button" id="appearance-tab"><i class="fas fa-palette"></i> Appearance</button>
-    <button class="tab-button" id="info-tab"><i class="fas fa-info"></i> Info</button>
+    <button class="tab-button active" id="proxy-tab"><i class="fa-regular fa-server"></i> Proxy</button>
+    <button class="tab-button" id="cloak-tab"><i class="fa-regular fa-user-secret"></i> Cloak</button>
+    <button class="tab-button" id="appearance-tab"><i class="fa-regular fa-palette"></i> Appearance</button>
+    <button class="tab-button" id="info-tab"><i class="fa-regular fa-info"></i> Info</button>
   </div>
   <div id="proxy-content" class="tab-content">
     <label for="transport-selector">Transport</label>
@@ -35,17 +35,17 @@ document.addEventListener('DOMContentLoaded', function() {
     <input type="checkbox" id="navbar-toggle">
   </div>
   <div id="info-content" class="tab-content">
-    <label>Version 2.3.1</label>
+    <label>Version 2.3.5</label>
     <label onmouseover="this.querySelector('span').style.color='lime'" onmouseout="this.querySelector('span').style.color='green'">
       Server Status: <span style="color: green; transition: color 0.3s ease;">Running</span>
     </label>
-    <p>If you want to see Waves status please visit <a href="https://status.usewaves.site" target="_blank" class="hover-link">https://uptime.macha.icu</a>.</p>
+    <p>If you want to see Waves status please visit <a href="https://status.usewaves.site" target="_blank" class="hover-link">https://status.usewaves.site</a>.</p>
     <div style="display: flex; gap: 10px; justify-content: left; align-items: left; margin-top: 10px; margin-bottom: -20px;">
-      <label><a href="https://discord.gg/dJvdkPRheV" target="_blank" class="hover-link"><i class="fab fa-discord" style="font-size: 20px;"></i></a></label>
+      <label><a href="https://discord.gg/wves" target="_blank" class="hover-link"><i class="fab fa-discord" style="font-size: 20px;"></i></a></label>
       <label><a href="https://github.com/xojw/waves" target="_blank" class="hover-link"><i class="fab fa-github" style="font-size: 20px;"></i></a></label>
     </div>
   </div>
-  <button id="close-settings"><i class="fas fa-times"></i></button>
+  <button id="close-settings"><i class="fa-regular fa-times"></i></button>
   `;
 	const settingsIcon = document.getElementById('settings-icon');
 	const closeSettingsButton = document.getElementById('close-settings');
@@ -100,18 +100,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	function toggleSettingsMenu() {
+		const icon = document.querySelector('#settings-icon i.settings-icon');
 		if (settingsMenu.classList.contains('open')) {
-			settingsMenu.classList.add('close');
-			setTimeout(() => {
-				settingsMenu.classList.remove('open', 'close');
-			}, 300);
+		  settingsMenu.classList.add('close');
+		  icon.classList.remove('fa-solid');
+		  icon.classList.add('fa-regular');
+		  setTimeout(() => {
+			settingsMenu.classList.remove('open', 'close');
+		  }, 300);
 		} else {
-			settingsMenu.classList.add('open');
-			setTimeout(() => {
-				settingsMenu.classList.remove('close');
-			}, 300);
+		  settingsMenu.classList.add('open');
+		  icon.classList.remove('fa-regular');
+		  icon.classList.add('fa-solid');
+		  setTimeout(() => {
+			settingsMenu.classList.remove('close');
+		  }, 300);
 		}
-	}
+	  }	  
 	transportSelected.addEventListener('click', function(e) {
 		e.stopPropagation();
 		transportOptions.classList.toggle('transport-show');
@@ -215,10 +220,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		const toast = document.createElement('div');
 		toast.className = `toast ${type} show`;
 		const icons = {
-			success: '<i class="fa-solid fa-check-circle" style="margin-right: 8px;"></i>',
-			error: '<i class="fa-solid fa-times-circle" style="margin-right: 8px;"></i>',
-			info: '<i class="fa-solid fa-info-circle" style="margin-right: 8px;"></i>',
-			warning: '<i class="fa-solid fa-exclamation-triangle" style="margin-right: 8px;"></i>'
+			success: '<i class="fa-regular fa-check-circle" style="margin-right: 8px;"></i>',
+			error: '<i class="fa-regular fa-times-circle" style="margin-right: 8px;"></i>',
+			info: '<i class="fa-regular fa-info-circle" style="margin-right: 8px;"></i>',
+			warning: '<i class="fa-regular fa-exclamation-triangle" style="margin-right: 8px;"></i>'
 		};
 		const icon = icons[type] || '';
 		toast.innerHTML = `${icon}${message}`;
@@ -227,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		toast.appendChild(progressBar);
 		const closeBtn = document.createElement('button');
 		closeBtn.className = 'toast-close';
-		closeBtn.innerHTML = '<i class="fa-solid fa-xmark" style="margin-left: 8px; font-size: 0.8em;"></i>';
+		closeBtn.innerHTML = '<i class="fa-regular fa-xmark" style="margin-left: 8px; font-size: 0.8em;"></i>';
 		closeBtn.addEventListener('click', () => {
 			toast.classList.remove('show');
 			toast.classList.add('hide');

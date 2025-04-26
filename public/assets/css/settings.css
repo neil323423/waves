@@ -4,7 +4,8 @@
     top: 47%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #0a0a0ae7;
+    background-color: #08080894;
+    border: 1px solid #ffffff21;
     padding: 25px 30px;
     border-radius: 20px;
     width: 450px;
@@ -33,7 +34,7 @@
     margin-bottom: 15px;
     background-color: #1b1b1b;
     color: #e0e0e0;
-    border: 2px dashed #4141411a;
+    border: 1px solid #4141411a;
     border-radius: 15px;
     font-size: 18px;
     outline: none;
@@ -46,13 +47,13 @@
 
 #close-settings {
     position: absolute;
-    top: 20px;
+    top: 17px;
     right: 10px;
     background-color: transparent;
     border: none;
     padding: 0;
     font-size: 10px;
-    color: #868686;
+    color: #888888;
     cursor: pointer;
     z-index: 1000;
     outline: none;
@@ -61,7 +62,8 @@
 }
 
 #close-settings:hover {
-    color: #f44336;
+    transform: rotate(90deg);
+    color: #d3d3d3;
 }
 
 #close-settings i {
@@ -94,7 +96,7 @@
     background-color: #141414;
     color: #e0e0e0;
     padding: 10px;
-    border: 2px solid #4141411a;
+    border: 1px solid #4141411a;
     border-radius: 15px;
     cursor: pointer;
     display: flex;
@@ -109,7 +111,7 @@
 
 .transport-selected::after {
     content: "\f107";
-    font-family: "Font Awesome 6 Free", "Font Awesome 6 Solid";
+    font-family: "Font Awesome 6 Pro";
     font-weight: 900;
     font-size: 0.8em;
     transition: transform 0.3s ease;
@@ -126,7 +128,7 @@
     left: 0;
     right: 0;
     background-color: #141414;
-    border: 2px solid #4141411a;
+    border: 1px solid #ffffff1a;
     border-radius: 15px;
     max-height: 0;
     text-align: left;
@@ -157,15 +159,16 @@
     margin-left: -80px;
     background-color: #141414;
     color: #e0e0e0;
-    border: 2px solid #4141411a;
+    border: 1px solid #4141411a;
     border-radius: 15px;
     font-size: 15px;
     outline: none;
     transition: background-color 0.3s, transform 0.2s ease, border-color 0.3s ease;
 }
 
-#wisp-server:hover {
-    border: 2px solid #ffffff48;
+#wisp-server:hover,
+#wisp-server:focus {
+    border: 1px solid #ffffff69;
 }
 
 #wisp-server::placeholder {
@@ -175,8 +178,8 @@
 
 #save-wisp-url {
     padding: 8px 10px;
-    background-color: #ffffff;
-    border: 2px solid #4141411a;
+    background-color: #c4c4c4;
+    border: 1px solid #4141411a;
     color: #000000;
     font-size: 16px;
     margin-left: 0;
@@ -186,7 +189,7 @@
 }
 
 #save-wisp-url:hover {
-    background-color: #cfcfcf;
+    background-color: #ffffff;
 }
 
 #save-wisp-url:active {

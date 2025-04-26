@@ -84,7 +84,7 @@
 .toast .toast-close {
   background: none;
   border: none;
-  color: #868686;
+  color: #888888;
   font-size: 18px;
   cursor: pointer;
   padding: 0;
@@ -93,5 +93,5 @@
 }
 
 .toast-close:hover {
-  color: #f44336;
+  color: #d3d3d3;
 }

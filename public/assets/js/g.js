@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             const games = Array.isArray(data.games) ? data.games : [];
 
-            gamesData = games; // Store games data for filtering
+            gamesData = games;
             searchInput.placeholder = `Search through ${games.length} Games…`;
             displayGames(games);
 
