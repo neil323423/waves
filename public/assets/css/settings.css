@@ -91,7 +91,6 @@
     max-width: 300px;
     margin-bottom: 15px;
 }
-
 .transport-selected {
     background-color: #141414;
     color: #e0e0e0;
@@ -137,7 +136,8 @@
     opacity: 0;
 }
 
-.transport-options.transport-show {
+.transport-options.transport-show, 
+.server-options.transport-show {
     max-height: 200px;
     opacity: 1;
 }
@@ -266,7 +266,7 @@
     background-color: #1b1b1b;
     color: #e0e0e0;
     padding: 12px 14px;
-    border: 1px solid #4141411a;
+    border: 1px solid #ffffff21;
     border-radius: 15px;
     font-size: 16px;
     cursor: pointer;
@@ -280,9 +280,8 @@
 }
 
 .tab-button.active {
-    background-color: #333;
+    background-color: #5c5c5c;
     color: #ffffff;
-    transform: translateY(-4px);
 }
 
 .tab-content {

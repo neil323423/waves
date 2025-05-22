@@ -39,7 +39,7 @@
   border: 1px solid #ffffff21;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
-  width: 180px;
+  width: 190px;
   height: 250px;
   display: flex;
   flex-direction: column;
@@ -117,7 +117,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-    transform: translate(calc(-50% + 195px), -50%);
+  transform: translate(calc(-50% + 195px), -50%);
   font-size: 12px;
   font-weight: 500;
   color: #000000;

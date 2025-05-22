@@ -17,6 +17,23 @@ body {
     color: #000000;
 }
 
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4e4e4e;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6b6b6b;
+}
+
 #nprogress .bar {
 	background: #ffffff !important;
     z-index: 99999 !important;
@@ -76,7 +93,7 @@ body {
 }
 
 .home-navbar a {
-    color: #e6e6e6;
+    color: #7c7c7c;
     text-decoration: none;
     padding: 8px 16px;
     font-size: 14px;
@@ -87,6 +104,7 @@ body {
 }
 
 .home-navbar a:hover {
+    color: #bbbbbb;
     font-size: 16px;
 }
 
@@ -98,23 +116,6 @@ body {
     color: #ffffff; 
     margin-right: -15px;
     margin-left: 115px;
-}
-
-::-webkit-scrollbar {
-    width: 5px;
-}
-
-::-webkit-scrollbar-track {
-    background: #000000;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #4e4e4e;
-    border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #6b6b6b;
 }
 
 .navbar {

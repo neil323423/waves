@@ -1,154 +1,407 @@
-{
-  "games": [
+[
     {
-      "icon": "assets/images/g/polytrack.jpg",
-      "title": "Poly Track",
-      "link": "https://selenite.cc/semag/polytrack/index.html"
+        "name": "SimCity 2000",
+        "image": "cover.png",
+        "directory": "2000si/"
     },
     {
-      "icon": "assets/images/g/10mtd.jpg",
-      "title": "10 Minutes Till Dawn",
-      "link": "https://selenite.cc/semag/10minutestilldawn/index.html"
+        "name": "Sonic Advance 3",
+        "image": "cover.png",
+        "directory": "3sadv/"
     },
     {
-      "icon": "assets/images/g/geometrydash.jpg",
-      "title": "Geometry Dash",
-      "link": "https://geometrydashonline.io/geometry-dash-online/"
+        "name": "Sonic Advance 2",
+        "image": "cover.png",
+        "directory": "2sadv/"
     },
     {
-      "icon": "assets/images/g/slope.jpg",
-      "title": "Slope",
-      "link": "https://selenite.cc/semag/slope/index.html"
+        "name": "Sonic 3",
+        "image": "cover.png",
+        "directory": "3sonic/"
     },
     {
-      "icon": "assets/images/g/drivemad.jpg",
-      "title": "Drive Mad",
-      "link": "https://selenite.cc/semag/drivemad/index.html"
+        "name": "Minecraft Tower Defense 1",
+        "image": "cover.png",
+        "directory": "1defense/"
     },
     {
-      "icon": "assets/images/g/1v1lol.jpg",
-      "title": "1v1.LOL",
-      "link": "https://selenite.cc/semag/1v1lol/index.html"
+        "name": "Hobo 7",
+        "image": "cover.png",
+        "directory": "7hobo/"
     },
     {
-      "icon": "assets/images/g/papascooperia.jpg",
-      "title": "Papa Scooperia",
-      "link": "https://papas-games.io/papas-scooperia/"
+        "name": "Hobo 6",
+        "image": "cover.png",
+        "directory": "6hobo/"
     },
     {
-      "icon": "assets/images/g/chess.jpg",
-      "title": "Chess",
-      "link": "https://selenite.cc/semag/chess/index.html"
+        "name": "Hobo 5",
+        "image": "cover.png",
+        "directory": "5hobo/"
     },
     {
-      "icon": "assets/images/g/bonkio.jpg",
-      "title": "Bonk.io",
-      "link": "https://bonk.io/"
+        "name": "Hobo 4",
+        "image": "cover.png",
+        "directory": "4hobo/"
     },
     {
-      "icon": "assets/images/g/basketbros.jpg",
-      "title": "Basket Bros",
-      "link": "https://games.crazygames.com/en_US/basketbros/index.html"
+        "name": "Hobo 3",
+        "image": "cover.png",
+        "directory": "3hobo/"
     },
     {
-      "icon": "assets/images/g/bloxdio.jpg",
-      "title": "Bloxd.io",
-      "link": "https://games.crazygames.com/en_US/bloxdhop-io/index.html"
+        "name": "3 Lines",
+        "image": "cover.png",
+        "directory": "3line/"
     },
     {
-      "icon": "assets/images/g/bulletforce.jpg",
-      "title": "Bullet Force",
-      "link": "https://games.crazygames.com/en_US/bullet-force-multiplayer/index.html"
+        "name": "Crazy Flasher 6",
+        "image": "cover.png",
+        "directory": "6flash/"
     },
     {
-      "icon": "assets/images/g/smashkarts.jpg",
-      "title": "Smash Karts",
-      "link": "https://games.crazygames.com/en_US/smash-karts/index.html"
+        "name": "Crazy Flasher 5",
+        "image": "cover.png",
+        "directory": "5flash/"
     },
     {
-      "icon": "assets/images/g/shellshockers.jpg",
-      "title": "Shell Shockers",
-      "link": "https://games.crazygames.com/en_US/shellshockersio/index.html"
+        "name": "Crazy Flasher 4",
+        "image": "cover.png",
+        "directory": "4flash/"
     },
     {
-      "icon": "assets/images/g/evowarsio.jpg",
-      "title": "EvoWars.io",
-      "link": "https://games.crazygames.com/en_US/evowarsio/index.html"
+        "name": "Crazy Flasher 2",
+        "image": "cover.png",
+        "directory": "2flash/"
     },
     {
-      "icon": "assets/images/g/krunkerio.jpg",
-      "title": "Krunker.io",
-      "link": "https://games.crazygames.com/en_US/krunker-io/index.html"
+        "name": "Crazy Flasher 3",
+        "image": "cover.png",
+        "directory": "3flash/"
     },
     {
-      "icon": "assets/images/g/warbrokersio.jpg",
-      "title": "War Brokers",
-      "link": "https://games.crazygames.com/en_US/war-brokers-io/index.html"
+        "name": "GTA: Advance",
+        "image": "cover.png",
+        "directory": "advgta/"
     },
     {
-      "icon": "assets/images/g/rocketbotroyale.jpg",
-      "title": "Rocket Bot Royale",
-      "link": "https://games.crazygames.com/en_US/rocket-bot-royale/index.html"
+        "name": "Sonic 2",
+        "image": "cover.svg",
+        "directory": "2sonic/"
     },
     {
-      "icon": "assets/images/g/ships3d.jpg",
-      "title": "Ships 3D",
-      "link": "https://games.crazygames.com/en_US/ships-3d/index.html"
+        "name": "Hobo 2",
+        "image": "cover.png",
+        "directory": "2hobo/"
     },
     {
-      "icon": "assets/images/g/crazystuntcarsmultiplayer.jpg",
-      "title": "Crazy Stunt Cars Multiplayer",
-      "link": "https://games.crazygames.com/en_US/crazy-stunt-cars-multiplayer/index.html"
+        "name": "Hobo 1",
+        "image": "cover.png",
+        "directory": "1hobo/"
     },
     {
-      "icon": "assets/images/g/skillwarz.jpg",
-      "title": "SkillWarz",
-      "link": "https://games.crazygames.com/en_US/skillwarz/index.html"
+        "name": "Super Auto Pets",
+        "image": "cover.png",
+        "directory": "auto/"
     },
     {
-      "icon": "assets/images/g/kirkaio.jpg",
-      "title": "Kirka.io",
-      "link": "https://games.crazygames.com/en_US/kirka-io/index.html"
+        "name": "Backrooms 2D",
+        "image": "cover.png",
+        "directory": "2d/"
     },
     {
-      "icon": "assets/images/g/voxiomio.jpg",
-      "title": "Voxiom.io",
-      "link": "https://games.crazygames.com/en_US/voxiom-io/index.html"
+        "name": "The Black Man",
+        "image": "cover.png",
+        "directory": "black/"
     },
     {
-      "icon": "assets/images/g/minigiantsio.jpg",
-      "title": "Mini Giants.io",
-      "link": "https://games.crazygames.com/en_US/minigiants-io/index.html"
+        "name": "Slope City",
+        "image": "cover.png",
+        "directory": "ballslo/"
     },
     {
-      "icon": "assets/images/g/warnationsio.jpg",
-      "title": "War Nations.io",
-      "link": "https://games.crazygames.com/en_US/war-nations-io/index.html"
+        "name": "Balloon Run",
+        "image": "cover.png",
+        "directory": "bal/"
     },
     {
-      "icon": "assets/images/g/scavengerhuntmultiplayer.jpg",
-      "title": "Scavenger Hunt Multiplayer",
-      "link": "https://games.crazygames.com/en_US/scavenger-hunt---multiplayer/index.html"
+        "name": "9007199254740992",
+        "image": "cover.png",
+        "directory": "9007199254740992/"
     },
     {
-      "icon": "assets/images/g/strikerdummies.jpg",
-      "title": "Striker Dummies",
-      "link": "https://games.crazygames.com/en_US/striker-dummies/index.html"
+        "name": "1",
+        "image": "cover.png",
+        "directory": "1/"
     },
     {
-      "icon": "assets/images/g/rooftopsnipers.jpg",
-      "title": "Rooftop Snipers",
-      "link": "https://games.crazygames.com/en_US/rooftop-snipers/index.html"
+        "name": "Adventure",
+        "image": "cover.png",
+        "directory": "adventure/"
     },
     {
-      "icon": "assets/images/g/fallout1.jpg",
-      "title": "Fall Out 1",
-      "link": "https://playclassic.games/games/role-playing-dos-games-online/play-fallout-online/play/"
+        "name": "Age of War 2",
+        "image": "cover.png",
+        "directory": "aow2/"
     },
     {
-      "icon": "assets/images/g/minicarball.jpg",
-      "title": "Mini Car Ball",
-      "link": "https://games.crazygames.com/en_US/mini-car-ball/index.html"
+        "name": "13 Days of Hell",
+        "image": "cover.png",
+        "directory": "13/"
+    },
+    {
+        "name": "Driving Force 4",
+        "image": "cover.png",
+        "directory": "driving/"
+    },
+    {
+        "name": "Minecraft Games",
+        "image": "cover.png",
+        "directory": "eaglercraft/"
+    },
+    {
+        "name": "Block Zappers 3",
+        "image": "logo.png",
+        "directory": "blockzappers/"
+    },
+    {
+        "name": "Bike Champ 2",
+        "image": "logo.jpg",
+        "directory": "bikechamp2/"
+    },
+    {
+        "name": "Bike Champ",
+        "image": "logo.png",
+        "directory": "bikechamp/"
+    },
+    {
+        "name": "Awesome Tanks",
+        "image": "cover.png",
+        "directory": "awesometanks/"
+    },
+    {
+        "name": "A Dance of Fire & Ice",
+        "directory": "adofai/",
+        "image": "splash.png"
+    },
+    {
+        "name": "60s Burger Run",
+        "directory": "60sburgerrun/",
+        "image": "icon.png"
+    },
+    {
+        "name": "Adventure Capitalist",
+        "directory": "adventure-capitalist/",
+        "image": "logo.webp"
+    },
+    {
+        "name": "Avalanche",
+        "directory": "avalanche/",
+        "image": "icon.png"
+    },
+    {
+        "name": "1v1.lol",
+        "directory": "1v1lol/",
+        "image": "splash.png"
+    },
+    {
+        "name": "2048",
+        "directory": "2048/",
+        "image": "icon.png"
+    },
+    {
+        "name": "2048 Multitask",
+        "directory": "2048-multitask/",
+        "image": "splash.png"
+    },
+    {
+        "name": "Basketball Stars",
+        "directory": "basketball-stars/",
+        "image": "icon.png"
+    },
+    {
+        "name": "Duck Life 4",
+        "directory": "ducklife4/",
+        "image": "icon.png"
+    },
+    {
+        "name": "Achievement Unlocked",
+        "directory": "achieveunlocked/",
+        "image": "icon.png"
+    },
+    {
+        "name": "Achievement Unlocked 2",
+        "directory": "achieveunlocked2/",
+        "image": "icon.png"
+    },
+    {
+        "name": "Bitlife",
+        "directory": "bitlife/",
+        "image": "bitlife.png"
+    },
+    {
+        "name": "Duck Life 1",
+        "directory": "ducklife1/",
+        "image": "ducklife1.png"
+    },
+    {
+        "name": "Duck Life 2",
+        "directory": "ducklife2/",
+        "image": "ducklife2.png"
+    },
+    {
+        "name": "Duck Life 3",
+        "directory": "ducklife3/",
+        "image": "ducklife3.png"
+    },
+    {
+        "name": "Duck Life 5",
+        "directory": "ducklife5/",
+        "image": "ducklife5.png"
+    },
+    {
+        "name": "Duck Life 6",
+        "directory": "ducklife6/",
+        "image": "ducklife5.png"
+    },
+    {
+        "name": "Amazing Rope Police",
+        "directory": "amazing-rope-police/",
+        "image": "splash.jpeg"
+    },
+    {
+        "name": "1 on 1 Soccer",
+        "directory": "1on1soccer/",
+        "image": "logo.jpg"
+    },
+    {
+        "name": "Among Us",
+        "directory": "amongus/",
+        "image": "amgojs]_.png"
+    },
+    {
+        "name": "Among Us (better)",
+        "directory": "amongusnew/",
+        "image": "amgojs]_.png"
+    },
+    {
+        "name": "Bad Piggies",
+        "directory": "badpiggies/",
+        "image": "badpiggies.png"
+    },
+    {
+        "name": "Blood Tournament",
+        "directory": "bloodtournament/",
+        "image": "blood-tournament.jpg"
+    },
+    {
+        "name": "Drive Mad",
+        "directory": "drivemad/",
+        "image": "icons/icon-128.png"
+    },
+    {
+        "name": "Bad Time Simulator",
+        "directory": "badtimesimulator/",
+        "image": "icon-114.png"
+    },
+    {
+        "name": "Basket Bros",
+        "directory": "basketbros/",
+        "image": "thumb.jpg"
+    },
+    {
+        "name": "Basket Random",
+        "directory": "basketrandom/",
+        "image": "test.png"
+    },
+    {
+        "name": "Bad Ice Cream",
+        "directory": "badicecream/",
+        "image": "bad-ice-cream.png"
+    },
+    {
+        "name": "Bad Ice Cream 2",
+        "directory": "badicecream2/",
+        "image": "bad-ice-cream-2.png"
+    },
+    {
+        "name": "Bad Ice Cream 3",
+        "directory": "badicecream3/",
+        "image": "bad-ice-cream-3.png"
+    },
+    {
+        "name": "A Dark Room",
+        "directory": "adarkroom/",
+        "image": "favicon.ico"
+    },
+    {
+        "name": "Age of War",
+        "directory": "ageofwar/",
+        "image": "warofage.jpg"
+    },
+    {
+        "name": "2D Rocket League",
+        "directory": "2drocketleague/",
+        "image": "unnamed.png"
+    },
+    {
+        "name": "Baldi's Basics",
+        "directory": "baldis-basics/",
+        "image": "splash.png"
+    },
+    {
+        "name": "Bit Planes",
+        "directory": "bit-planes/",
+        "image": "bitplanes.png"
+    },
+    {
+        "name": "10 Minutes Till Dawn",
+        "directory": "10minutestilldawn/",
+        "image": "splash.png"
+    },
+    {
+        "name": "Animal Crossing Wild World",
+        "directory": "animalcrossingwildworld/",
+        "image": "animalcrossingwildworld.png"
+    },
+    {
+        "name": "Banjo Kazooie",
+        "directory": "banjokazooie/",
+        "image": "banjokazooie.png"
+    },
+    {
+        "name": "99 Balls",
+        "directory": "99balls/",
+        "image": "99-balls-evo.jpg"
+    },
+    {
+        "name": "Astray",
+        "directory": "astray/",
+        "image": "splash.png"
+    },
+    {
+        "name": "Big Red Button",
+        "directory": "bigredbutton/",
+        "image": "bigredbutton.png"
+    },
+    {
+        "name": "Ages Of Conflict",
+        "directory": "ages-of-conflict/",
+        "image": "splash.jpg"
+    },
+    {
+        "name": "Black Knight",
+        "directory": "blackknight/",
+        "image": "blackknight.png"
+    },
+    {
+        "name": "DUD",
+        "directory": "dud/",
+        "image": "icon.png"
+    },
+    {
+        "name": "Black Jack",
+        "directory": "blackjack/",
+        "image": "icon.png"
     }
-  ]
-}
+]

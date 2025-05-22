@@ -1,6 +1,6 @@
 {
     "name": "waves",
-    "version": "2.3.5",
+    "version": "2.8.5",
     "description": "A sleek and minimalist Web Proxy.",
     "type": "module",
     "engines": {
@@ -29,7 +29,7 @@
         "express-rate-limit": "^7.5.0",
         "fs": "^0.0.1-security",
         "node": "^23.9.0",
-        "node-cache": "^5.1.2",
+        "lru-cache": "^11.1.0",
         "node-fetch": "latest",
         "wisp-server-node": "latest",
         "ws": "latest"

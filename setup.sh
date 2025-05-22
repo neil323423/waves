@@ -77,15 +77,19 @@ cat <<EOF | sudo tee /etc/caddy/Caddyfile > /dev/null
 
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
-        X-Frame-Options "ALLOWALL" 
+        X-Frame-Options "ALLOWALL"
         X-Content-Type-Options "nosniff"
         X-XSS-Protection "1; mode=block"
         Referrer-Policy "no-referrer"
     }
 }
+
+:80 {
+    reverse_proxy http://localhost:3000
+}
 EOF
 separator
-
+h
 info "Testing Caddy configuration..."
 sudo caddy fmt /etc/caddy/Caddyfile > /dev/null 2>&1
 if [ $? -eq 0 ]; then

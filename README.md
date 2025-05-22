@@ -1,14 +1,9 @@
-
-
 # Waves.
 A sleek and minimalist Web Proxy.
 
 [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v3/monitor/1r475.svg)](https://uptime.betterstack.com/?utm_source=status_badge)
 
 [![Join our Discord](https://invidget.switchblade.xyz/dJvdkPRheV)](https://discord.gg/dJvdkPRheV)
-
-> [!IMPORTANT]
-> Our main repository has now moved to https://gitea.sentt.lol/sent/waves. This repository will remain available, but it only contains around 20 games, whereas the Gitea version has over 430+ games. For the full collection, we recommend using the Gitea version.
 
 ## Supported Sites:
 
@@ -33,9 +28,7 @@ A sleek and minimalist Web Proxy.
 
 You **cannot** deploy Waves on any static hosting services.
 
-## Connecting Waves to Your Domain or Subdomain:
-> [!IMPORTANT]
-> This is temporarily unavailable due to issues with our VPS provider. We’re working on resolving the problem as soon as possible.
+## BYOD (Bring Your Own Domain):
 
 1. Log in to your domain or subdomain provider’s control panel.
 2. Select the domain or subdomain you'd like to configure.
@@ -96,13 +89,13 @@ npm start
 
 ## Credits:
 
-- [SleepyHeadDev](https://github.com/sleepyheadXD) - For the Waves icon.
-- [Selenite](https://gitlab.com/skysthelimit.dev/selenite) - For all the games assets.
+- [NobodycaresJR](https://github.com/Nobodycaresjr-lo) - For the Waves icon
+- [Selenite](https://gitlab.com/skysthelimit.dev/selenite) - All the games assets
 
 ## License
 
 This project is licensed under the [GPL-3.0 License](LICENSE).
 
 > [!IMPORTANT]
-> Considering giving this repository a star if you do fork and use Waves. :)
+> Considering giving this repository a star if you do fork and use Waves. <3
 

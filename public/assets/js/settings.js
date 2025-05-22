@@ -35,13 +35,13 @@ document.addEventListener('DOMContentLoaded', function() {
     <input type="checkbox" id="navbar-toggle">
   </div>
   <div id="info-content" class="tab-content">
-    <label>Version 2.3.5</label>
+    <label>Version 2.8.5</label>
     <label onmouseover="this.querySelector('span').style.color='lime'" onmouseout="this.querySelector('span').style.color='green'">
       Server Status: <span style="color: green; transition: color 0.3s ease;">Running</span>
     </label>
     <p>If you want to see Waves status please visit <a href="https://status.usewaves.site" target="_blank" class="hover-link">https://status.usewaves.site</a>.</p>
     <div style="display: flex; gap: 10px; justify-content: left; align-items: left; margin-top: 10px; margin-bottom: -20px;">
-      <label><a href="https://discord.gg/wves" target="_blank" class="hover-link"><i class="fab fa-discord" style="font-size: 20px;"></i></a></label>
+      <label><a href="https://discord.gg/dJvdkPRheV" target="_blank" class="hover-link"><i class="fab fa-discord" style="font-size: 20px;"></i></a></label>
       <label><a href="https://github.com/xojw/waves" target="_blank" class="hover-link"><i class="fab fa-github" style="font-size: 20px;"></i></a></label>
     </div>
   </div>
@@ -72,14 +72,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (isValidUrl(url)) {
 			currentWispUrl = url;
 			localStorage.setItem('customWispUrl', url);
-			document.dispatchEvent(new CustomEvent('wispUrlChanged', {
-				detail: currentWispUrl
-			}));
+			document.dispatchEvent(new CustomEvent('wispUrlChanged', { detail: currentWispUrl }));
 			wispInput.value = currentWispUrl;
 			showToast('success', `WISP URL successfully updated to: ${currentWispUrl}`);
 			location.reload();
 		} else {
-			console.log("%c[❌]%c Invalid WISP URL. Please enter a valid one.", "color: red; font-weight: bold;", "color: inherit;");
 			currentWispUrl = defaultWispUrl;
 			localStorage.setItem('customWispUrl', defaultWispUrl);
 			wispInput.value = defaultWispUrl;
@@ -88,68 +85,51 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	saveButton.addEventListener('click', () => {
-		const customUrl = wispInput.value.trim();
-		updateWispServerUrl(customUrl);
+		updateWispServerUrl(wispInput.value.trim());
 	});
 	settingsIcon.addEventListener('click', (event) => {
 		event.preventDefault();
 		toggleSettingsMenu();
 	});
-	closeSettingsButton.addEventListener('click', () => {
-		toggleSettingsMenu();
-	});
+	closeSettingsButton.addEventListener('click', toggleSettingsMenu);
 
 	function toggleSettingsMenu() {
 		const icon = document.querySelector('#settings-icon i.settings-icon');
 		if (settingsMenu.classList.contains('open')) {
-		  settingsMenu.classList.add('close');
-		  icon.classList.remove('fa-solid');
-		  icon.classList.add('fa-regular');
-		  setTimeout(() => {
-			settingsMenu.classList.remove('open', 'close');
-		  }, 300);
+			settingsMenu.classList.add('close');
+			icon.classList.replace('fa-solid', 'fa-regular');
+			setTimeout(() => settingsMenu.classList.remove('open', 'close'), 300);
 		} else {
-		  settingsMenu.classList.add('open');
-		  icon.classList.remove('fa-regular');
-		  icon.classList.add('fa-solid');
-		  setTimeout(() => {
-			settingsMenu.classList.remove('close');
-		  }, 300);
+			settingsMenu.classList.add('open');
+			icon.classList.replace('fa-regular', 'fa-solid');
+			setTimeout(() => settingsMenu.classList.remove('close'), 300);
 		}
-	  }	  
+	}
 	transportSelected.addEventListener('click', function(e) {
 		e.stopPropagation();
 		transportOptions.classList.toggle('transport-show');
 		this.classList.toggle('transport-arrow-active');
 	});
-	const optionDivs = transportOptions.getElementsByTagName('div');
-	for (let i = 0; i < optionDivs.length; i++) {
-		optionDivs[i].addEventListener('click', function(e) {
+	Array.from(transportOptions.getElementsByTagName('div')).forEach(option => {
+		option.addEventListener('click', function(e) {
 			e.stopPropagation();
-			const selectedValue = this.innerHTML;
-			transportSelected.innerHTML = selectedValue;
+			const selectedValue = this.textContent;
+			transportSelected.textContent = selectedValue;
 			localStorage.setItem('transport', selectedValue.toLowerCase());
 			transportOptions.classList.remove('transport-show');
 			transportSelected.classList.remove('transport-arrow-active');
-			const event = new Event('newTransport', {
-				detail: selectedValue.toLowerCase()
-			});
-			document.dispatchEvent(event);
+			document.dispatchEvent(new Event('newTransport', { detail: selectedValue.toLowerCase() }));
 			showToast('success', `Transport successfully changed to ${selectedValue}`);
 			location.reload();
 		});
-	}
+	});
 	document.getElementById('proxy-content').classList.add('active');
 
-	function switchTab(tabId, contentId, otherTabId1, otherContentId1, otherTabId2, otherContentId2, otherTabId3, otherContentId3) {
-		document.getElementById(otherContentId1).classList.remove('active');
-		document.getElementById(otherContentId2).classList.remove('active');
-		document.getElementById(otherContentId3).classList.remove('active');
-		document.getElementById(otherTabId1).classList.remove('active');
-		document.getElementById(otherTabId2).classList.remove('active');
-		document.getElementById(otherTabId3).classList.remove('active');
-		document.getElementById(contentId).classList.add('active');
-		document.getElementById(tabId).classList.add('active');
+	function switchTab(activeTabId, activeContentId, ...others) {
+		[others[1], others[3], others[5]].forEach(id => document.getElementById(id).classList.remove('active'));
+		[others[0], others[2], others[4]].forEach(id => document.getElementById(id).classList.remove('active'));
+		document.getElementById(activeContentId).classList.add('active');
+		document.getElementById(activeTabId).classList.add('active');
 	}
 	document.getElementById('proxy-tab').addEventListener('click', function() {
 		switchTab('proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content', 'cloak-tab', 'cloak-content', 'info-tab', 'info-content');
@@ -163,51 +143,36 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById('info-tab').addEventListener('click', function() {
 		switchTab('info-tab', 'info-content', 'proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content', 'cloak-tab', 'cloak-content');
 	});
-	navbarToggle.addEventListener('change', function() {
-		if (this.checked) {
-			showToast('success', 'Navigation Bar is now enabled.');
-		} else {
-			showToast('error', 'Navigation Bar is now disabled.');
-		}
+	document.querySelectorAll('.tab-button').forEach(btn => {
+		btn.addEventListener('click', function() {
+			const icon = this.querySelector('i');
+			if (icon.classList.contains('fa-bounce')) return;
+			icon.classList.add('fa-bounce');
+			setTimeout(() => icon.classList.remove('fa-bounce'), 750);
+		});
 	});
-
+	navbarToggle.addEventListener('change', function() {
+		showToast(this.checked ? 'success' : 'error', `Navigation Bar is now ${this.checked ? 'enabled' : 'disabled'}.`);
+	});
 	function runScriptIfChecked() {
 		let inFrame;
-		try {
-			inFrame = window !== top;
-		} catch (e) {
-			inFrame = true;
-		}
+		try { inFrame = window !== top; } catch (e) { inFrame = true; }
 		const aboutBlankChecked = JSON.parse(localStorage.getItem("aboutBlankChecked")) || false;
-		if (!aboutBlankChecked || inFrame) {
-			return;
-		}
-		const defaultTitle = "Google.";
-		const defaultIcon = "https://www.google.com/favicon.ico";
-		const title = localStorage.getItem("siteTitle") || defaultTitle;
-		const icon = localStorage.getItem("faviconURL") || defaultIcon;
-		const iframeSrc = "/";
+		if (!aboutBlankChecked || inFrame) return;
+		const title = localStorage.getItem("siteTitle") || "Google.";
+		const icon = localStorage.getItem("faviconURL") || "https://www.google.com/favicon.ico";
 		const popup = window.open("", "_blank");
 		if (!popup || popup.closed) {
 			alert("Failed to load automask. Please allow popups and try again.");
 			return;
 		}
-		popup.document.head.innerHTML = `
-        <title>${title}</title>
-        <link rel="icon" href="${icon}">
-    `;
-		popup.document.body.innerHTML = `
-        <iframe style="height: 100%; width: 100%; border: none; position: fixed; top: 0; right: 0; left: 0; bottom: 0;" src="${iframeSrc}"></iframe>
-    `;
+		popup.document.head.innerHTML = `<title>${title}</title><link rel="icon" href="${icon}">`;
+		popup.document.body.innerHTML = `<iframe style="height:100%;width:100%;border:none;position:fixed;top:0;right:0;left:0;bottom:0;" src="/"></iframe>`;
 		window.location.replace("https://bisd.schoology.com/home");
 	}
 	document.getElementById("aboutblank-toggle").addEventListener("change", function() {
 		localStorage.setItem("aboutBlankChecked", JSON.stringify(this.checked));
-		if (this.checked) {
-			showToast('success', 'About:Blank is now enabled.');
-		} else {
-			showToast('error', 'About:Blank is now disabled.');
-		}
+		showToast(this.checked ? 'success' : 'error', `About:Blank is now ${this.checked ? 'enabled' : 'disabled'}.`);
 		runScriptIfChecked();
 	});
 	window.addEventListener("load", function() {
@@ -215,39 +180,31 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById("aboutblank-toggle").checked = aboutBlankChecked;
 		runScriptIfChecked();
 	});
-
 	function showToast(type, message) {
 		const toast = document.createElement('div');
 		toast.className = `toast ${type} show`;
 		const icons = {
-			success: '<i class="fa-regular fa-check-circle" style="margin-right: 8px;"></i>',
-			error: '<i class="fa-regular fa-times-circle" style="margin-right: 8px;"></i>',
-			info: '<i class="fa-regular fa-info-circle" style="margin-right: 8px;"></i>',
-			warning: '<i class="fa-regular fa-exclamation-triangle" style="margin-right: 8px;"></i>'
+			success: '<i class="fa-regular fa-check-circle" style="margin-right:8px;"></i>',
+			error: '<i class="fa-regular fa-times-circle" style="margin-right:8px;"></i>',
+			info: '<i class="fa-regular fa-info-circle" style="margin-right:8px;"></i>',
+			warning: '<i class="fa-regular fa-exclamation-triangle" style="margin-right:8px;"></i>'
 		};
-		const icon = icons[type] || '';
-		toast.innerHTML = `${icon}${message}`;
+		toast.innerHTML = `${icons[type] || ''}${message}`;
 		const progressBar = document.createElement('div');
 		progressBar.className = 'progress-bar';
 		toast.appendChild(progressBar);
 		const closeBtn = document.createElement('button');
 		closeBtn.className = 'toast-close';
-		closeBtn.innerHTML = '<i class="fa-regular fa-xmark" style="margin-left: 8px; font-size: 0.8em;"></i>';
+		closeBtn.innerHTML = '<i class="fa-regular fa-xmark" style="margin-left:8px;font-size:0.8em;"></i>';
 		closeBtn.addEventListener('click', () => {
-			toast.classList.remove('show');
-			toast.classList.add('hide');
-			setTimeout(() => {
-				toast.remove();
-			}, 500);
+			toast.classList.replace('show', 'hide');
+			setTimeout(() => toast.remove(), 500);
 		});
 		toast.appendChild(closeBtn);
 		document.body.appendChild(toast);
 		setTimeout(() => {
-			toast.classList.remove('show');
-			toast.classList.add('hide');
-			setTimeout(() => {
-				toast.remove();
-			}, 500);
+			toast.classList.replace('show', 'hide');
+			setTimeout(() => toast.remove(), 500);
 		}, 3000);
 	}
 });
