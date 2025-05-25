@@ -1,6 +1,6 @@
 (async () => {
     try {
-      const res = await fetch('/api/github-updates');
+      const res = await fetch('/api/latest-commit');
       const { updates } = await res.json();
       const u = updates[0];
       const commitUrl = `https://github.com/xojw/waves/commit/${u.sha}`;

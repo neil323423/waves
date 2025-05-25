@@ -166,7 +166,7 @@ if (cluster.isPrimary) {
     }
   });
 
-  app.get("/api/github-updates", async (_req, res) => {
+  app.get("/api/latest-commit", async (_req, res) => {
     try {
       const ghRes = await fetch(
         "https://api.github.com/repos/xojw/waves/commits?per_page=1",
