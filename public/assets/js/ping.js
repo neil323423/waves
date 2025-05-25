@@ -23,7 +23,7 @@
 					}));
 				}
 				if (data.type === "latency" && typeof data.latency === "number") {
-					pingDisplay.innerHTML = '<i class="fa-regular fa-wifi"></i> Ping: ' + data.latency + ' ms';
+					pingDisplay.innerHTML = '<i class="fa-solid fa-wifi"></i> Ping: ' + '~' + data.latency + 'ms';
 				}
 			} catch (err) {
 				console.error("Error parsing message:", err);

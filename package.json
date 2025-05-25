@@ -1,44 +1,41 @@
 {
-    "name": "waves",
-    "version": "2.8.5",
-    "description": "A sleek and minimalist Web Proxy.",
-    "type": "module",
-    "engines": {
-        "npm": ">=7.0.0",
-        "node": ">=16.0.0"
-    },
-    "scripts": {
-        "start": "node index.mjs",
-        "dev": "nodemon index.mjs",
-        "lint": "eslint ."
-    },
-    "author": {
-        "name": "sent",
-        "email": "sentttt@proton.me"
-    },
-    "dependencies": {
-        "@mercuryworkshop/bare-mux": "latest",
-        "@mercuryworkshop/epoxy-transport": "latest",
-        "@mercuryworkshop/libcurl-transport": "latest",
-        "@titaniumnetwork-dev/ultraviolet": "latest",
-        "axios": "^1.8.2",
-        "cache": "^3.0.0",
-        "compression": "latest",
-        "cors": "^2.8.5",
-        "express": "latest",
-        "express-rate-limit": "^7.5.0",
-        "fs": "^0.0.1-security",
-        "node": "^23.9.0",
-        "lru-cache": "^11.1.0",
-        "node-fetch": "latest",
-        "wisp-server-node": "latest",
-        "ws": "latest"
-    },
-    "devDependencies": {
-        "eslint": "latest",
-        "glob": "latest",
-        "nodemon": "latest",
-        "prettier": "latest",
-        "rimraf": "latest"
-    }
+  "name": "waves",
+  "version": "2.8.5",
+  "description": "A sleek and minimalist Web Proxy.",
+  "type": "module",
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "start": "node index.mjs",
+    "dev": "nodemon index.mjs",
+    "lint": "eslint ."
+  },
+  "author": {
+    "name": "sent",
+    "email": "sentttt@proton.me"
+  },
+  "dependencies": {
+    "@mercuryworkshop/bare-mux": "latest",
+    "@mercuryworkshop/epoxy-transport": "latest",
+    "@mercuryworkshop/libcurl-transport": "latest",
+    "@titaniumnetwork-dev/ultraviolet": "latest",
+    "axios": "latest",
+    "cache": "latest",
+    "compression": "latest",
+    "cors": "latest",
+    "express": "latest",
+    "express-rate-limit": "latest",
+    "lru-cache": "latest",
+    "wisp-server-node": "latest",
+    "ws": "latest"
+  },
+  "devDependencies": {
+    "eslint": "latest",
+    "glob": "latest",
+    "nodemon": "latest",
+    "prettier": "latest",
+    "rimraf": "latest"
+  }
 }

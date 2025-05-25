@@ -7,6 +7,7 @@ body {
     color: #e0e0e0;
     overflow-x: hidden;
     transition: background-color 0.3s ease;
+    animation: fadeIn 0.3s ease;
     scroll-behavior: smooth;
     position: relative;
     z-index: 1;
@@ -71,7 +72,6 @@ body {
     height: 35px;
     color: #818181;
     padding: 10px;
-    animation: fadeIn 2s ease;
     text-align: center;
     font-size: 18px;
     font-weight: bold;
@@ -256,7 +256,6 @@ body {
     margin-top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
-    animation: fadeIn 2s ease;
     text-align: center;
     width: 90%;
 }
@@ -266,25 +265,22 @@ body {
     font-weight: bolder;
     text-align: center;
     display: inline-block;
-    background: linear-gradient(-45deg, #4e4e4e, #ffffff);
+    background: linear-gradient(-45deg, #8d8d8d, #ffffff);
     -webkit-background-clip: text;
-            background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
-            color: transparent;
+    color: transparent;
     cursor: default;
     transition: all 0.3s ease;
-}  
+}
 
-  .search-title span {
+.search-title span {
     display: inline-block;
-    background: inherit;
-    -webkit-background-clip: text;
-            background-clip: text;
-    -webkit-text-fill-color: transparent;
-            color: transparent;
     opacity: 0;
-    transform: translateX(-50px);
-    animation: fadeInFromLeft 0.5s ease-in-out forwards;
+    background: inherit;
+    color: transparent;
+    transform: translateY(4rem);
+    animation: fadeSlideIn 0.6s forwards;
 }
 
 .search-bar {
@@ -388,13 +384,13 @@ body {
 }
 
 .hover-link {
-    color: #949494;
+    color: #b3b3b3;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .hover-link:hover {
-    color: #dadada;
+    color: #ffffff;
 }
 
 #pingDisplay {
@@ -402,10 +398,9 @@ body {
     margin-top: -46px;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-weight: bold;
+    font-weight: 550;
     color: #888888;
     cursor: default;
-    animation: fadeIn 2s ease;
     padding: 5px 10px;
     transition: all 0.3s ease;
     z-index: -1;
@@ -413,7 +408,7 @@ body {
 }
 
 #pingDisplay:hover {
-    color: #b6b6b6;
+    color: #d3d3d3;
 }
 
 .god-rays {
@@ -427,7 +422,6 @@ body {
     background-image: var(--stripes), var(--rays);
     background-size: 300%, 200%;
     background-position: 50% 50%, 50% 50%;
-    animation: fadeIn 2s ease;
     mask-image: radial-gradient(ellipse at 100% 0%, transparent 40%, transparent 70%);
     -webkit-mask-image: radial-gradient(ellipse at 100% 0%, white 40%, transparent 70%);
     pointer-events: none;
@@ -573,7 +567,6 @@ body {
     position: fixed;
     left: 50%;
     transform: translate(-50%, -50%);
-    animation: fadeIn 2s ease;
     opacity: 0;
     transition: all 0.3s ease;
     cursor: default;
@@ -581,22 +574,94 @@ body {
 }
 
 #greeting:hover {
-    color: #b6b6b6;
+    color: #d3d3d3;
 }
 
 #namePrompt.fade-out {
     animation: fadeOutPrompt 0.3s ease-in-out forwards;
 }
 
-@keyframes fadeInFromLeft {
-    0% {
-        opacity: 0;
-        transform: translateX(-50px);
-    }
+#last-updated {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 9999;
+    background-color: #08080894;
+    border: 1px solid #ffffff21;    
+    color: #cfcfcf;
+    font-weight: 540;
+    transition: all 0.3s ease;
+    cursor: default;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+}
 
-    100% {
+.last-updated {
+    transition: all 0.3s ease;
+}
+
+.last-updated:hover {
+    color: #ffffff;
+}
+
+#copyright {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background-color: #08080894;
+    border: 1px solid #ffffff21;    
+    color: #858585;
+    font-weight: 540;
+    transition: all 0.3s ease;
+    cursor: default;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+#copyright:hover {
+    color: #afafaf;
+}
+
+#discord {
+    position: fixed;
+    bottom: 10px;
+    right: 100px;
+    z-index: 9999;
+    background-color: #08080894;
+    border: 1px solid #ffffff21;    
+    color: #858585;
+    font-weight: 540;
+    transition: all 0.3s ease;
+    cursor: default;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+#github {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 9999;
+    background-color: #08080894;
+    border: 1px solid #ffffff21;    
+    color: #858585;
+    font-weight: 540;
+    transition: all 0.3s ease;
+    cursor: default;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+@keyframes fadeSlideIn {
+    to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(0);
     }
 }
 

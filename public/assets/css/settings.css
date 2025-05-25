@@ -63,7 +63,7 @@
 
 #close-settings:hover {
     transform: rotate(90deg);
-    color: #d3d3d3;
+    color: #ffffff;
 }
 
 #close-settings i {
@@ -91,11 +91,12 @@
     max-width: 300px;
     margin-bottom: 15px;
 }
+
 .transport-selected {
     background-color: #141414;
+    border: 1px solid #ffffff1a;
     color: #e0e0e0;
     padding: 10px;
-    border: 1px solid #4141411a;
     border-radius: 15px;
     cursor: pointer;
     display: flex;
@@ -136,8 +137,7 @@
     opacity: 0;
 }
 
-.transport-options.transport-show, 
-.server-options.transport-show {
+.transport-options.transport-show {
     max-height: 200px;
     opacity: 1;
 }
@@ -159,7 +159,7 @@
     margin-left: -80px;
     background-color: #141414;
     color: #e0e0e0;
-    border: 1px solid #4141411a;
+    border: 1px solid #ffffff1a;
     border-radius: 15px;
     font-size: 15px;
     outline: none;

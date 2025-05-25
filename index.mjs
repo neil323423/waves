@@ -2,8 +2,8 @@ import cluster from "cluster";
 import os from "os";
 import net from "net";
 import fs from "fs";
-import { spawnSync } from "child_process";
 import path from "path";
+import { spawnSync } from "child_process";
 import express from "express";
 import { createServer } from "http";
 import compression from "compression";
@@ -17,23 +17,19 @@ import wisp from "wisp-server-node";
 
 const surgeConfigPath = path.resolve("surge.config.json");
 const isSurgedRun = process.argv.includes("--surged");
+let startTime = Date.now();
 
 function applySurgeAndRestartIfNeeded() {
   if (isSurgedRun) {
     try {
       const config = JSON.parse(fs.readFileSync(surgeConfigPath, "utf-8"));
       process.env.UV_THREADPOOL_SIZE = String(config.uvThreadpoolSize);
-    } catch {
-    }
+    } catch {}
     return;
   }
 
-  console.log('[~] Running Surge...');
   const result = spawnSync("node", ["./others/surge.mjs"], { stdio: "inherit" });
-  if (result.error) {
-    console.error('[!] Surger failed:', result.error);
-    process.exit(1);
-  }
+  if (result.error) process.exit(1);
 
   const config = JSON.parse(fs.readFileSync(surgeConfigPath, "utf-8"));
   const nodeArgs = config.nodeFlags.concat([path.resolve("index.mjs"), "--surged"]);
@@ -43,8 +39,7 @@ function applySurgeAndRestartIfNeeded() {
     ALREADY_SURGED: "true"
   };
 
-  console.log(`[~] Relaunching with Node flags: ${config.nodeFlags.join(' ')}`);
-  const relaunch = spawnSync(process.execPath, nodeArgs, { stdio: 'inherit', env });
+  const relaunch = spawnSync(process.execPath, nodeArgs, { stdio: "inherit", env });
   process.exit(relaunch.status || 0);
 }
 
@@ -53,27 +48,33 @@ applySurgeAndRestartIfNeeded();
 if (global.gc) {
   setInterval(() => {
     const { heapUsed, heapTotal } = process.memoryUsage();
-    if (heapTotal > 0 && heapUsed / heapTotal > 0.7) {
-      global.gc();
-      console.info('[~] Performed GC due to high heap usage');
-    }
-  }, 60_000);
+    if (heapTotal > 0 && heapUsed / heapTotal > 0.7) global.gc();
+  }, 60000);
 }
 
-import './others/scaler.mjs';
-import './others/warmup.mjs';
+import "./others/scaler.mjs";
+import "./others/warmup.mjs";
 
 const cache = new LRUCache({
   maxSize: 1000,
-  ttl: 4 * 24 * 60 * 60 * 1000,
+  ttl: 345600000,
   allowStale: false,
+  sizeCalculation: (value, key) => Buffer.byteLength(value) + Buffer.byteLength(key)
 });
 
 const port = parseInt(process.env.PORT || "3000", 10);
 
-function logInfo(msg)    { console.info(`[~] ${msg}`); }
-function logSuccess(msg) { console.info(`[+] ${msg}`); }
-function logError(err)   { console.error(`[!] ${err instanceof Error ? err.message : err}`); }
+function logInfo(msg) {
+  console.info(`[~] ${msg}`);
+}
+
+function logSuccess(msg) {
+  console.info(`[+] ${msg}`);
+}
+
+function logError(err) {
+  console.error(`[!] ${err instanceof Error ? err.message : err}`);
+}
 
 process.on("uncaughtException", err => logError(`Unhandled Exception: ${err}`));
 process.on("unhandledRejection", reason => logError(`Unhandled Rejection: ${reason}`));
@@ -81,11 +82,15 @@ process.on("unhandledRejection", reason => logError(`Unhandled Rejection: ${reas
 if (cluster.isPrimary) {
   const cpus = os.cpus().length;
   const workers = Math.max(1, cpus - 1);
-  logInfo(`Master: forking ${workers} of ${cpus} cores`);
-  for (let i = 0; i < workers; i++) cluster.fork();
 
-  cluster.on("exit", (worker, code, signal) => {
-    logError(`Worker ${worker.process.pid} exited (code=${code}, signal=${signal}). Restarting...`);
+  logInfo(`Master: forking ${workers} workers`);
+
+  for (let i = 0; i < workers; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", worker => {
+    logError(`Worker ${worker.process.pid} exited. Restarting...`);
     cluster.fork();
   });
 
@@ -98,12 +103,12 @@ if (cluster.isPrimary) {
   });
 
   server.on("error", err => logError(`Server error: ${err}`));
-  server.listen(port, () => logSuccess(`Server listening on port ${port}`));
-
+  server.listen(port, () => logSuccess(`Server listening on ${port}`));
 } else {
   const __dirname = process.cwd();
   const publicPath = path.join(__dirname, "public");
   const app = express();
+  let latencySamples = [];
 
   app.use(compression({ level: 4, memLevel: 4, threshold: 1024 }));
 
@@ -129,27 +134,87 @@ if (cluster.isPrimary) {
   app.use("/libcurl/", express.static(libcurlPath, staticOpts));
   app.use(express.static(publicPath, staticOpts));
   app.use("/wah/", express.static(uvPath, staticOpts));
-
   app.use(express.json());
 
-  const sendHtml = file => (req, res) => res.sendFile(path.join(publicPath, file));
+  const sendHtml = file => (_req, res) => res.sendFile(path.join(publicPath, file));
+
   app.get('/', sendHtml('$.html'));
   app.get('/g', sendHtml('!.html'));
   app.get('/a', sendHtml('!!.html'));
-  app.get('/resent', (req, res) => res.sendFile(path.join(publicPath, 'resent', 'index.html')));
-  app.use((req, res) => res.status(404).sendFile(path.join(publicPath, '404.html')));
+  app.get('/resent', (_req, res) => res.sendFile(path.join(publicPath, 'resent', 'index.html')));
+
+  app.get('/api/info', (_req, res) => {
+    try {
+      const average = latencySamples.length > 0
+        ? latencySamples.reduce((a, b) => a + b, 0) / latencySamples.length
+        : 0;
+      let speed = 'Medium';
+      if (average < 200) speed = 'Fast';
+      else if (average > 500) speed = 'Slow';
+      const cpus = os.cpus();
+      const totalMem = os.totalmem() / 1024 / 1024 / 1024;
+      res.json({
+        speed,
+        averageLatency: average.toFixed(2),
+        specs: `${cpus[0].model} + ${cpus.length} CPU Cores + ${totalMem.toFixed(1)}GB of RAM`,
+        startTime,
+        samples: latencySamples.length,
+        timestamp: Date.now()
+      });
+    } catch {
+      res.status(500).json({ error: 'Internal error' });
+    }
+  });
+
+  app.get('/api/github-updates', async (_req, res) => {
+    try {
+      const ghRes = await fetch('https://api.github.com/repos/xojw/waves/commits?per_page=5', {
+        headers: {
+          'User-Agent': 'waves-app',
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      if (!ghRes.ok) return res.status(ghRes.status).json({ error: 'GitHub API error' });
+
+      const commits = await ghRes.json();
+      const now = Date.now();
+
+      const updates = commits.map(c => {
+        const dateMs = new Date(c.commit.author.date).getTime();
+        const diffMs = now - dateMs;
+        const diffMins = Math.round(diffMs / 60000);
+        const diffHours = Math.round(diffMs / 3600000);
+        const ago = diffHours > 1 ? `${diffHours} hours ago` : `${diffMins} minutes ago`;
+        return {
+          sha: c.sha.slice(0, 7),
+          message: c.commit.message.split('\n')[0],
+          author: c.commit.author.name,
+          date: c.commit.author.date,
+          ago
+        };
+      });
+
+      res.json({ repo: 'xojw/waves', updates });
+    } catch {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  app.use((_req, res) => res.status(404).sendFile(path.join(publicPath, '404.html')));
 
   const server = createServer(app);
   server.keepAliveTimeout = 0;
   server.headersTimeout = 0;
 
-  const pingWSS = new WebSocket.Server({ noServer: true, maxPayload: 4 * 1024 * 1024, perMessageDeflate: false });
+  const pingWSS = new WebSocket.Server({ noServer: true, maxPayload: 4194304, perMessageDeflate: false });
+
   pingWSS.on("connection", (ws, req) => {
     const remote = req.socket.remoteAddress || 'unknown';
     let lat = [];
     const interval = setInterval(() => {
       if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'ping', timestamp: Date.now() }));
     }, 1000);
+
     ws.on('message', msg => {
       try {
         const data = JSON.parse(msg);
@@ -157,14 +222,19 @@ if (cluster.isPrimary) {
           const d = Date.now() - data.timestamp;
           lat.push(d);
           if (lat.length > 5) lat.shift();
+          latencySamples.push(d);
+          if (latencySamples.length > 100) latencySamples.shift();
           ws.send(JSON.stringify({ type: 'latency', latency: d }));
         }
-      } catch(e) { logError(`Ping error: ${e}`); }
+      } catch(e) {
+        logError(`Ping error: ${e}`);
+      }
     });
+
     ws.on('close', () => {
       clearInterval(interval);
       const avg = lat.length ? (lat.reduce((a,b)=>a+b)/lat.length).toFixed(2) : 0;
-      logInfo(`WS ${remote} closed. Avg latency ${avg}ms`);
+      logInfo(`WS ${remote} closed. Avg: ${avg}ms`);
     });
   });
 
@@ -178,7 +248,7 @@ if (cluster.isPrimary) {
     }
   });
 
-  server.on('error', err => logError(`Worker server error: ${err}`));
+  server.on('error', err => logError(`Worker error: ${err}`));
   server.listen(0, () => logSuccess(`Worker ${process.pid} ready`));
 
   process.on('message', (msg, conn) => {

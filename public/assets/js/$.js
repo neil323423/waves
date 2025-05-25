@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			error: '<i class="fa-regular fa-times-circle" style="margin-right: 8px;"></i>',
 			info: '<i class="fa-regular fa-info-circle" style="margin-right: 8px;"></i>',
 			warning: '<i class="fa-regular fa-exclamation-triangle" style="margin-right: 8px;"></i>',
-			heart: '<i class="fa-regular fa-heart" style="margin-right: 8px;"></i>'
+			heart: '<i class="fa-solid fa-heart" style="margin-right: 8px;"></i>'
 		}
 		const icon = icons[iconType] || icons.heart
 		toast.innerHTML = `${icon}${message} `

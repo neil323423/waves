@@ -111,10 +111,10 @@ function getGreeting() {
     const generalGreetings = [
         { text: 'Welcome aboard', icon: '<i class="fa-regular fa-rocket"></i>' },
         { text: 'Let’s do something great', icon: '<i class="fa-regular fa-lightbulb"></i>' },
-        { text: 'Hope you enjoy Waves', icon: '<i class="fa-regular fa-heart"></i>' },
+        { text: 'Hope you enjoy Waves', icon: '<i class="fa-solid fa-heart"></i>' },
         { text: 'Time to explore', icon: '<i class="fa-regular fa-compass"></i>' },
         { text: 'Let’s roll', icon: '<i class="fa-regular fa-tire"></i>' },
-        { text: 'Another great visit', icon: '<i class="fa-regular fa-thumbs-up"></i>' },
+        { text: 'Consider joining our Discord (discord.gg/ire)', icon: '<i class="fa-solid fa-smile"></i>' },
         { text: 'The adventure continues', icon: '<i class="fa-regular fa-map"></i>' }
     ];
 

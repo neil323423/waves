@@ -51,6 +51,21 @@
   animation: progress 3s linear forwards;
 }
 
+.toast .toast-close {
+  background: none;
+  border: none;
+  color: #888888;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 10px;
+  transition: 0.3s;
+}
+
+.toast-close:hover {
+  color: #ffffff;
+}
+
 @keyframes slideIn {
   0% {
       right: -300px;
@@ -79,19 +94,4 @@
   100% {
       width: 0%;
   }
-}
-
-.toast .toast-close {
-  background: none;
-  border: none;
-  color: #888888;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 0;
-  margin-left: 10px;
-  transition: 0.3s;
-}
-
-.toast-close:hover {
-  color: #d3d3d3;
 }
