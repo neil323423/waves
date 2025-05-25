@@ -32,6 +32,10 @@
   display: inline-block;
 }
 
+.toast i {
+  margin-right: 8px;
+}
+
 .toast.show {
   animation: slideIn 0.3s forwards;
 }

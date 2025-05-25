@@ -28,7 +28,6 @@ function submitName() {
     updateGreeting(name);
     document.getElementById('namePrompt').classList.add('fade-out');
     showToast(`Hey, ${name}! Welcome to Waves!`, 'success', 'wave');
-    const path = window.location.pathname;
 
     setTimeout(() => {
         document.getElementById('namePrompt').style.display = 'none';
