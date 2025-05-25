@@ -4,6 +4,7 @@
 
 The following versions of this project that are currently supported and unsupported:  
 
+- **Version 2.3.7** – Supported ✅
 - **Version 2.3.5** – Supported ✅
 - **Version 2.3.1** – Supported ✅
 - **Version 2.3.0** – Supported ✅
@@ -17,4 +18,4 @@ The following versions of this project that are currently supported and unsuppor
 
 ## Support
 
-If you are experiencing an issue with Waves unrelated to security, feel free to join our [Discord](https://discord.gg/dJvdkPRheV) server and open a ticket.  
+If you are experiencing an issue with Waves unrelated to security, feel free to join our [Discord Server](https://discord.gg/dJvdkPRheV) and open a ticket.

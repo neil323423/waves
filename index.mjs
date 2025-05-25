@@ -32,7 +32,7 @@ function applySurgeAndRestartIfNeeded() {
   if (result.error) process.exit(1);
 
   const config = JSON.parse(fs.readFileSync(surgeConfigPath, "utf-8"));
-  const nodeArgs = config.nodeFlags.concat([path.resolve("index.mjs"), "--surged"]);
+  const nodeArgs = [...config.nodeFlags, path.resolve("index.mjs"), "--surged"];
   const env = {
     ...process.env,
     UV_THREADPOOL_SIZE: String(config.uvThreadpoolSize),
@@ -138,19 +138,19 @@ if (cluster.isPrimary) {
 
   const sendHtml = file => (_req, res) => res.sendFile(path.join(publicPath, file));
 
-  app.get('/', sendHtml('$.html'));
-  app.get('/g', sendHtml('!.html'));
-  app.get('/a', sendHtml('!!.html'));
-  app.get('/resent', (_req, res) => res.sendFile(path.join(publicPath, 'resent', 'index.html')));
+  app.get("/", sendHtml("$.html"));
+  app.get("/g", sendHtml("!.html"));
+  app.get("/a", sendHtml("!!.html"));
+  app.get("/resent", (_req, res) => res.sendFile(path.join(publicPath, "resent", "index.html")));
 
-  app.get('/api/info', (_req, res) => {
+  app.get("/api/info", (_req, res) => {
     try {
-      const average = latencySamples.length > 0
+      const average = latencySamples.length
         ? latencySamples.reduce((a, b) => a + b, 0) / latencySamples.length
         : 0;
-      let speed = 'Medium';
-      if (average < 200) speed = 'Fast';
-      else if (average > 500) speed = 'Slow';
+      let speed = "Medium";
+      if (average < 200) speed = "Fast";
+      else if (average > 500) speed = "Slow";
       const cpus = os.cpus();
       const totalMem = os.totalmem() / 1024 / 1024 / 1024;
       res.json({
@@ -162,98 +162,102 @@ if (cluster.isPrimary) {
         timestamp: Date.now()
       });
     } catch {
-      res.status(500).json({ error: 'Internal error' });
+      res.status(500).json({ error: "Internal error" });
     }
   });
 
-  app.get('/api/github-updates', async (_req, res) => {
+  app.get("/api/github-updates", async (_req, res) => {
     try {
-      const ghRes = await fetch('https://api.github.com/repos/xojw/waves/commits?per_page=1', {
-        headers: {
-          'User-Agent': 'waves-app',
-          'Accept': 'application/vnd.github.v3+json'
+      const ghRes = await fetch(
+        "https://api.github.com/repos/xojw/waves/commits?per_page=1",
+        {
+          headers: {
+            "User-Agent": "waves-app",
+            Accept: "application/vnd.github.v3+json"
+          }
         }
-      });
-      if (!ghRes.ok) return res.status(ghRes.status).json({ error: 'GitHub API error' });
+      );
+      if (!ghRes.ok) return res.status(ghRes.status).json({ error: "GitHub API error" });
 
       const commits = await ghRes.json();
-      const now = Date.now();
+      const updates = commits.map(c => ({
+        sha: c.sha.slice(0, 7),
+        message: c.commit.message.split("\n")[0],
+        author: c.commit.author.name,
+        date: c.commit.author.date
+      }));
 
-      const updates = commits.map(c => {
-        const dateMs = new Date(c.commit.author.date).getTime();
-        const diffMs = now - dateMs;
-        const diffMins = Math.round(diffMs / 60000);
-        const diffHours = Math.round(diffMs / 3600000);
-        const ago = diffHours > 1 ? `${diffHours} hours ago` : `${diffMins} minutes ago`;
-        return {
-          sha: c.sha.slice(0, 7),
-          message: c.commit.message.split('\n')[0],
-          author: c.commit.author.name,
-          date: c.commit.author.date,
-          ago
-        };
-      });
-
-      res.json({ repo: 'xojw/waves', updates });
+      res.json({ repo: "xojw/waves", updates });
     } catch {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 
-  app.use((_req, res) => res.status(404).sendFile(path.join(publicPath, '404.html')));
+  app.use((_req, res) => res.status(404).sendFile(path.join(publicPath, "404.html")));
 
   const server = createServer(app);
   server.keepAliveTimeout = 0;
   server.headersTimeout = 0;
 
-  const pingWSS = new WebSocket.Server({ noServer: true, maxPayload: 4194304, perMessageDeflate: false });
+  const pingWSS = new WebSocket.Server({
+    noServer: true,
+    maxPayload: 4 * 1024 * 1024,
+    perMessageDeflate: false
+  });
 
   pingWSS.on("connection", (ws, req) => {
-    const remote = req.socket.remoteAddress || 'unknown';
+    const remote = req.socket.remoteAddress || "unknown";
     let lat = [];
     const interval = setInterval(() => {
-      if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'ping', timestamp: Date.now() }));
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: "ping", timestamp: Date.now() }));
+      }
     }, 1000);
 
-    ws.on('message', msg => {
+    ws.on("message", msg => {
       try {
         const data = JSON.parse(msg);
-        if (data.type === 'pong' && data.timestamp) {
+        if (data.type === "pong" && data.timestamp) {
           const d = Date.now() - data.timestamp;
           lat.push(d);
           if (lat.length > 5) lat.shift();
           latencySamples.push(d);
           if (latencySamples.length > 100) latencySamples.shift();
-          ws.send(JSON.stringify({ type: 'latency', latency: d }));
+          ws.send(JSON.stringify({ type: "latency", latency: d }));
         }
-      } catch(e) {
+      } catch (e) {
         logError(`Ping error: ${e}`);
       }
     });
 
-    ws.on('close', () => {
+    ws.on("close", () => {
       clearInterval(interval);
-      const avg = lat.length ? (lat.reduce((a,b)=>a+b)/lat.length).toFixed(2) : 0;
+      const avg = lat.length
+        ? (lat.reduce((a, b) => a + b) / lat.length).toFixed(2)
+        : 0;
       logInfo(`WS ${remote} closed. Avg: ${avg}ms`);
     });
   });
 
-  server.on('upgrade', (req, sock, head) => {
-    if (req.url === '/w/ping') {
-      pingWSS.handleUpgrade(req, sock, head, ws => pingWSS.emit('connection', ws, req));
-    } else if (req.url.startsWith('/w/')) {
+  server.on("upgrade", (req, sock, head) => {
+    if (req.url === "/w/ping") {
+      pingWSS.handleUpgrade(req, sock, head, ws =>
+        pingWSS.emit("connection", ws, req)
+      );
+    } else if (req.url.startsWith("/w/")) {
       wisp.routeRequest(req, sock, head);
     } else {
       sock.end();
     }
   });
 
-  server.on('error', err => logError(`Worker error: ${err}`));
+  server.on("error", err => logError(`Worker error: ${err}`));
+
   server.listen(0, () => logSuccess(`Worker ${process.pid} ready`));
 
-  process.on('message', (msg, conn) => {
-    if (msg === 'sticky-session:connection' && conn) {
-      server.emit('connection', conn);
+  process.on("message", (msg, conn) => {
+    if (msg === "sticky-session:connection" && conn) {
+      server.emit("connection", conn);
       conn.resume();
     }
   });
