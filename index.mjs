@@ -168,7 +168,7 @@ if (cluster.isPrimary) {
 
   app.get('/api/github-updates', async (_req, res) => {
     try {
-      const ghRes = await fetch('https://api.github.com/repos/xojw/waves/commits?per_page=5', {
+      const ghRes = await fetch('https://api.github.com/repos/xojw/waves/commits?per_page=1', {
         headers: {
           'User-Agent': 'waves-app',
           'Accept': 'application/vnd.github.v3+json'
