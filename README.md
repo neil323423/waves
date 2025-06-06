@@ -1,7 +1,9 @@
-# Waves.
-A sleek and minimalist Web Proxy.
+<div align="center">
+<h1>Waves.</h1>
+<h2>A sleek and minimalist Web Proxy.</h2>
 
 [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v3/monitor/1r475.svg)](https://uptime.betterstack.com/?utm_source=status_badge)
+</div>
 
 [![Join our Discord](https://invidget.switchblade.xyz/dJvdkPRheV)](https://discord.gg/dJvdkPRheV)
 
