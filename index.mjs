@@ -57,7 +57,7 @@ import "./others/warmup.mjs";
 
 const cache = new LRUCache({
   maxSize: 1000,
-  ttl: 345600000,
+  ttl: 60_000,
   allowStale: false,
   sizeCalculation: (value, key) => Buffer.byteLength(value) + Buffer.byteLength(key)
 });
@@ -140,7 +140,7 @@ if (cluster.isPrimary) {
 
   app.get("/", sendHtml("$.html"));
   app.get("/g", sendHtml("!.html"));
-  app.get("/a", sendHtml("!!.html"));
+  app.get("/s", sendHtml("!!.html"));
   app.get("/resent", (_req, res) => res.sendFile(path.join(publicPath, "resent", "index.html")));
 
   app.get("/api/info", (_req, res) => {

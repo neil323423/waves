@@ -1,16 +1,16 @@
-.apps-page {
+.shortcuts-page {
   padding: 100px 20px 40px;
   text-align: center;
   position: relative;
 }
 
-.apps-page h1 {
+.shortcuts-page h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
   color: #fff;
 }
 
-.apps-grid {
+.shortcuts-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -21,14 +21,14 @@
   margin: 0 auto;
 }
 
-.content.apps-page {
+.content.shortcuts-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.app-card {
+.shortcut-card {
   background-color: #08080894;
   border-radius: 25px;
   padding: 15px 20px;
@@ -48,7 +48,7 @@
   animation: fadeIn 2s ease;
 }
 
-.app-card img {
+.shortcut-card img {
   width: 100%;
   height: 200px;
   object-fit: cover;
@@ -57,26 +57,26 @@
   transition: all 0.3s ease; 
 }
 
-.app-card:hover img {
+.shortcut-card:hover img {
   filter: brightness(1); 
 }
 
-.app-card:hover {
+.shortcut-card:hover {
   background-color: #333333;
 }
 
-.app-card h2 {
+.shortcut-card h2 {
   font-size: 1rem;
   margin: 10px 0;
   color: #fff;
 }
 
-.app-card p {
+.shortcut-card p {
   font-size: 1rem;
   color: #ccc;
 }
 
-.apps-search-bar {
+.shortcuts-search-bar {
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -84,12 +84,12 @@
   position: relative;
 }
 
-#appSearchInput {
+#shortcutSearchInput {
   padding: 14px 30px;
   border: 1px solid #ffffff1a;
   background-image: url('/assets/images/icons/search.png');
   background-size: 35px 35px;
-  background-position: 10px center;
+  background-position: 5px center;
   background-repeat: no-repeat;
   padding-left: 45px;
   border-radius: 20px;
@@ -102,12 +102,12 @@
   transition: all 0.3s ease;
 }
 
-#appSearchInput:focus,
-#appSearchInput:hover {
+#shortcutSearchInput:focus,
+#shortcutSearchInput:hover {
   border: 1px solid #ffffff69;
 }
 
-#appSearchInput::placeholder {
+#shortcutSearchInput::placeholder {
   color: #a8a8a8;
 }
 

@@ -6,7 +6,7 @@ let cache   = makeCache(maxKeys);
 function makeCache(maxEntries) {
   return new LRUCache({
     maxSize: maxEntries,
-    ttl:     4 * 24 * 60 * 60 * 1_000,
+    ttl:     60_000,
     allowStale:     false,
     updateAgeOnGet: false,
     updateAgeOnHas: false,

@@ -1,6 +1,6 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const settingsMenu = document.getElementById('settings-menu');
-  settingsMenu.innerHTML = `
+document.addEventListener('DOMContentLoaded', function() {
+    const settingsMenu = document.getElementById('settings-menu');
+    settingsMenu.innerHTML = `
     <h2>Settings</h2>
     <div class="settings-tabs">
       <button class="tab-button active" id="proxy-tab">
@@ -92,241 +92,259 @@ document.addEventListener('DOMContentLoaded', function () {
     </button>
   `;
 
-  const settingsIcon = document.getElementById('settings-icon');
-  const closeSettingsBtn = document.getElementById('close-settings');
-  const saveWispBtn = document.getElementById('save-wisp-url');
-  const transportSelector = document.querySelector('.transport-selector');
-  const transportSelected = transportSelector.querySelector('.transport-selected');
-  const transportOptions = transportSelector.querySelector('.transport-options');
-  const navbarToggle = document.getElementById('navbar-toggle');
-  const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
-  let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
-  const wispInput = document.querySelector("#wisp-server");
-  wispInput.value = currentWispUrl;
-  let isToggling = false;
+    const settingsIcon = document.getElementById('settings-icon');
+    const closeSettingsBtn = document.getElementById('close-settings');
+    const saveWispBtn = document.getElementById('save-wisp-url');
+    const transportSelector = document.querySelector('.transport-selector');
+    const transportSelected = transportSelector.querySelector('.transport-selected');
+    const transportOptions = transportSelector.querySelector('.transport-options');
+    const navbarToggle = document.getElementById('navbar-toggle');
+    const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
+    let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
+    const wispInput = document.querySelector("#wisp-server");
+    wispInput.value = currentWispUrl;
+    let isToggling = false;
 
-  function isValidUrl(url) {
-    try {
-      const p = new URL(url);
-      return (p.protocol === "wss:" || p.protocol === "ws:") && url.endsWith('/');
-    } catch (_) {
-      return false;
+    navbarToggle.checked = localStorage.getItem('navbarToggled') !== 'false';
+
+    function isValidUrl(url) {
+        try {
+            const p = new URL(url);
+            return (p.protocol === "wss:" || p.protocol === "ws:") && url.endsWith('/');
+        } catch (_) {
+            return false;
+        }
     }
-  }
 
     function runScriptIfChecked() {
-		let inFrame;
-		try {
-			inFrame = window !== top;
-		} catch (e) {
-			inFrame = true;
-		}
-		const aboutBlankChecked = JSON.parse(localStorage.getItem("aboutBlankChecked")) || false;
-		if (!aboutBlankChecked || inFrame) {
-			return;
-		}
-		const defaultTitle = "Google.";
-		const defaultIcon = "https://www.google.com/favicon.ico";
-		const title = localStorage.getItem("siteTitle") || defaultTitle;
-		const icon = localStorage.getItem("faviconURL") || defaultIcon;
-		const iframeSrc = "/";
-		const popup = window.open("", "_blank");
-		if (!popup || popup.closed) {
-			alert("Failed to load automask. Please allow popups and try again.");
-			return;
-		}
-		popup.document.head.innerHTML = `
+        let inFrame;
+        try {
+            inFrame = window !== top;
+        } catch (e) {
+            inFrame = true;
+        }
+        const aboutBlankChecked = JSON.parse(localStorage.getItem("aboutBlankChecked")) || false;
+        if (!aboutBlankChecked || inFrame) {
+            return;
+        }
+        const defaultTitle = "Google.";
+        const defaultIcon = "https://www.google.com/favicon.ico";
+        const title = localStorage.getItem("siteTitle") || defaultTitle;
+        const icon = localStorage.getItem("faviconURL") || defaultIcon;
+        const iframeSrc = "/";
+        const popup = window.open("", "_blank");
+        if (!popup || popup.closed) {
+            alert("Failed to load automask. Please allow popups and try again.");
+            return;
+        }
+        popup.document.head.innerHTML = `
         <title>${title}</title>
         <link rel="icon" href="${icon}">
     `;
-		popup.document.body.innerHTML = `
+        popup.document.body.innerHTML = `
         <iframe style="height: 100%; width: 100%; border: none; position: fixed; top: 0; right: 0; left: 0; bottom: 0;" src="${iframeSrc}"></iframe>
     `;
-		window.location.replace("https://bisd.schoology.com/home");
-	}
-	document.getElementById("aboutblank-toggle").addEventListener("change", function() {
-		localStorage.setItem("aboutBlankChecked", JSON.stringify(this.checked));
-		if (this.checked) {
-			showToast('success', 'Auto About:Blank is now enabled.');
-		} else {
-			showToast('error', 'Auto About:Blank is now disabled.');
-		}
-		runScriptIfChecked();
-	});
-	window.addEventListener("load", function() {
-		const aboutBlankChecked = JSON.parse(localStorage.getItem("aboutBlankChecked")) || false;
-		document.getElementById("aboutblank-toggle").checked = aboutBlankChecked;
-		runScriptIfChecked();
-	});
-
-  function updateWispServerUrl(url) {
-    if (isValidUrl(url)) {
-      currentWispUrl = url;
-      localStorage.setItem('customWispUrl', url);
-      document.dispatchEvent(new CustomEvent('wispUrlChanged', { detail: currentWispUrl }));
-      showToast('success', `Wisp Server URL changed to: ${currentWispUrl}`);
-    } else {
-      currentWispUrl = defaultWispUrl;
-      localStorage.setItem('customWispUrl', defaultWispUrl);
-      document.dispatchEvent(new CustomEvent('wispUrlChanged', { detail: currentWispUrl }));
-      showToast('error', "Invalid URL. Reverting to default...");
+        window.location.replace("https://bisd.schoology.com/home");
     }
-  }
 
-  function updateServerInfo() {
-    const speedSpan = document.getElementById('server-speed');
-    const uptimeSpan = document.getElementById('server-uptime');
-    const specsSpan = document.getElementById('server-specs');
-    let uptimeInterval;
-
-    fetch('/api/info')
-      .then(response => {
-        if (!response.ok) throw new Error();
-        return response.json();
-      })
-      .then(data => {
-        if (data?.speed) {
-          const updateUptimeDisplay = () => {
-            const uptime = Date.now() - data.startTime;
-            const days = Math.floor(uptime / 86400000);
-            const hours = Math.floor((uptime % 86400000) / 3600000);
-            const minutes = Math.floor((uptime % 3600000) / 60000);
-            const seconds = Math.floor((uptime % 60000) / 1000);
-            uptimeSpan.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-          };
-
-          updateUptimeDisplay();
-          clearInterval(uptimeInterval);
-          uptimeInterval = setInterval(updateUptimeDisplay, 1000);
-
-          speedSpan.textContent = `${data.speed} (${data.averageLatency}ms)`;
-          specsSpan.textContent = data.specs;
+    document.getElementById("aboutblank-toggle").addEventListener("change", function() {
+        localStorage.setItem("aboutBlankChecked", JSON.stringify(this.checked));
+        if (this.checked) {
+            showToast('success', 'Auto About:Blank is now enabled.');
+        } else {
+            showToast('error', 'Auto About:Blank is now disabled.');
         }
-        setTimeout(updateServerInfo, 10000);
-      })
-      .catch(() => {
-        speedSpan.textContent = 'Connection error';
-        setTimeout(updateServerInfo, 30000);
-      });
-  }
+        runScriptIfChecked();
+    });
 
-  function initializeInfo() {
-    const infoTab = document.getElementById('info-tab');
-    const infoContent = document.getElementById('info-content');
+    window.addEventListener("load", function() {
+        const aboutBlankChecked = JSON.parse(localStorage.getItem("aboutBlankChecked")) || false;
+        document.getElementById("aboutblank-toggle").checked = aboutBlankChecked;
+        runScriptIfChecked();
+    });
 
-    const startMonitoring = () => {
-      updateServerInfo();
-      infoTab.removeEventListener('click', startMonitoring);
-    };
-
-    if (infoContent.classList.contains('active')) {
-      updateServerInfo();
-    } else {
-      infoTab.addEventListener('click', startMonitoring, { once: true });
+    function updateWispServerUrl(url) {
+        if (isValidUrl(url)) {
+            currentWispUrl = url;
+            localStorage.setItem('customWispUrl', url);
+            document.dispatchEvent(new CustomEvent('wispUrlChanged', {
+                detail: currentWispUrl
+            }));
+            showToast('success', `Wisp Server URL changed to: ${currentWispUrl}`);
+        } else {
+            currentWispUrl = defaultWispUrl;
+            localStorage.setItem('customWispUrl', defaultWispUrl);
+            document.dispatchEvent(new CustomEvent('wispUrlChanged', {
+                detail: currentWispUrl
+            }));
+            showToast('error', "Invalid URL. Reverting to default...");
+        }
     }
-  }
 
-  function showToast(type, message) {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type} show`;
-    const icons = {
-      success: '<i class="fa-regular fa-check-circle"></i>',
-      error: '<i class="fa-regular fa-times-circle"></i>',
-      info: '<i class="fa-regular fa-info-circle"></i>',
-      warning: '<i class="fa-regular fa-exclamation-triangle"></i>'
-    };
-    toast.innerHTML = `${icons[type]||''}${message}`;
-    const progressBar = document.createElement('div');
-    progressBar.className = 'progress-bar';
-    toast.appendChild(progressBar);
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'toast-close';
-    closeBtn.innerHTML = '<i class="fa-regular fa-xmark"></i>';
-    closeBtn.addEventListener('click', () => {
-      toast.classList.replace('show', 'hide');
-      setTimeout(() => toast.remove(), 500);
-    });
-    toast.appendChild(closeBtn);
-    document.body.appendChild(toast);
-    setTimeout(() => {
-      toast.classList.replace('show', 'hide');
-      setTimeout(() => toast.remove(), 500);
-    }, 3000);
-  }
 
-  saveWispBtn.addEventListener('click', () => updateWispServerUrl(wispInput.value.trim()));
-  settingsIcon.addEventListener('click', e => {
-    e.preventDefault();
-    toggleSettingsMenu();
-  });
-  closeSettingsBtn.addEventListener('click', toggleSettingsMenu);
 
-  function toggleSettingsMenu() {
-    if (isToggling) return;
-    isToggling = true;
-    const icon = document.querySelector('#settings-icon i.settings-icon');
-    if (settingsMenu.classList.contains('open')) {
-      settingsMenu.classList.add('close');
-      icon.classList.replace('fa-solid', 'fa-regular');
-      setTimeout(() => {
-        settingsMenu.classList.remove('open', 'close');
-        isToggling = false;
-      }, 300);
-    } else {
-      settingsMenu.classList.add('open');
-      icon.classList.replace('fa-regular', 'fa-solid');
-      setTimeout(() => {
-        settingsMenu.classList.remove('close');
-        isToggling = false;
-      }, 300);
+    function updateServerInfo() {
+        const speedSpan = document.getElementById('server-speed');
+        const uptimeSpan = document.getElementById('server-uptime');
+        const specsSpan = document.getElementById('server-specs');
+        let uptimeInterval;
+
+        fetch('/api/info')
+            .then(response => {
+                if (!response.ok) throw new Error();
+                return response.json();
+            })
+            .then(data => {
+                if (data?.speed) {
+                    const updateUptimeDisplay = () => {
+                        const uptime = Date.now() - data.startTime;
+                        const days = Math.floor(uptime / 86400000);
+                        const hours = Math.floor((uptime % 86400000) / 3600000);
+                        const minutes = Math.floor((uptime % 3600000) / 60000);
+                        const seconds = Math.floor((uptime % 60000) / 1000);
+                        uptimeSpan.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                    };
+
+                    updateUptimeDisplay();
+                    clearInterval(uptimeInterval);
+                    uptimeInterval = setInterval(updateUptimeDisplay, 1000);
+
+                    speedSpan.textContent = `${data.speed} (${data.averageLatency}ms)`;
+                    specsSpan.textContent = data.specs;
+                }
+                setTimeout(updateServerInfo, 10000);
+            })
+            .catch(() => {
+                speedSpan.textContent = 'Connection error';
+                setTimeout(updateServerInfo, 30000);
+            });
     }
-  }
 
-  transportSelected.addEventListener('click', e => {
-    e.stopPropagation();
-    transportOptions.classList.toggle('transport-show');
-    transportSelected.classList.toggle('transport-arrow-active');
-  });
+    function initializeInfo() {
+        const infoTab = document.getElementById('info-tab');
+        const infoContent = document.getElementById('info-content');
 
-  Array.from(transportOptions.getElementsByTagName('div')).forEach(option => {
-    option.addEventListener('click', function (e) {
-      e.stopPropagation();
-      const val = this.textContent;
-      transportSelected.textContent = val;
-      localStorage.setItem('transport', val.toLowerCase());
-      transportOptions.classList.remove('transport-show');
-      transportSelected.classList.remove('transport-arrow-active');
-      document.dispatchEvent(new CustomEvent('newTransport', { detail: val.toLowerCase() }));
-      showToast('success', `Transport changed to ${val}`);
+        const startMonitoring = () => {
+            updateServerInfo();
+            infoTab.removeEventListener('click', startMonitoring);
+        };
+
+        if (infoContent.classList.contains('active')) {
+            updateServerInfo();
+        } else {
+            infoTab.addEventListener('click', startMonitoring, {
+                once: true
+            });
+        }
+    }
+
+    function showToast(type, message) {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type} show`;
+        const icons = {
+            success: '<i class="fa-regular fa-check-circle"></i>',
+            error: '<i class="fa-regular fa-times-circle"></i>',
+            info: '<i class="fa-regular fa-info-circle"></i>',
+            warning: '<i class="fa-regular fa-exclamation-triangle"></i>'
+        };
+        toast.innerHTML = `${icons[type]||''}${message}`;
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        toast.appendChild(progressBar);
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'toast-close';
+        closeBtn.innerHTML = '<i class="fa-regular fa-xmark"></i>';
+        closeBtn.addEventListener('click', () => {
+            toast.classList.replace('show', 'hide');
+            setTimeout(() => toast.remove(), 500);
+        });
+        toast.appendChild(closeBtn);
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.replace('show', 'hide');
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+    }
+
+    saveWispBtn.addEventListener('click', () => updateWispServerUrl(wispInput.value.trim()));
+    settingsIcon.addEventListener('click', e => {
+        e.preventDefault();
+        toggleSettingsMenu();
     });
-  });
+    closeSettingsBtn.addEventListener('click', toggleSettingsMenu);
 
-  document.getElementById('proxy-content').classList.add('active');
+    function toggleSettingsMenu() {
+        if (isToggling) return;
+        isToggling = true;
+        const icon = document.querySelector('#settings-icon i.settings-icon');
+        if (settingsMenu.classList.contains('open')) {
+            settingsMenu.classList.add('close');
+            icon.classList.replace('fa-solid', 'fa-regular');
+            setTimeout(() => {
+                settingsMenu.classList.remove('open', 'close');
+                isToggling = false;
+            }, 300);
+        } else {
+            settingsMenu.classList.add('open');
+            icon.classList.replace('fa-regular', 'fa-solid');
+            setTimeout(() => {
+                settingsMenu.classList.remove('close');
+                isToggling = false;
+            }, 300);
+        }
+    }
 
-  function switchTab(activeTab, activeContent, ...others) {
-    others.forEach(id => document.getElementById(id).classList.remove('active'));
-    document.getElementById(activeTab).classList.add('active');
-    document.getElementById(activeContent).classList.add('active');
-  }
-
-  document.getElementById('proxy-tab').addEventListener('click', () => switchTab('proxy-tab', 'proxy-content', 'cloak-tab', 'cloak-content', 'appearance-tab', 'appearance-content', 'info-tab', 'info-content'));
-  document.getElementById('cloak-tab').addEventListener('click', () => switchTab('cloak-tab', 'cloak-content', 'proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content', 'info-tab', 'info-content'));
-  document.getElementById('appearance-tab').addEventListener('click', () => switchTab('appearance-tab', 'appearance-content', 'proxy-tab', 'proxy-content', 'cloak-tab', 'cloak-content', 'info-tab', 'info-content'));
-  document.getElementById('info-tab').addEventListener('click', () => switchTab('info-tab', 'info-content', 'proxy-tab', 'proxy-content', 'cloak-tab', 'cloak-content', 'appearance-tab', 'appearance-content'));
-
-  document.querySelectorAll('.tab-button').forEach(btn => {
-    btn.addEventListener('click', function () {
-      const icon = this.querySelector('i');
-      if (!icon.classList.contains('fa-bounce')) {
-        icon.classList.add('fa-bounce');
-        setTimeout(() => icon.classList.remove('fa-bounce'), 750);
-      }
+    transportSelected.addEventListener('click', e => {
+        e.stopPropagation();
+        transportOptions.classList.toggle('transport-show');
+        transportSelected.classList.toggle('transport-arrow-active');
     });
-  });
 
-  navbarToggle.addEventListener('change', function () {
-    showToast(this.checked ? 'success' : 'error', `Navigation Bar ${this.checked ? 'enabled' : 'disabled'}`);
-  });
+    Array.from(transportOptions.getElementsByTagName('div')).forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const val = this.textContent;
+            transportSelected.textContent = val;
+            localStorage.setItem('transport', val.toLowerCase());
+            transportOptions.classList.remove('transport-show');
+            transportSelected.classList.remove('transport-arrow-active');
+            document.dispatchEvent(new CustomEvent('newTransport', {
+                detail: val.toLowerCase()
+            }));
+            showToast('success', `Transport changed to ${val}`);
+        });
+    });
 
-  initializeInfo();
+    document.getElementById('proxy-content').classList.add('active');
+
+    function switchTab(activeTab, activeContent, ...others) {
+        others.forEach(id => document.getElementById(id).classList.remove('active'));
+        document.getElementById(activeTab).classList.add('active');
+        document.getElementById(activeContent).classList.add('active');
+    }
+
+    document.getElementById('proxy-tab').addEventListener('click', () => switchTab('proxy-tab', 'proxy-content', 'cloak-tab', 'cloak-content', 'appearance-tab', 'appearance-content', 'info-tab', 'info-content'));
+    document.getElementById('cloak-tab').addEventListener('click', () => switchTab('cloak-tab', 'cloak-content', 'proxy-tab', 'proxy-content', 'appearance-tab', 'appearance-content', 'info-tab', 'info-content'));
+    document.getElementById('appearance-tab').addEventListener('click', () => switchTab('appearance-tab', 'appearance-content', 'proxy-tab', 'proxy-content', 'cloak-tab', 'cloak-content', 'info-tab', 'info-content'));
+    document.getElementById('info-tab').addEventListener('click', () => switchTab('info-tab', 'info-content', 'proxy-tab', 'proxy-content', 'cloak-tab', 'cloak-content', 'appearance-tab', 'appearance-content'));
+
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (!icon.classList.contains('fa-bounce')) {
+                icon.classList.add('fa-bounce');
+                setTimeout(() => icon.classList.remove('fa-bounce'), 750);
+            }
+        });
+    });
+
+    navbarToggle.addEventListener('change', function() {
+        localStorage.setItem('navbarToggled', this.checked.toString());
+        showToast(this.checked ? 'success' : 'error', `Navigation Bar ${this.checked ? 'enabled' : 'disabled'}`);
+        if (window.APP && typeof window.APP.updateNavbarDisplay === 'function') {
+            window.APP.updateNavbarDisplay();
+        }
+    });
+
+    initializeInfo();
 });

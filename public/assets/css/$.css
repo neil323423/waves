@@ -63,7 +63,7 @@ body {
 
 .home-navbar {
     transform: translateX(-50%);
-    width: 670px;
+    width: 700px;
     top: 1%;
     margin-bottom: -10px;
     margin-left: 50%;
@@ -86,7 +86,7 @@ body {
 }
 
 .home-navbar .favicon {
-    width: 24px;
+    width: 28px;
     height: 24px;
     margin-right: -10px;
     vertical-align: middle;
@@ -105,7 +105,7 @@ body {
 
 .home-navbar a:hover {
     color: #bbbbbb;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .home-navbar a:active {
@@ -223,6 +223,26 @@ body {
     color: #818181;
 }
 
+.shortcut-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(calc(-50% + 235px), -50%);
+    font-size: 12px;
+    font-weight: 500;
+    color: #000000;
+    background-color: #c4c4c4;
+    padding: 2px 6px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.3s ease;
+}
+
+.shortcut-indicator:hover {
+    background-color: #ffffff;
+}
+
 .shortcut-indicator-2 {
     position: absolute;
     top: 50%;
@@ -236,10 +256,18 @@ body {
     border-radius: 7px;
     cursor: pointer;
     transition: all 0.3s ease;
+    animation: fadeUp 0.3s ease;
 }
 
 .shortcut-indicator-2:hover {
     background-color: #ffffff;
+}
+
+.arrow-mode {
+   display: inline-block;
+   margin-left: 17px;
+   transition: all 0.3s ease;
+       animation: fadeIn 0.3s ease;
 }
 
 #lockIcon {
@@ -318,25 +346,6 @@ body {
 
 .search-bar input[type=text]::placeholder {
     color: #ffffff69;
-}
-
-.shortcut-indicator {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(calc(-50% + 235px), -50%);
-    font-size: 12px;
-    font-weight: 500;
-    color: #000000;
-    background-color: #c4c4c4;
-    padding: 2px 6px;
-    border-radius: 7px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.shortcut-indicator:hover {
-    background-color: #ffffff;
 }
 
 #erudaLoadingScreen {
@@ -451,7 +460,7 @@ body {
     display: none;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-    animation: fadeInOverlay 0.3s ease-in-out forwards;
+    animation: fadeIn 0.3s ease-in-out forwards;
 }
 
 #namePrompt {
@@ -578,7 +587,7 @@ body {
 }
 
 #namePrompt.fade-out {
-    animation: fadeOutPrompt 0.3s ease-in-out forwards;
+    animation: fadeOut 0.3s ease-in-out forwards;
 }
 
 #lastest-commit {
@@ -650,30 +659,18 @@ body {
     font-size: 14px;
 }
 
+.fadeIn {
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.fadeOut {
+    animation: fadeOut 0.3s ease-in-out forwards;
+}
+
 @keyframes fadeSlideIn {
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeInOverlay {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
     }
 }
 
@@ -689,7 +686,17 @@ body {
     }
 }
 
-@keyframes fadeOutPrompt {
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
     0% {
         opacity: 1;
     }
@@ -706,47 +713,6 @@ body {
 
     to {
         background-position: 350% 50%, 350% 50%;
-    }
-}
-
-@keyframes swing {
-
-    0%,
-    100% {
-        transform: rotate(3deg);
-    }
-
-    50% {
-        transform: rotate(-3deg);
-    }
-}
-
-@keyframes steamLarge {
-    0% {
-        stroke-dashoffset: 13;
-        opacity: 0.6;
-    }
-
-    100% {
-        stroke-dashoffset: 39;
-        opacity: 0;
-    }
-}
-
-@keyframes steamSmall {
-    10% {
-        stroke-dashoffset: 9;
-        opacity: 0.6;
-    }
-
-    80% {
-        stroke-dashoffset: 27;
-        opacity: 0;
-    }
-
-    100% {
-        stroke-dashoffset: 27;
-        opacity: 0;
     }
 }
 

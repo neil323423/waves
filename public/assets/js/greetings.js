@@ -28,7 +28,6 @@ function submitName() {
     updateGreeting(name);
     document.getElementById('namePrompt').classList.add('fade-out');
     showToast(`Hey, ${name}! Welcome to Waves!`, 'success', 'wave');
-
     setTimeout(() => {
         document.getElementById('namePrompt').style.display = 'none';
         document.getElementById('overlay').style.display = 'none';
@@ -39,8 +38,8 @@ function getWelcomeMessage(name) {
     const path = window.location.pathname;
     if (path === '/g') {
         return `Have fun playing games, ${name}!`;
-    } else if (path === '/a') {
-        return `Enjoy our collection of apps, ${name}!`;
+    } else if (path === '/s') {
+        return `Enjoy our collection of, ${name}!`;
     } else {
         return `Welcome back, ${name}!`;
     }
@@ -48,44 +47,96 @@ function getWelcomeMessage(name) {
 
 function getIconType(path) {
     if (path === '/g') return 'game';
-    if (path === '/a') return 'apps';
+    if (path === '/s') return 'shortcuts';
     return 'wave';
 }
 
-function updateGreeting(name) {
-    const { text, icon } = getGreeting();
+const generalGreetings = [
+    { text: 'Welcome aboard', icon: '<i class="fa-regular fa-rocket"></i>', suffix: '!' },
+    { text: 'Hii', icon: '<i class="fa-regular fa-hand-wave"></i>', suffix: '!!' },
+    { text: 'Hope you enjoy Waves', icon: '<i class="fa-solid fa-heart"></i>', suffix: ' <3' },
+    { text: 'Consider joining our Discord (discord.gg/ire)', icon: '<i class="fa-solid fa-smile"></i>', suffix: '!' },
+    { text: 'How you doing today', icon: '<i class="fa-regular fa-question"></i>', suffix: '?' }
+];
 
-    const el = document.getElementById('greeting');
-    if (el) {
-        if (text === 'Hope you enjoy Waves') {
-            el.innerHTML = `${icon} ${text}, ${name} <3`;
-        } else {
-            el.innerHTML = `${icon} ${text}, ${name}!`;
-        }
-        el.style.opacity = 1;
+const timeGreetings = [];
+
+timeGreetings.push(
+    { text: 'Good morning, sunshine', icon: '<i class="fa-regular fa-sun"></i>', suffix: ' :D' },
+    { text: 'Here’s to a bright morning', icon: '<i class="fa-regular fa-cloud-sun"></i>', suffix: '.' },
+    { text: 'Enjoy your morning', icon: '<i class="fa-regular fa-mug-hot"></i>', suffix: '!' },
+    { text: 'Your day starts here', icon: '<i class="fa-regular fa-star"></i>', suffix: '!' }
+);
+
+timeGreetings.push(
+    { text: 'Good afternoon', icon: '<i class="fa-regular fa-leaf"></i>', suffix: '!' },
+    { text: 'Hope your day is going well', icon: '<i class="fa-regular fa-coffee"></i>', suffix: '.' },
+    { text: 'Keep up the pace', icon: '<i class="fa-regular fa-book"></i>', suffix: '!' },
+    { text: 'Stay on track today', icon: '<i class="fa-regular fa-sun"></i>', suffix: '.' }
+);
+
+timeGreetings.push(
+    { text: 'Good evening', icon: '<i class="fa-regular fa-cloud-moon"></i>', suffix: '!' },
+    { text: 'Time to unwind', icon: '<i class="fa-regular fa-fire"></i>', suffix: '.' },
+    { text: 'Evening’s here—relax', icon: '<i class="fa-regular fa-star"></i>', suffix: '.' },
+    { text: 'Breathe and recharge', icon: '<i class="fa-regular fa-moon"></i>', suffix: '…' }
+);
+
+timeGreetings.push(
+    { text: 'Good night', icon: '<i class="fa-regular fa-bed"></i>', suffix: '!' },
+    { text: 'Rest well', icon: '<i class="fa-regular fa-blanket"></i>', suffix: '.' },
+    { text: 'Sweet dreams', icon: '<i class="fa-regular fa-star-and-crescent"></i>', suffix: '!' },
+    { text: 'See you tomorrow', icon: '<i class="fa-regular fa-moon"></i>', suffix: '!' }
+);
+
+function getGreeting() {
+    const now = new Date();
+    const hour = now.getHours();
+    let pool = [];
+    if (hour >= 5 && hour < 12) {
+        pool = timeGreetings.slice(0, 4);
+    } else if (hour < 17) {
+        pool = timeGreetings.slice(4, 8);
+    } else if (hour < 21) {
+        pool = timeGreetings.slice(8, 12);
+    } else {
+        pool = timeGreetings.slice(12, 16);
     }
+    if (Math.random() < 0.5) {
+        pool = generalGreetings;
+    }
+    const choice = pool[Math.floor(Math.random() * pool.length)];
+    return { text: choice.text, icon: choice.icon, suffix: choice.suffix };
+}
+
+function updateGreeting(name) {
+    const { text, icon, suffix } = getGreeting();
+    const el = document.getElementById('greeting');
+    if (!el) return;
+    if (text === 'Hope you enjoy Waves') {
+        el.innerHTML = `${icon} ${text}, ${name}${suffix}`;
+    } else {
+        el.innerHTML = `${icon} ${text}, ${name}${suffix}`;
+    }
+    el.style.opacity = 1;
 }
 
 function showToast(message, type = 'success', iconType = 'wave') {
     const toast = document.createElement('div');
     toast.className = `toast show ${type}`;
-
     const icons = {
         success: '<i class="fas fa-check-circle" style="margin-right: 8px;"></i>',
-        error:   '<i class="fas fa-times-circle" style="margin-right: 8px;"></i>',
-        info:    '<i class="fas fa-info-circle" style="margin-right: 8px;"></i>',
+        error: '<i class="fas fa-times-circle" style="margin-right: 8px;"></i>',
+        info: '<i class="fas fa-info-circle" style="margin-right: 8px;"></i>',
         warning: '<i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>',
-        wave:    '<i class="fa-regular fa-hand-wave" style="margin-right: 8px;"></i>',
-        game:    '<i class="fa-regular fa-gamepad" style="margin-right: 8px;"></i>',
-        apps:    '<i class="fa-regular fa-th" style="margin-right: 8px;"></i>',
+        wave: '<i class="fa-regular fa-hand-wave" style="margin-right: 8px;"></i>',
+        game: '<i class="fa-regular fa-gamepad" style="margin-right: 8px;"></i>',
+        apps: '<i class="fa-regular fa-th" style="margin-right: 8px;"></i>'
     };
-
     toast.innerHTML = `${icons[iconType] || icons.wave}${message}`;
-
     const progressBar = document.createElement('div');
     progressBar.className = 'progress-bar';
     toast.appendChild(progressBar);
-
     const closeBtn = document.createElement('button');
     closeBtn.className = 'toast-close';
     closeBtn.innerHTML = '<i class="fas fa-xmark" style="margin-left: 8px; font-size: 0.8em;"></i>';
@@ -94,61 +145,9 @@ function showToast(message, type = 'success', iconType = 'wave') {
         setTimeout(() => toast.remove(), 500);
     });
     toast.appendChild(closeBtn);
-
     document.body.appendChild(toast);
     setTimeout(() => {
         toast.classList.add('hide');
         setTimeout(() => toast.remove(), 500);
     }, 3000);
-}
-
-function getGreeting() {
-    const now = new Date();
-    const hour = now.getHours();
-
-    const timeGreetings = [];
-    const generalGreetings = [
-        { text: 'Welcome aboard', icon: '<i class="fa-regular fa-rocket"></i>' },
-        { text: 'Let’s do something great', icon: '<i class="fa-regular fa-lightbulb"></i>' },
-        { text: 'Hope you enjoy Waves', icon: '<i class="fa-solid fa-heart"></i>' },
-        { text: 'Time to explore', icon: '<i class="fa-regular fa-compass"></i>' },
-        { text: 'Let’s roll', icon: '<i class="fa-regular fa-tire"></i>' },
-        { text: 'Consider joining our Discord (discord.gg/ire)', icon: '<i class="fa-solid fa-smile"></i>' },
-        { text: 'The adventure continues', icon: '<i class="fa-regular fa-map"></i>' }
-    ];
-
-    if (hour >= 5 && hour < 12) {
-        timeGreetings.push(
-            { text: 'Good morning, sunshine', icon: '<i class="fa-regular fa-sun"></i>' },
-            { text: 'Here’s to a bright morning', icon: '<i class="fa-regular fa-cloud-sun"></i>' },
-            { text: 'Enjoy your morning', icon: '<i class="fa-regular fa-mug-hot"></i>' },
-            { text: 'Your day starts here', icon: '<i class="fa-regular fa-star"></i>' }
-        );
-    } else if (hour < 17) {
-        timeGreetings.push(
-            { text: 'Good afternoon', icon: '<i class="fa-regular fa-leaf"></i>' },
-            { text: 'Hope your day is going well', icon: '<i class="fa-regular fa-coffee"></i>' },
-            { text: 'Keep up the pace', icon: '<i class="fa-regular fa-book"></i>' },
-            { text: 'Stay on track today', icon: '<i class="fa-regular fa-sun"></i>' }
-        );
-    } else if (hour < 21) {
-        timeGreetings.push(
-            { text: 'Good evening', icon: '<i class="fa-regular fa-cloud-moon"></i>' },
-            { text: 'Time to unwind', icon: '<i class="fa-regular fa-fire"></i>' },
-            { text: 'Evening’s here—relax', icon: '<i class="fa-regular fa-star"></i>' },
-            { text: 'Breathe and recharge', icon: '<i class="fa-regular fa-moon"></i>' }
-        );
-    } else {
-        timeGreetings.push(
-            { text: 'Good night', icon: '<i class="fa-regular fa-bed"></i>' },
-            { text: 'Rest well', icon: '<i class="fa-regular fa-blanket"></i>' },
-            { text: 'Sweet dreams', icon: '<i class="fa-regular fa-star-and-crescent"></i>' },
-            { text: 'See you tomorrow', icon: '<i class="fa-regular fa-moon"></i>' }
-        );
-    }
-
-    const useGeneral = Math.random() < 0.5;
-    const pool = useGeneral ? generalGreetings : timeGreetings;
-
-    return pool[Math.floor(Math.random() * pool.length)];
 }

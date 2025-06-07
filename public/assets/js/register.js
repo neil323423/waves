@@ -1,124 +1,80 @@
-document.addEventListener('DOMContentLoaded', function() {
-	const originalLog = console.log;
-	const originalWarn = console.warn;
-	const originalError = console.error;
-	const scriptLogs = [];
+;(function(){
+  const origLog = console.log.bind(console);
+  document.addEventListener("DOMContentLoaded", () => {
+    origLog(
+      "%c\n" +
+	  "     ᶻ 𝗓 𐰁 .ᐟ\n" +
+      "    |\\      _,,,---,,_\n" +
+      "   /, `.-'`'    -.  ;-;;,_\n" +
+      "  |,4-  ) )-,_..;\\ (  `'-'\n" +
+      " '---''(_/--'  `-`\\_)\n   discord.gg/dJvdkPRheV",
+      "color: hotpink; font-size: 16px; display: block; white-space: pre; text-align: center; padding-left: 28%;"
+    );
+  });
 
-	function isScriptLog(args) {
-		return args[0] && (args[0].includes('%c[+]%c') || args[0].includes('%c[*]%c') || args[0].includes('%c[#]%c') || args[0].includes('%c[-]%c') || args[0].includes('%c[!]%c'));
-	}
+  const labelStyle   = "background: white; color: black; font-weight: bold; padding: 2px 4px; border-radius: 2px";
+  const messageStyle = "background: black; color: white; padding: 2px 4px; border-radius: 2px";
+  ["log","info","warn","error","debug"].forEach(method => {
+    const orig = console[method].bind(console);
+    console[method] = (...args) => {
+      const text = args.map(a => typeof a === 'string' ? a : JSON.stringify(a)).join(' ');
+      orig(`%cWaves:%c ${text}`, labelStyle, messageStyle);
+    };
+  });
 
-	console.log = function(...args) {
-		if (isScriptLog(args)) {
-			scriptLogs.push(args);
-		}
-		originalLog.apply(console, args);
-	};
+  document.addEventListener("DOMContentLoaded", function(){
+    const defaultWispUrl = `${window.location.protocol==="https:"?"wss":"ws"}://${window.location.host}/w/`;
+    let currentWispUrl    = localStorage.getItem("customWispUrl") || defaultWispUrl;
+    const wispUrl         = currentWispUrl;
+    const connection      = new BareMux.BareMuxConnection("/baremux/worker.js");
 
-	console.warn = function(...args) {
-		if (isScriptLog(args)) {
-			scriptLogs.push(args);
-		}
-		originalWarn.apply(console, args);
-	};
+    registerSW();
 
-	console.error = function(...args) {
-		if (isScriptLog(args)) {
-			scriptLogs.push(args);
-		}
-		originalError.apply(console, args);
-	};
+    async function registerSW(){
+      try {
+        if (!navigator.serviceWorker) return console.error("Service Workers are not supported by this browser.");
+        await ensureWebSocketConnection(wispUrl);
+        console.log("Registering Service Worker...");
+        await navigator.serviceWorker.register("/wah/sw.js", { scope: "/wah/a/" });
+        console.log("Service Worker registered successfully.");
+        const savedTransport = localStorage.getItem("transport") || "epoxy";
+        switchTransport(savedTransport);
+        updateTransportUI(savedTransport);
+        console.log(`Using ${capitalizeTransport(savedTransport)} transport.`);
+      } catch (e) {
+        console.error(`An error occurred during Service Worker registration or WebSocket connection: ${e.message||e}`);
+      }
+    }
 
-	setInterval(() => {
-		const currentLogs = [...scriptLogs];
-		console.clear();
-		currentLogs.forEach(log => originalLog.apply(console, log));
-	}, 400);
+    async function ensureWebSocketConnection(url){
+      return new Promise((resolve, reject) => {
+        console.log("Establishing WebSocket connection...");
+        const ws = new WebSocket(url);
+        ws.onopen  = () => { console.log("WebSocket connection established."); resolve(ws); };
+        ws.onerror = e  => { console.error(`Failed to establish WebSocket connection: ${e.message||e}`); reject(e); };
+        ws.onclose = ev => {
+          if (ev.code !== 1000) console.warn(`WebSocket connection closed. Reason: ${ev.reason||"No reason provided"}`);
+          else                  console.warn("WebSocket connection closed normally.");
+        };
+      });
+    }
 
-	const defaultWispUrl = `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/w/`;
-	let currentWispUrl = localStorage.getItem('customWispUrl') || defaultWispUrl;
-	const wispUrl = currentWispUrl;
-	const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+    function switchTransport(t){
+      const m = { epoxy: "/epoxy/index.mjs", libcurl: "/libcurl/index.mjs" }[t];
+      if (m) connection.setTransport(m, [{ wisp: wispUrl }]);
+    }
 
-	async function registerSW() {
-		try {
-			if (!navigator.serviceWorker) {
-				console.log("%c[!]%c Service Workers are not supported by this browser.", "background-color: black; color: white; font-weight: bold;", "background-color: black; color: white;");
-				return;
-			}
-			await ensureWebSocketConnection(wispUrl);
-			console.log("%c[+]%c Registering Service Worker...", "background-color: black; color: white; font-weight: bold;", "background-color: black; color: white;");
-			await navigator.serviceWorker.register("/wah/sw.js", { scope: '/wah/a/' });
-			console.log("%c[*]%c Service Worker registered successfully.", "background-color: black; color: white; font-weight: bold;", "background-color: black; color: white;");
-			const savedTransport = localStorage.getItem('transport') || "epoxy";
-			switchTransport(savedTransport);
-			updateTransportUI(savedTransport);
-			console.log(`%c[#]%c Using ${capitalizeTransport(savedTransport)} transport.`, "background-color: black; color: white; font-weight: bold;", "background-color: black; color: white;");
-		} catch (error) {
-			logError(error, 'An error occurred during Service Worker registration or WebSocket connection');
-		}
-	}
+    function updateTransportUI(t){
+      document.querySelector(".transport-selected").textContent = capitalizeTransport(t);
+    }
 
-	async function ensureWebSocketConnection(url) {
-		return new Promise((resolve, reject) => {
-			console.log("%c[+]%c Establishing WebSocket connection...", "background-color: black; color: white; font-weight: bold;", "background-color: black; color: white;");
-			const ws = new WebSocket(url);
-			ws.onopen = () => {
-				console.log("%c[*]%c WebSocket connection established.", "background-color: black; color: white; font-weight: bold;", "background-color: black; color: white;");
-				resolve(ws);
-			};
-			ws.onerror = (error) => {
-				logError(error, 'Failed to establish WebSocket connection');
-				reject(error);
-			};
-			ws.onclose = (event) => {
-				if (event.code !== 1000) {
-					console.warn(`%c[-]%c WebSocket connection closed. Reason: ${event.reason || "No reason provided"}`, "background-color: black; color: white; font-weight: bold;", "background-color: black; color: white;");
-				} else {
-					console.warn("%c[-]%c WebSocket connection closed normally.", "background-color: black; color: white; font-weight: bold;", "background-color: black; color: white;");
-				}
-			};
-		});
-	}
+    function capitalizeTransport(t){
+      return t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
+    }
 
-	function logError(error, message) {
-		console.error(`%c[!]%c ${message}: ${error.message || error}`, "background-color: black; color: white; font-weight: bold;", "background-color: black; color: white;");
-	}
-
-	function switchTransport(transport) {
-		const transportMap = {
-			"epoxy": "/epoxy/index.mjs",
-			"libcurl": "/libcurl/index.mjs"
-		};
-		const transportFile = transportMap[transport];
-		if (transportFile) {
-			connection.setTransport(transportFile, [{ wisp: wispUrl }]);
-		}
-	}
-
-	async function changeTransport(newTransport) {
-		try {
-			localStorage.setItem('transport', newTransport);
-			switchTransport(newTransport);
-			updateTransportUI(newTransport);
-		} catch (error) {
-			logError(error, 'An error occurred while storing transport preference');
-		}
-	}
-
-	function updateTransportUI(transport) {
-		const transportSelected = document.querySelector(".transport-selected");
-		transportSelected.textContent = capitalizeTransport(transport);
-	}
-
-	function capitalizeTransport(transport) {
-		return transport.charAt(0).toUpperCase() + transport.slice(1).toLowerCase();
-	}
-
-	document.addEventListener('wispUrlChanged', function(e) {
-		currentWispUrl = e.detail;
-		switchTransport(localStorage.getItem('transport') || "epoxy");
-	});
-
-	registerSW();
-});
+    document.addEventListener("wispUrlChanged", function(e){
+      currentWispUrl = e.detail;
+      switchTransport(localStorage.getItem("transport") || "epoxy");
+    });
+  });
+})();
