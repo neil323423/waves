@@ -396,11 +396,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (movies) movies.addEventListener('click', e => {
         e.preventDefault();
-        APP.handleSearch('https://movies.usewaves.site/');
+        APP.handleSearch('https://movies.waves.lat/');
     });
     if (ai) ai.addEventListener('click', e => {
         e.preventDefault();
-        APP.handleSearch('https://ai.usewaves.site/');
+        APP.handleSearch('https://ai.waves.lat/');
     });
 
     function showToast(message, type = 'success', iconType = 'check') {
