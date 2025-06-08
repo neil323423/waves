@@ -4,8 +4,9 @@
 
 The following versions of this project that are currently supported and unsupported:  
 
-- **Version 2.3.7** – Supported ✅
-- **Version 2.3.5** – Supported ✅
+- **Version 2.8.9** – Supported ✅
+- **Version 2.8.7** – Supported ✅
+- **Version 2.8.5** – Supported ✅
 - **Version 2.3.1** – Supported ✅
 - **Version 2.3.0** – Supported ✅
 - **Version 2.2.0** – Supported ✅
