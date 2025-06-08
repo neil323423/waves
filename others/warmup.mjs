@@ -3,7 +3,7 @@ import http from 'http';
 const endpoints = [
   'http://localhost:3000/',
   'http://localhost:3000/g',
-  'http://localhost:3000/a'
+  'http://localhost:3000/s'
 ];
 
 function httpGet(url, timeout = 5000) {
@@ -44,7 +44,7 @@ async function warm(retries = 2) {
   if (failed.length) {
     console.warn(`[WARMUP] Some endpoints failed to warm:`, failed);
   } else {
-    console.log('[WARMUP] All endpoints warmed successfully');
+    console.log('[WARMUP] All endpoints warmed up successfully');
   }
 }
 

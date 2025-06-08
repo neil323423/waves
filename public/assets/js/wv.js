@@ -19,7 +19,7 @@
   const overlay = document.createElement('div'); overlay.id='wv-overlay';
   overlay.innerHTML = `
     <div id="wv-card">
-      <h2><i class="fas fa-shield-alt"></i> Verifying Browser</h2>
+      <h2><i class="fas fa-shield-alt"></i> Verifying Your Browser...</h2>
       <div id="wv-progress"><div id="wv-bar"></div></div>
       <div id="wv-info"></div>
     </div>

@@ -62,7 +62,7 @@ function getIconType(path) {
 const generalGreetings = [
     { text: 'Have fun', icon: '<i class="fa-regular fa-party-horn"></i>', suffix: '!' },
     { text: 'Hope you enjoy Waves', icon: '<i class="fa-solid fa-heart"></i>', suffix: ' <3' },
-    { text: 'Consider joining our Discord (discord.gg/ire)', icon: '<i class="fa-solid fa-smile"></i>', suffix: '!' },
+    { text: 'Join discord.gg/dJvdkPRheV', icon: '<i class="fa-brands fa-discord"></i>', suffix: '!' },
     { text: 'How you doing today', icon: '<i class="fa-regular fa-question"></i>', suffix: '?' }
 ];
 

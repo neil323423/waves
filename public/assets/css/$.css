@@ -55,7 +55,7 @@ body {
     color: #ffffff;
     display: inline-block;
     text-align: left;
-    margin: 1px 75px 0 10px;
+    margin: 1px 79px 0 10px;
     white-space: nowrap;
     cursor: default;
     transition: all 0.3s ease;
@@ -114,8 +114,8 @@ body {
 
 .home-navbar i {
     color: #ffffff; 
-    margin-right: -19px;
-    margin-left: 119px;
+    margin-right: -16px;
+    margin-left: 115px;
 }
 
 .navbar {
