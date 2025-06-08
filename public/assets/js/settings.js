@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     <div id="info-content" class="tab-content">
-      <label>Version 2.8.7</label>
+      <label>Version 2.8.9</label>
       <label 
         onmouseover="this.querySelector('span').style.color='lime'" 
         onmouseout="this.querySelector('span').style.color='green'">
