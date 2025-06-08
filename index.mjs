@@ -17,7 +17,6 @@ import wisp from "wisp-server-node";
 
 const surgeConfigPath = path.resolve("surge.config.json");
 const isSurgedRun = process.argv.includes("--surged");
-let startTime = Date.now();
 
 function applySurgeAndRestartIfNeeded() {
   if (isSurgedRun) {
@@ -48,19 +47,12 @@ applySurgeAndRestartIfNeeded();
 if (global.gc) {
   setInterval(() => {
     const { heapUsed, heapTotal } = process.memoryUsage();
-    if (heapTotal > 0 && heapUsed / heapTotal > 0.7) global.gc();
-  }, 60000);
+    if (heapTotal > 0 && heapUsed / heapTotal > 0.8) global.gc();
+  }, 120000);
 }
 
 import "./others/scaler.mjs";
 import "./others/warmup.mjs";
-
-const cache = new LRUCache({
-  maxSize: 1000,
-  ttl: 60_000,
-  allowStale: false,
-  sizeCalculation: (value, key) => Buffer.byteLength(value) + Buffer.byteLength(key)
-});
 
 const port = parseInt(process.env.PORT || "3000", 10);
 
@@ -80,9 +72,7 @@ process.on("uncaughtException", err => logError(`Unhandled Exception: ${err}`));
 process.on("unhandledRejection", reason => logError(`Unhandled Rejection: ${reason}`));
 
 if (cluster.isPrimary) {
-  const cpus = os.cpus().length;
-  const workers = Math.max(1, cpus - 1);
-
+  const workers = Math.max(1, os.cpus().length - 1);
   logInfo(`Master: forking ${workers} workers`);
 
   for (let i = 0; i < workers; i++) {
@@ -108,18 +98,26 @@ if (cluster.isPrimary) {
   const __dirname = process.cwd();
   const publicPath = path.join(__dirname, "public");
   const app = express();
-  let latencySamples = [];
+  
+  const cache = new LRUCache({
+    max: 500,
+    ttl: 60_000,
+    allowStale: false
+  });
+  
+  const latencySamples = new Array(200);
 
   app.use(compression({ level: 4, memLevel: 4, threshold: 1024 }));
 
   app.use((req, res, next) => {
+    if (req.path.startsWith("/api/")) return next();
     const key = req.originalUrl;
     const val = cache.get(key);
     if (val) {
       res.setHeader("X-Cache", "HIT");
       return res.send(val);
     }
-    res.sendResponse = res.send.bind(res);
+    res.sendResponse = res.send;
     res.send = body => {
       cache.set(key, body);
       res.setHeader("X-Cache", "MISS");
@@ -128,13 +126,12 @@ if (cluster.isPrimary) {
     next();
   });
 
-  const staticOpts = { maxAge: "7d", immutable: true };
+  const staticOpts = { maxAge: "7d", immutable: true, etag: false };
   app.use("/baremux/", express.static(baremuxPath, staticOpts));
   app.use("/epoxy/", express.static(epoxyPath, staticOpts));
   app.use("/libcurl/", express.static(libcurlPath, staticOpts));
   app.use(express.static(publicPath, staticOpts));
   app.use("/wah/", express.static(uvPath, staticOpts));
-  app.use(express.json());
 
   const sendHtml = file => (_req, res) => res.sendFile(path.join(publicPath, file));
 
@@ -144,75 +141,40 @@ if (cluster.isPrimary) {
   app.get("/resent", (_req, res) => res.sendFile(path.join(publicPath, "resent", "index.html")));
 
   app.get("/api/info", (_req, res) => {
-    try {
-      const average = latencySamples.length
-        ? latencySamples.reduce((a, b) => a + b, 0) / latencySamples.length
-        : 0;
-      let speed = "Medium";
-      if (average < 200) speed = "Fast";
-      else if (average > 500) speed = "Slow";
-      const cpus = os.cpus();
-      const totalMem = os.totalmem() / 1024 / 1024 / 1024;
-      res.json({
-        speed,
-        averageLatency: average.toFixed(2),
-        specs: `${cpus[0].model} + ${cpus.length} CPU Cores + ${totalMem.toFixed(1)}GB of RAM`,
-        startTime,
-        samples: latencySamples.length,
-        timestamp: Date.now()
-      });
-    } catch {
-      res.status(500).json({ error: "Internal error" });
-    }
-  });
-
-  app.get("/api/latest-commit", async (_req, res) => {
-    try {
-      const ghRes = await fetch(
-        "https://api.github.com/repos/xojw/waves/commits?per_page=1",
-        {
-          headers: {
-            "User-Agent": "waves-app",
-            Accept: "application/vnd.github.v3+json"
-          }
-        }
-      );
-      if (!ghRes.ok) return res.status(ghRes.status).json({ error: "GitHub API error" });
-
-      const commits = await ghRes.json();
-      const updates = commits.map(c => ({
-        sha: c.sha.slice(0, 7),
-        message: c.commit.message.split("\n")[0],
-        author: c.commit.author.name,
-        date: c.commit.author.date
-      }));
-
-      res.json({ repo: "xojw/waves", updates });
-    } catch {
-      res.status(500).json({ error: "Internal server error" });
-    }
+    const validSamples = latencySamples.filter(s => s !== undefined);
+    const average = validSamples.length ? validSamples.reduce((a, b) => a + b, 0) / validSamples.length : 0;
+    res.json({
+      speed: average < 200 ? "Fast" : average > 500 ? "Slow" : "Medium",
+      averageLatency: average.toFixed(2),
+      timestamp: Date.now()
+    });
   });
 
   app.use((_req, res) => res.status(404).sendFile(path.join(publicPath, "404.html")));
 
   const server = createServer(app);
-  server.keepAliveTimeout = 0;
-  server.headersTimeout = 0;
+  server.keepAliveTimeout = 5000;
+  server.headersTimeout = 10000;
 
   const pingWSS = new WebSocket.Server({
     noServer: true,
-    maxPayload: 4 * 1024 * 1024,
+    maxPayload: 16384,
     perMessageDeflate: false
   });
 
   pingWSS.on("connection", (ws, req) => {
     const remote = req.socket.remoteAddress || "unknown";
-    let lat = [];
-    const interval = setInterval(() => {
+    const lat = [];
+    let sampleIndex = 0;
+
+    const sendPing = () => {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ type: "ping", timestamp: Date.now() }));
       }
-    }, 1000);
+    };
+
+    const pingInterval = setInterval(sendPing, 500);
+    sendPing();
 
     ws.on("message", msg => {
       try {
@@ -220,39 +182,36 @@ if (cluster.isPrimary) {
         if (data.type === "pong" && data.timestamp) {
           const d = Date.now() - data.timestamp;
           lat.push(d);
-          if (lat.length > 5) lat.shift();
-          latencySamples.push(d);
-          if (latencySamples.length > 100) latencySamples.shift();
-          ws.send(JSON.stringify({ type: "latency", latency: d }));
+          if (lat.length > 10) lat.shift();
+          
+          latencySamples[sampleIndex % latencySamples.length] = d;
+          sampleIndex = (sampleIndex + 1) % latencySamples.length;
+          
+          ws.send(JSON.stringify({ type: "latency", latency: d }), { compress: false });
         }
-      } catch (e) {
-        logError(`Ping error: ${e}`);
-      }
+      } catch {}
     });
 
     ws.on("close", () => {
-      clearInterval(interval);
-      const avg = lat.length
-        ? (lat.reduce((a, b) => a + b) / lat.length).toFixed(2)
-        : 0;
+      clearInterval(pingInterval);
+      const avg = lat.length ? (lat.reduce((a, b) => a + b) / lat.length).toFixed(2) : 0;
       logInfo(`WS ${remote} closed. Avg: ${avg}ms`);
     });
   });
 
   server.on("upgrade", (req, sock, head) => {
     if (req.url === "/w/ping") {
-      pingWSS.handleUpgrade(req, sock, head, ws =>
+      pingWSS.handleUpgrade(req, sock, head, ws => 
         pingWSS.emit("connection", ws, req)
       );
     } else if (req.url.startsWith("/w/")) {
       wisp.routeRequest(req, sock, head);
     } else {
-      sock.end();
+      sock.destroy();
     }
   });
 
   server.on("error", err => logError(`Worker error: ${err}`));
-
   server.listen(0, () => logSuccess(`Worker ${process.pid} ready`));
 
   process.on("message", (msg, conn) => {

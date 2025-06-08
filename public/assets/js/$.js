@@ -141,6 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDecodedSearchInput();
     }
 
+    function generateSubject() {
+        const subjects = ['math', 'science', 'history', 'art', 'programming', 'philosophy'];
+        const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
+        try {
+            history.replaceState({}, '', `/learning?subject=${randomSubject}`);
+        } catch (e) {}
+    }
+
     function setupIframeNavigationListeners() {
         try {
             const iframeWindow = iframe.contentWindow;
@@ -209,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             setupIframeNavigationListeners();
+            generateSubject();
             if (navbarToggle && navbarToggle.checked && navBar) {
                 navBar.style.display = 'block';
             }
@@ -467,19 +476,3 @@ document.addEventListener('DOMContentLoaded', () => {
     window.APP.decodeUrl = decodeUrl;
     window.APP.normalizeUrl = normalizeUrl;
 });
-
-(async () => {
-    try {
-        const res = await fetch('/api/latest-commit');
-        const {
-            updates
-        } = await res.json();
-        const u = updates[0];
-        const commitUrl = `https://github.com/xojw/waves/commit/${u.sha}`;
-        document.getElementById('lastest-commit').innerHTML =
-            `<a href="${commitUrl}" class="hover-link" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-code-commit"></i> ${u.sha}</a>`;
-    } catch {
-        document.getElementById('lastest-commit').textContent =
-            'Failed to load lastest commit';
-    }
-})();

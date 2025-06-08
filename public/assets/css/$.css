@@ -55,7 +55,7 @@ body {
     color: #ffffff;
     display: inline-block;
     text-align: left;
-    margin: 1px 80px 0 10px;
+    margin: 1px 75px 0 10px;
     white-space: nowrap;
     cursor: default;
     transition: all 0.3s ease;
@@ -88,7 +88,7 @@ body {
 .home-navbar .favicon {
     width: 28px;
     height: 24px;
-    margin-right: -10px;
+    margin-right: -9px;
     vertical-align: middle;
 }
 
@@ -114,8 +114,8 @@ body {
 
 .home-navbar i {
     color: #ffffff; 
-    margin-right: -15px;
-    margin-left: 115px;
+    margin-right: -19px;
+    margin-left: 119px;
 }
 
 .navbar {
@@ -590,20 +590,24 @@ body {
     animation: fadeOut 0.3s ease-in-out forwards;
 }
 
-#lastest-commit {
+#hi {
     position: fixed;
     bottom: 10px;
     left: 10px;
     z-index: 9999;
     background-color: #08080894;
     border: 1px solid #ffffff21;    
-    color: #cfcfcf;
+    color: #aaaaaa;
     font-weight: 540;
     transition: all 0.3s ease;
     cursor: default;
     padding: 8px 12px;
     border-radius: 15px;
     font-size: 14px;
+}
+
+#hi:hover {
+    color: #ffffff;
 }
 
 #copyright {

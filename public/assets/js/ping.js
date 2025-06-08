@@ -10,7 +10,7 @@
 		ws = new WebSocket(wsUrl);
 
 		ws.onopen = function() {
-			pingDisplay.innerHTML = '<i class="fas fa-wifi"></i> Ping: Waiting...';
+			pingDisplay.innerHTML = '<i class="fas fa-satellite-dish"></i> Ping: Waiting...';
 		};
 
 		ws.onmessage = function(event) {
@@ -23,7 +23,7 @@
 					}));
 				}
 				if (data.type === "latency" && typeof data.latency === "number") {
-					pingDisplay.innerHTML = '<i class="fa-solid fa-wifi"></i> Ping: ' + '~' + data.latency + 'ms';
+					pingDisplay.innerHTML = '<i class="fas fa-satellite-dish"></i> ' + 'Ping: ' + '~' + data.latency + 'ms';
 				}
 			} catch (err) {
 				console.error("Error parsing message:", err);
@@ -31,11 +31,11 @@
 		};
 
 		ws.onerror = function() {
-			pingDisplay.innerHTML = '<i class="fa-regular fa-wifi"></i> Ping: Error';
+			pingDisplay.innerHTML = '<i class="fas fa-satellite-dish"></i> Ping: Error';
 		};
 
 		ws.onclose = function() {
-			pingDisplay.innerHTML = '<i class="fa-regular fa-wifi"></i> Ping: Disconnected';
+			pingDisplay.innerHTML = '<i class="fas fa-satellite-dish"></i> Ping: Disconnected';
 			setTimeout(createWebSocket, 1000);
 		};
 	}
