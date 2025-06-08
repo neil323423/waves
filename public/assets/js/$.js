@@ -141,14 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDecodedSearchInput();
     }
 
-    function generateSubject() {
-        const subjects = ['math', 'science', 'history', 'art', 'programming', 'philosophy'];
-        const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
-        try {
-            history.replaceState({}, '', `/learning?subject=${randomSubject}`);
-        } catch (e) {}
-    }
-
     function setupIframeNavigationListeners() {
         try {
             const iframeWindow = iframe.contentWindow;
@@ -217,7 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             setupIframeNavigationListeners();
-            generateSubject();
             if (navbarToggle && navbarToggle.checked && navBar) {
                 navBar.style.display = 'block';
             }
