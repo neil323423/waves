@@ -335,7 +335,7 @@
 
                     text = text.replace(
                         /<\/body>/i, 
-                        `<script src="https://cdn.usewaves.site/main.js" crossorigin="anonymous"></script></body>`
+                        `<script src="https://cdn.waves.lat/main.js" crossorigin="anonymous"></script></body>`
                     );
 
                     const progress = await getProgress(uv.meta.url.host);
