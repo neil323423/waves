@@ -26,10 +26,8 @@ function applySurgeAndRestartIfNeeded() {
     } catch {}
     return;
   }
-
   const result = spawnSync("node", ["./others/surge.mjs"], { stdio: "inherit" });
   if (result.error) process.exit(1);
-
   const config = JSON.parse(fs.readFileSync(surgeConfigPath, "utf-8"));
   const nodeArgs = [...config.nodeFlags, path.resolve("index.mjs"), "--surged"];
   const env = {
@@ -37,7 +35,6 @@ function applySurgeAndRestartIfNeeded() {
     UV_THREADPOOL_SIZE: String(config.uvThreadpoolSize),
     ALREADY_SURGED: "true"
   };
-
   const relaunch = spawnSync(process.execPath, nodeArgs, { stdio: "inherit", env });
   process.exit(relaunch.status || 0);
 }
@@ -74,16 +71,13 @@ process.on("unhandledRejection", reason => logError(`Unhandled Rejection: ${reas
 if (cluster.isPrimary) {
   const workers = Math.max(1, os.cpus().length - 1);
   logInfo(`Master: forking ${workers} workers`);
-
   for (let i = 0; i < workers; i++) {
     cluster.fork();
   }
-
   cluster.on("exit", worker => {
     logError(`Worker ${worker.process.pid} exited. Restarting...`);
     cluster.fork();
   });
-
   let current = 0;
   const server = net.createServer({ pauseOnConnect: true }, conn => {
     const workersArr = Object.values(cluster.workers);
@@ -91,20 +85,14 @@ if (cluster.isPrimary) {
     const worker = workersArr[current++ % workersArr.length];
     worker.send("sticky-session:connection", conn);
   });
-
   server.on("error", err => logError(`Server error: ${err}`));
   server.listen(port, () => logSuccess(`Server listening on ${port}`));
 } else {
+  const startTime = Date.now();
   const __dirname = process.cwd();
   const publicPath = path.join(__dirname, "public");
   const app = express();
-  
-  const cache = new LRUCache({
-    max: 500,
-    ttl: 60_000,
-    allowStale: false
-  });
-  
+  const cache = new LRUCache({ max: 500, ttl: 60000, allowStale: false });
   const latencySamples = new Array(200);
 
   app.use(compression({ level: 4, memLevel: 4, threshold: 1024 }));
@@ -134,20 +122,32 @@ if (cluster.isPrimary) {
   app.use("/wah/", express.static(uvPath, staticOpts));
 
   const sendHtml = file => (_req, res) => res.sendFile(path.join(publicPath, file));
-
   app.get("/", sendHtml("$.html"));
   app.get("/g", sendHtml("!.html"));
   app.get("/s", sendHtml("!!.html"));
   app.get("/resent", (_req, res) => res.sendFile(path.join(publicPath, "resent", "index.html")));
 
   app.get("/api/info", (_req, res) => {
-    const validSamples = latencySamples.filter(s => s !== undefined);
-    const average = validSamples.length ? validSamples.reduce((a, b) => a + b, 0) / validSamples.length : 0;
-    res.json({
-      speed: average < 200 ? "Fast" : average > 500 ? "Slow" : "Medium",
-      averageLatency: average.toFixed(2),
-      timestamp: Date.now()
-    });
+    try {
+      const average = latencySamples.length
+        ? latencySamples.reduce((a, b) => a + b, 0) / latencySamples.length
+        : 0;
+      let speed = "Medium";
+      if (average < 200) speed = "Fast";
+      else if (average > 500) speed = "Slow";
+      const cpus = os.cpus();
+      const totalMem = os.totalmem() / 1024 / 1024 / 1024;
+      res.json({
+        speed,
+        averageLatency: average.toFixed(2),
+        specs: `${cpus[0].model} + ${cpus.length} CPU Cores + ${totalMem.toFixed(1)}GB of RAM`,
+        startTime,
+        samples: latencySamples.length,
+        timestamp: Date.now()
+      });
+    } catch {
+      res.status(500).json({ error: "Internal error" });
+    }
   });
 
   app.use((_req, res) => res.status(404).sendFile(path.join(publicPath, "404.html")));
@@ -156,26 +156,19 @@ if (cluster.isPrimary) {
   server.keepAliveTimeout = 5000;
   server.headersTimeout = 10000;
 
-  const pingWSS = new WebSocket.Server({
-    noServer: true,
-    maxPayload: 16384,
-    perMessageDeflate: false
-  });
+  const pingWSS = new WebSocket.Server({ noServer: true, maxPayload: 16384, perMessageDeflate: false });
 
   pingWSS.on("connection", (ws, req) => {
     const remote = req.socket.remoteAddress || "unknown";
     const lat = [];
     let sampleIndex = 0;
-
     const sendPing = () => {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ type: "ping", timestamp: Date.now() }));
       }
     };
-
     const pingInterval = setInterval(sendPing, 500);
     sendPing();
-
     ws.on("message", msg => {
       try {
         const data = JSON.parse(msg);
@@ -183,15 +176,12 @@ if (cluster.isPrimary) {
           const d = Date.now() - data.timestamp;
           lat.push(d);
           if (lat.length > 10) lat.shift();
-          
           latencySamples[sampleIndex % latencySamples.length] = d;
           sampleIndex = (sampleIndex + 1) % latencySamples.length;
-          
           ws.send(JSON.stringify({ type: "latency", latency: d }), { compress: false });
         }
       } catch {}
     });
-
     ws.on("close", () => {
       clearInterval(pingInterval);
       const avg = lat.length ? (lat.reduce((a, b) => a + b) / lat.length).toFixed(2) : 0;
@@ -201,9 +191,7 @@ if (cluster.isPrimary) {
 
   server.on("upgrade", (req, sock, head) => {
     if (req.url === "/w/ping") {
-      pingWSS.handleUpgrade(req, sock, head, ws => 
-        pingWSS.emit("connection", ws, req)
-      );
+      pingWSS.handleUpgrade(req, sock, head, ws => pingWSS.emit("connection", ws, req));
     } else if (req.url.startsWith("/w/")) {
       wisp.routeRequest(req, sock, head);
     } else {
