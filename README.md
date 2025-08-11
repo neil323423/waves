@@ -1,3 +1,5 @@
+# MAIN REPO MOVED TO https://gitlab.com/waveslab/Waves
+
 # Waves.
 A sleek and minimalist Web Proxy.
 
