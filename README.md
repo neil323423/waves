@@ -1,4 +1,4 @@
-# MAIN REPO MOVED TO https://gitlab.com/waveslab/Waves
+# Main repo has been moved to https://gitlab.com/waveslab/waves this current repo will no longer be maintained.
 
 # Waves.
 A sleek and minimalist Web Proxy.
