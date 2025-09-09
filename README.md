@@ -1,4 +1,5 @@
 # Main repo has been moved to https://gitlab.com/waveslab/waves this current repo will no longer be maintained.
+Again please use the Gitlab version this Github version is VERY outdated and have a lot of bugs!
 
 # Waves.
 A sleek and minimalist Web Proxy.
