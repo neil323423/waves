@@ -49,6 +49,51 @@
             "icon": "/assets/images/a/steam.jpg",
             "title": "Steam",
             "link": "https://store.steampowered.com"
+        },
+        {
+            "icon": "https://i1.sndcdn.com/avatars-x9Lpm7laW5AFh5Pl-OtMfHQ-t240x240.jpg",
+            "title": "Anime",
+            "link": "https://hianmie.com"
+        },
+        {
+            "icon": "https://yt3.googleusercontent.com/cSVSA1S_y1HeAh1HLnFNZzO-1OwHAbJyW6wK8Y3XYWO5AOK8TuhpvZE1AX9EQz3P1I5DJ78bDQ=s900-c-k-c0x00ffffff-no-rj",
+            "title": "Amazon",
+            "link": "https://www.amazon.com"
+        },
+        {
+            "icon": "https://play-lh.googleusercontent.com/a7R5nyeaX8lIEWdBOxjlvbyq9LcFwh3XMvNtBPEKR3LPGgdvgGrec4sJwn8tUaaSkw=s256-rw",
+            "title": "Chess.com",
+            "link": "https://www.chess.com"
+        },
+        {
+            "icon": "https://sf-static.tiktokcdn.com/obj/eden-sg/uhtyvueh7nulogpoguhm/tiktok-icon2.png",
+            "title": "TikTok",
+            "link": "https://www.tiktok.com"
+        },
+        {
+            "icon": "https://yt3.googleusercontent.com/3LXX8rQiWxvIFLBcXEw1gNtE_nz6XDW_AdHN4J9zvzQz9u3_6MBPx8WhBeZ0d6uls0yVRMsl=s900-c-k-c0x00ffffff-no-rj",
+            "title": "Snapchat",
+            "link": "https://www.snapchat.com"
+        },
+        {
+            "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png",
+            "title": "Instagram",
+            "link": "https://www.instagram.com"
+        },
+        {
+            "icon": "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/1200px-Wikipedia-logo-v2.svg.png",
+            "title": "Wikipedia",
+            "link": "https://www.wikipedia.org"
+        },
+        {
+            "icon": "https://media.wired.com/photos/592718a9af95806129f519a8/master/pass/Soundcloud-icon-2.jpg",
+            "title": "SoundCloud",
+            "link": "https://soundcloud.com"
+        },
+        {
+            "icon": "https://play-lh.googleusercontent.com/FBwBJqAv2KjTXRDRaEkrY3r2PJUWZbru1Y-6VyQY4Sku776mLJ2fIh1nMqzsmGdXUPI",
+            "title": "Poki",
+            "link": "https://poki.com"
         }
     ]
 }
